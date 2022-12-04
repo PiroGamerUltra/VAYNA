@@ -3,7 +3,7 @@ package dev.piste.vayna.util;
 public enum Collection {
 
     ACCOUNTS("accounts"),
-    TOKENS("tokens");
+    BOT_STATS("bot-stats");
 
     private final String text;
 

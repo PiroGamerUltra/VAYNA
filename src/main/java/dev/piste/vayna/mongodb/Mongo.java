@@ -18,20 +18,20 @@ public class Mongo {
 
     public static void connect() {
 
+        ConnectionString uri = new ConnectionString((String) JSONTokens.readToken(TokenType.MONGODB));
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(uri)
+                .serverApi(ServerApi.builder()
+                        .version(ServerApiVersion.V1)
+                        .build())
+                .build();
+
         try {
-            ConnectionString connectionString = new ConnectionString((String) JSONTokens.readToken(TokenType.MONGODB));
-            MongoClientSettings settings = MongoClientSettings.builder()
-                    .applyConnectionString(connectionString)
-                    .serverApi(ServerApi.builder()
-                            .version(ServerApiVersion.V1)
-                            .build())
-                    .build();
             mongoClient = MongoClients.create(settings);
             System.out.println(Resources.SYSTEM_PRINT_PREFIX + FontColor.GREEN + "Connected to " + FontColor.YELLOW + "MongoDB" + FontColor.GREEN + "." + FontColor.RESET);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
         }
-
     }
 
     public static MongoClient getMongoClient() {
