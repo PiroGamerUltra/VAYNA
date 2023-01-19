@@ -4,7 +4,7 @@ package dev.piste.vayna.util;
  * Date: 26.05.2021
  */
 
-import dev.piste.vayna.main.Bot;
+import dev.piste.vayna.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -117,12 +117,8 @@ public class Embed {
             }
         }
 
-        if (imageUrl != null) {
-            builder.setImage(imageUrl);
-        }
-        if (colorRGB != 0) {
-            builder.setColor(colorRGB);
-        }
+        if (imageUrl != null) builder.setImage(imageUrl);
+        builder.setColor(colorRGB);
         if (description != null) {
             builder.setDescription(description);
         }

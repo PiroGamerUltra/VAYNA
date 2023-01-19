@@ -1,4 +1,4 @@
-package dev.piste.vayna.util;
+package dev.piste.vayna.config;
 
 public enum TokenType {
 

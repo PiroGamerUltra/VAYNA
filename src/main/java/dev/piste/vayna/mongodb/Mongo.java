@@ -5,12 +5,13 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import dev.piste.vayna.json.JSONTokens;
-import dev.piste.vayna.util.Collection;
-import dev.piste.vayna.util.Resources;
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.util.FontColor;
-import dev.piste.vayna.util.TokenType;
+import dev.piste.vayna.config.TokenType;
 import org.bson.Document;
+
+import java.util.Objects;
 
 public class Mongo {
 
@@ -18,7 +19,7 @@ public class Mongo {
 
     public static void connect() {
 
-        ConnectionString uri = new ConnectionString((String) JSONTokens.readToken(TokenType.MONGODB));
+        ConnectionString uri = new ConnectionString((String) Objects.requireNonNull(TokensConfig.readToken(TokenType.MONGODB)));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(uri)
                 .serverApi(ServerApi.builder()
@@ -28,7 +29,7 @@ public class Mongo {
 
         try {
             mongoClient = MongoClients.create(settings);
-            System.out.println(Resources.SYSTEM_PRINT_PREFIX + FontColor.GREEN + "Connected to " + FontColor.YELLOW + "MongoDB" + FontColor.GREEN + "." + FontColor.RESET);
+            System.out.println(Bot.getConsolePrefix("MongoDB") + FontColor.GREEN + "Connected" + FontColor.RESET);
         } catch (MongoException e) {
             e.printStackTrace();
         }

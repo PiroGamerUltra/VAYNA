@@ -1,9 +1,9 @@
 # VAYNA • VALORANT BOT
 VAYNA is a discord bot that provides player statistics, general information about VALORANT, and more.
 ## Commands
-All commands work with the slash command function from discord.
+All commands work with the slash command function in Discord.
 ### General Commands
-- `/help` Get informations about the bot and commands.
+- `/help` Retrieve general information about the bot and a list of all available commands
 ## Contact
 If you have any questions, you can contact me:
    - **E-Mail:** vayna@piste.dev

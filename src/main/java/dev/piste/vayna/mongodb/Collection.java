@@ -1,9 +1,11 @@
-package dev.piste.vayna.util;
+package dev.piste.vayna.mongodb;
 
 public enum Collection {
 
-    ACCOUNTS("accounts"),
-    BOT_STATS("bot-stats");
+    LINKED_ACCOUNTS("linked-accounts"),
+    BOT_STATS("bot-stats"),
+
+    AUTH_KEYS("auth-keys");
 
     private final String text;
 
