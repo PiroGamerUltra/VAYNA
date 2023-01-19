@@ -18,7 +18,9 @@ public class CommandManager {
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             for(String commandName : commandList) {
-                if(!command.getName().equalsIgnoreCase(commandName)) Bot.getJDA().deleteCommandById(command.getIdLong());
+                if(!command.getName().equalsIgnoreCase(commandName)) {
+                    Bot.getJDA().deleteCommandById(command.getIdLong());
+                }
             }
         }
 

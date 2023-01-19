@@ -24,9 +24,9 @@ public class HelpCommand {
         embedBuilder.setAuthor(event.getMember().getUser().getName(), websiteUri, event.getMember().getUser().getAvatarUrl());
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
-                Button.link(websiteUri + "redirect/discord", "Support Discord"),
-                Button.link(websiteUri + "redirect/github", "GitHub"),
-                Button.link(websiteUri + "redirect/topgg", "Top.GG")
+                Button.link(websiteUri + "/redirect/discord", "Support Discord"),
+                Button.link(websiteUri + "/redirect/github", "GitHub"),
+                Button.link(websiteUri + "/redirect/topgg", "Top.GG")
         ).queue();
 
     }

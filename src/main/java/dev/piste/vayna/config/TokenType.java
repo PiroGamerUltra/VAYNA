@@ -4,7 +4,9 @@ public enum TokenType {
 
     PUBLIC("public"),
     DEVELOPMENT("development"),
-    MONGODB("mongodb");
+    MONGODB("mongodb"),
+
+    RIOT_API_KEY("riot_api_key");
 
     private final String text;
 
