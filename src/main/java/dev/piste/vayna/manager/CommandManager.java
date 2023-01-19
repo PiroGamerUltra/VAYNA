@@ -17,10 +17,8 @@ public class CommandManager {
         commandList.add("connection");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
-            for(String commandName : commandList) {
-                if(!command.getName().equalsIgnoreCase(commandName)) {
-                    Bot.getJDA().deleteCommandById(command.getIdLong());
-                }
+            if(!commandList.contains(command.getName())) {
+                command.delete().queue();
             }
         }
 

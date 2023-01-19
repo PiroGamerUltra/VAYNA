@@ -15,25 +15,19 @@ import org.bson.Document;
 
 import java.util.Random;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class ConnectionCommand {
 
     public static void performCommand(SlashCommandInteractionEvent event, String subcommand) {
         MongoCollection<Document> linkedAccountsCollection = Mongo.getMongoCollection(Collection.LINKED_ACCOUNTS);
-        Document accountQuery = new Document();
-        accountQuery.put("discordId", event.getUser().getIdLong());
-        Document foundAccount = linkedAccountsCollection.find(accountQuery).first();
-        boolean existingConnection;
-        if(foundAccount == null) {
-            existingConnection = false;
-        } else {
-            existingConnection = true;
-        }
+        Document foundAccount = linkedAccountsCollection.find(eq("discordId", event.getUser().getIdLong())).first();
 
         Embed embed = new Embed();
 
         switch (subcommand) {
             case "connect" -> {
-                if(existingConnection) {
+                if(foundAccount != null) {
                     embed.setColor(255, 0, 0);
                     embed.setTitle("» Connection already existing");
                     embed.setDescription("Your Discord account is already connected with a Riot account. " +
@@ -45,9 +39,7 @@ public class ConnectionCommand {
                 MongoCollection<Document> authKeysCollection = Mongo.getMongoCollection(Collection.AUTH_KEYS);
                 String redirectUri = Config.readSetting(ConfigSetting.WEBSITE_URI) + "/RSO/redirect?authKey=";
 
-                Document query = new Document();
-                query.put("discordId", event.getUser().getIdLong());
-                Document foundAuthKeyDocument = authKeysCollection.find(query).first();
+                Document foundAuthKeyDocument = authKeysCollection.find(eq("discordId", event.getUser().getIdLong())).first();
                 String authKey;
                 if(foundAuthKeyDocument != null) {
                     authKey = (String) foundAuthKeyDocument.get("authKey");
@@ -65,15 +57,7 @@ public class ConnectionCommand {
                 ).queue();
             }
             case "disconnect" -> {
-                if(!existingConnection) {
-                    embed.setColor(255, 0, 0);
-                    embed.setTitle("» No connection existing");
-                    embed.setDescription("You haven't connected a Riot account to your Discord account yet. " +
-                            "To do this, type " +
-                            "</connection connect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getId() + ">.");
-                    event.getHook().editOriginalEmbeds(embed.build()).queue();
-                    return;
-                }
+                if (!accountIsExisting(event, foundAccount, embed)) return;
                 linkedAccountsCollection.deleteOne(foundAccount);
                 embed.setColor(0, 255, 0);
                 embed.setTitle("» Success");
@@ -81,17 +65,8 @@ public class ConnectionCommand {
                 event.getHook().editOriginalEmbeds(embed.build()).queue();
             }
             case "info" -> {
-                if(!existingConnection) {
-                    embed.setColor(255, 0, 0);
-                    embed.setTitle("» No connection existing");
-                    embed.setDescription("You haven't connected a Riot account to your Discord account yet. " +
-                            "To do this, type " +
-                            "</connection connect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getId() + ">.");
-                    event.getHook().editOriginalEmbeds(embed.build()).queue();
-                    return;
-                }
-                String puuid = foundAccount.getString("puuid");
-                String[] riotId = AccountAPI.getByPuuid(puuid);
+                if (!accountIsExisting(event, foundAccount, embed)) return;
+                String[] riotId = AccountAPI.getByPuuid(foundAccount.getString("puuid"));
                 embed.setTitle("» Current connection");
                 embed.setDescription("This is your currently connected Riot account:");
                 embed.addField("Riot-Games Account", Emoji.fromCustom("RiotGames", 1065717205402124398l, false).getAsMention() + " **" + riotId[0] + "#" + riotId[1] + "**", false);
@@ -101,6 +76,19 @@ public class ConnectionCommand {
         }
 
 
+    }
+
+    private static boolean accountIsExisting(SlashCommandInteractionEvent event, Document foundAccount, Embed embed) {
+        if(foundAccount == null) {
+            embed.setColor(255, 0, 0);
+            embed.setTitle("» No connection existing");
+            embed.setDescription("You haven't connected a Riot account to your Discord account yet. " +
+                    "To do this, type " +
+                    "</connection connect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getId() + ">.");
+            event.getHook().editOriginalEmbeds(embed.build()).queue();
+            return false;
+        }
+        return true;
     }
 
     private static String getRandomHexString(){
