@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.bson.Document;
 
 import java.util.Random;
+import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -41,7 +42,7 @@ public class ConnectionCommand {
                 if(foundAuthKeyDocument != null) {
                     authKey = (String) foundAuthKeyDocument.get("authKey");
                 } else {
-                    authKey = getRandomHexString();
+                    authKey = UUID.randomUUID().toString();
                     Document newAuthKeyDocument = new Document();
                     newAuthKeyDocument.put("discordId", event.getUser().getIdLong());
                     newAuthKeyDocument.put("authKey", authKey);
@@ -85,15 +86,6 @@ public class ConnectionCommand {
             return false;
         }
         return true;
-    }
-
-    private static String getRandomHexString(){
-        Random r = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        while(stringBuilder.length() < 32) {
-            stringBuilder.append(Integer.toHexString(r.nextInt()));
-        }
-        return stringBuilder.substring(0, 32);
     }
 
 }
