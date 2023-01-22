@@ -17,7 +17,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class ConnectionCommand {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    public static void performCommand(SlashCommandInteractionEvent event) throws Exception {
         MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountsCollection();
         Document foundAccount = linkedAccountsCollection.find(eq("discordId", event.getUser().getIdLong())).first();
 
