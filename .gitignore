@@ -1,5 +1,5 @@
 # Project exclude paths
-.gitignore
+/.gitignore
 /target/
 /src/main/resources/
 /src/test/
