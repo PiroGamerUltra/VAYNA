@@ -1,11 +1,9 @@
 package dev.piste.vayna.commands;
 
 import com.mongodb.client.MongoCollection;
-import dev.piste.vayna.api.riotgames.AccountAPI;
-import dev.piste.vayna.config.Config;
-import dev.piste.vayna.config.ConfigSetting;
+import dev.piste.vayna.api.riotgames.Account;
+import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.manager.CommandManager;
-import dev.piste.vayna.mongodb.Collection;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -20,7 +18,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class ConnectionCommand {
 
     public static void performCommand(SlashCommandInteractionEvent event, String subcommand) {
-        MongoCollection<Document> linkedAccountsCollection = Mongo.getMongoCollection(Collection.LINKED_ACCOUNTS);
+        MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountsCollection();
         Document foundAccount = linkedAccountsCollection.find(eq("discordId", event.getUser().getIdLong())).first();
 
         Embed embed = new Embed();
@@ -36,8 +34,7 @@ public class ConnectionCommand {
                     event.getHook().editOriginalEmbeds(embed.build()).queue();
                     return;
                 }
-                MongoCollection<Document> authKeysCollection = Mongo.getMongoCollection(Collection.AUTH_KEYS);
-                String redirectUri = Config.readSetting(ConfigSetting.WEBSITE_URI) + "/RSO/redirect?authKey=";
+                MongoCollection<Document> authKeysCollection = Mongo.getAuthKeysCollection();
 
                 Document foundAuthKeyDocument = authKeysCollection.find(eq("discordId", event.getUser().getIdLong())).first();
                 String authKey;
@@ -53,7 +50,7 @@ public class ConnectionCommand {
                 embed.setTitle("» Authorization");
                 embed.setDescription("Please click on the button below to log in with your Riot account.");
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                        Button.link(redirectUri + authKey, Emoji.fromCustom("RiotGames", 1065717205402124398l, false))
+                        Button.link(new SettingsConfig().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, Emoji.fromCustom("RiotGames", 1065717205402124398l, false))
                 ).queue();
             }
             case "disconnect" -> {
@@ -66,10 +63,10 @@ public class ConnectionCommand {
             }
             case "info" -> {
                 if (!accountIsExisting(event, foundAccount, embed)) return;
-                String[] riotId = AccountAPI.getByPuuid(foundAccount.getString("puuid"));
+                Account account = new Account(foundAccount.getString("puuid"));
                 embed.setTitle("» Current connection");
                 embed.setDescription("This is your currently connected Riot account:");
-                embed.addField("Riot-Games Account", Emoji.fromCustom("RiotGames", 1065717205402124398l, false).getAsMention() + " **" + riotId[0] + "#" + riotId[1] + "**", false);
+                embed.addField("Riot-Games Account", Emoji.fromCustom("RiotGames", 1065717205402124398l, false).getAsMention() + " **" + account.getRiotId() + "**", false);
                 event.getHook().editOriginalEmbeds(embed.build()).queue();
                 return;
             }

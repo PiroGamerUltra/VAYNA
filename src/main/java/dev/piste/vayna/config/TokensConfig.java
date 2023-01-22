@@ -9,15 +9,38 @@ import java.io.IOException;
 
 public class TokensConfig {
 
-    public static Object readToken(TokenType tokenType) {
-        final String key = tokenType.toString();
+    private final String publicBotToken;
+    private final String developmentBotToken;
+    private final String mongodbToken;
+    private final String riotApiToken;
+
+    public TokensConfig() {
+        JSONObject jsonObject = new JSONObject();
         try (FileReader reader = new FileReader("tokens.json")) {
-            JSONObject tokens = (JSONObject) new JSONParser().parse(reader);
-            return tokens.get(key);
+            jsonObject = (JSONObject) new JSONParser().parse(reader);
         } catch (ParseException | IOException | NullPointerException e) {
             e.printStackTrace();
-            return null;
         }
+        JSONObject botKeysObject = (JSONObject) jsonObject.get("bot");
+        this.developmentBotToken = (String) botKeysObject.get("development");
+        this.publicBotToken = (String) botKeysObject.get("public");
+        this.mongodbToken = (String) jsonObject.get("mongodb");
+        this.riotApiToken = (String) jsonObject.get("riot_api");
     }
 
+    public String getPublicBotToken() {
+        return publicBotToken;
+    }
+
+    public String getDevelopmentBotToken() {
+        return developmentBotToken;
+    }
+
+    public String getMongodbToken() {
+        return mongodbToken;
+    }
+
+    public String getRiotApiToken() {
+        return riotApiToken;
+    }
 }

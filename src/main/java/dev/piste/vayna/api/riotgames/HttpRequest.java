@@ -1,6 +1,5 @@
-package dev.piste.vayna.api;
+package dev.piste.vayna.api.riotgames;
 
-import dev.piste.vayna.config.TokenType;
 import dev.piste.vayna.config.TokensConfig;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -18,7 +17,7 @@ public class HttpRequest {
     public static JSONObject doHttpRequest(String uri) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(uri);
-        httpGet.addHeader("X-Riot-Token", TokensConfig.readToken(TokenType.RIOT_API_KEY));
+        httpGet.addHeader("X-Riot-Token", new TokensConfig().getRiotApiToken());
         try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
             String responseString = EntityUtils.toString(response.getEntity());
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(responseString);

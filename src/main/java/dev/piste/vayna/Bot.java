@@ -4,7 +4,6 @@ import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.listener.SlashCommandListener;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.config.TokenType;
 import dev.piste.vayna.util.FontColor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -43,15 +42,8 @@ public class Bot {
     public Bot() {
 
         Mongo.connect();
-        TokenType tokenType;
-        if(isDebug()) {
-            tokenType = TokenType.DEVELOPMENT;
-        } else {
-            tokenType = TokenType.PUBLIC;
-        }
-        String token = (String) TokensConfig.readToken(tokenType);
 
-        jda = JDABuilder.createDefault(token)
+        jda = JDABuilder.createDefault(isDebug() ? new TokensConfig().getDevelopmentBotToken() : new TokensConfig().getPublicBotToken())
                 .addEventListeners(new SlashCommandListener())
                 .setActivity(Activity.playing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
@@ -63,7 +55,7 @@ public class Bot {
 
         CommandManager.createCommands();
 
-        System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected to " + FontColor.YELLOW + tokenType.toString().toUpperCase() + FontColor.GREEN + " instance" + FontColor.RESET);
+        System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 
         shutdownListener();
 

@@ -8,10 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.util.FontColor;
-import dev.piste.vayna.config.TokenType;
 import org.bson.Document;
-
-import java.util.Objects;
 
 public class Mongo {
 
@@ -19,7 +16,7 @@ public class Mongo {
 
     public static void connect() {
 
-        ConnectionString uri = new ConnectionString((String) Objects.requireNonNull(TokensConfig.readToken(TokenType.MONGODB)));
+        ConnectionString uri = new ConnectionString(new TokensConfig().getMongodbToken());
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(uri)
                 .serverApi(ServerApi.builder()
@@ -35,16 +32,16 @@ public class Mongo {
         }
     }
 
-    public static MongoClient getMongoClient() {
-        return mongoClient;
-    }
-
     public static MongoDatabase getMongoDatabase() {
         return mongoClient.getDatabase("VAYNA");
     }
 
-    public static MongoCollection<Document> getMongoCollection(Collection collection) {
-        return getMongoDatabase().getCollection(collection.toString());
+    public static MongoCollection<Document> getLinkedAccountsCollection() {
+        return getMongoDatabase().getCollection("linked-accounts");
+    }
+
+    public static MongoCollection<Document> getAuthKeysCollection() {
+        return getMongoDatabase().getCollection("auth-keys");
     }
 
 
