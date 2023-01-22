@@ -10,6 +10,9 @@ All commands work with the slash command function in Discord.
 - `/connection connect` Connect your Riot-Games account with your Discord account
 - `/connection disconnect` Disconnect your currently connected Riot-Games account from your Discord account
 - `/connection info` Retrieve information about the Riot-Games account that is currently connected with your Discord account
+### Stats Commands
+- `/stats user [@user]` Get general information about a VALORANT profile from a Discord user
+- `/stats riotid <name> <tag>` Get general information about a VALORANT profile by providing a Riot-ID
 ## Contact
 If you have any questions, you can contact me:
    - **Email:** vayna@piste.dev
