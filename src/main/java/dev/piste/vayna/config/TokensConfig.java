@@ -13,6 +13,7 @@ public class TokensConfig {
     private final String developmentBotToken;
     private final String mongodbToken;
     private final String riotApiToken;
+    private final String henrikApiToken;
 
     public TokensConfig() {
         JSONObject jsonObject = new JSONObject();
@@ -26,6 +27,7 @@ public class TokensConfig {
         this.publicBotToken = (String) botKeysObject.get("public");
         this.mongodbToken = (String) jsonObject.get("mongodb");
         this.riotApiToken = (String) jsonObject.get("riot_api");
+        this.henrikApiToken = (String) jsonObject.get("henrik_api");
     }
 
     public String getPublicBotToken() {
@@ -42,5 +44,9 @@ public class TokensConfig {
 
     public String getRiotApiToken() {
         return riotApiToken;
+    }
+
+    public String getHenrikApiToken() {
+        return henrikApiToken;
     }
 }

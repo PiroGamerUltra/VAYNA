@@ -1,4 +1,4 @@
-package dev.piste.vayna.api.riotgames;
+package dev.piste.vayna.api;
 
 import dev.piste.vayna.config.TokensConfig;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -14,10 +14,20 @@ import java.io.IOException;
 
 public class HttpRequest {
 
-    public static JSONObject doHttpRequest(String uri) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+    public static JSONObject doRiotApiRequest(String uri) {
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("X-Riot-Token", new TokensConfig().getRiotApiToken());
+        return getJsonObject(httpGet);
+    }
+
+    public static JSONObject doHenrikApiRequest(String uri) {
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.addHeader("Authorization", new TokensConfig().getHenrikApiToken());
+        return getJsonObject(httpGet);
+    }
+
+    private static JSONObject getJsonObject(HttpGet httpGet) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
         try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
             String responseString = EntityUtils.toString(response.getEntity());
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(responseString);

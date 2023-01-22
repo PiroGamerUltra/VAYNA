@@ -1,7 +1,7 @@
 package dev.piste.vayna.commands;
 
 import com.mongodb.client.MongoCollection;
-import dev.piste.vayna.api.riotgames.Account;
+import dev.piste.vayna.api.Account;
 import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.Mongo;
@@ -17,20 +17,20 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class ConnectionCommand {
 
-    public static void performCommand(SlashCommandInteractionEvent event, String subcommand) {
+    public static void performCommand(SlashCommandInteractionEvent event) {
         MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountsCollection();
         Document foundAccount = linkedAccountsCollection.find(eq("discordId", event.getUser().getIdLong())).first();
 
         Embed embed = new Embed();
 
-        switch (subcommand) {
+        switch (event.getSubcommandName()) {
             case "connect" -> {
                 if(foundAccount != null) {
                     embed.setColor(255, 0, 0);
                     embed.setTitle("» Connection already existing");
                     embed.setDescription("Your Discord account is already connected with a Riot account. " +
                             "Please disconnect your currently connected Riot account from your Discord account first " +
-                            "(</connection disconnect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "disconnect").getId() + ">) and then try again.");
+                            "(" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "disconnect").getAsMention() + ") and then try again.");
                     event.getHook().editOriginalEmbeds(embed.build()).queue();
                     return;
                 }
@@ -50,7 +50,7 @@ public class ConnectionCommand {
                 embed.setTitle("» Authorization");
                 embed.setDescription("Please click on the button below to log in with your Riot account.");
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                        Button.link(new SettingsConfig().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, Emoji.fromCustom("RiotGames", 1065717205402124398l, false))
+                        Button.link(new SettingsConfig().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Log in").withEmoji(Emoji.fromCustom("RiotGames", 1065717205402124398l, false))
                 ).queue();
             }
             case "disconnect" -> {
@@ -80,8 +80,7 @@ public class ConnectionCommand {
             embed.setColor(255, 0, 0);
             embed.setTitle("» No connection existing");
             embed.setDescription("You haven't connected a Riot account to your Discord account yet. " +
-                    "To do this, type " +
-                    "</connection connect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getId() + ">.");
+                    "To do this, type " + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getAsMention());
             event.getHook().editOriginalEmbeds(embed.build()).queue();
             return false;
         }

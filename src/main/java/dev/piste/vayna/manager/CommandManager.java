@@ -2,6 +2,7 @@ package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class CommandManager {
         List<String> commandList = new ArrayList<>();
         commandList.add("help");
         commandList.add("connection");
+        commandList.add("stats");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commandList.contains(command.getName())) {
@@ -39,6 +41,13 @@ public class CommandManager {
                 SubcommandData disconnectSub = new SubcommandData("disconnect", "Disconnect your currently connected Riot-Games account from your Discord account");
                 Bot.getJDA().upsertCommand("connection", "Connection").addSubcommands(connectSub, disconnectSub, infoSub).queue();
                 break;
+            case "stats":
+                SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
+                        .addOption(OptionType.USER, "user", "The discord user to get the stats from");
+                SubcommandData riotIdSub = new SubcommandData("riotid", "Get general information about a VALORANT profile by providing a Riot-ID")
+                        .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
+                        .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
+                Bot.getJDA().upsertCommand("stats", "Stats").addSubcommands(userSub, riotIdSub).queue();
         }
     }
 
