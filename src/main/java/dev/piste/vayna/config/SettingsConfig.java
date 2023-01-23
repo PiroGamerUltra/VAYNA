@@ -17,7 +17,11 @@ public class SettingsConfig {
     }
 
     public static long getSupportGuildId() {
-        return getJsonNode().get("supportGuildId").asLong();
+        return getJsonNode().path("supportGuild").get("id").asLong();
+    }
+
+    public static String getSupportGuildInviteLink() {
+        return getJsonNode().path("supportGuild").get("inviteLink").asText();
     }
 
     public static long getGuildJoinActivitiesChannelId() {

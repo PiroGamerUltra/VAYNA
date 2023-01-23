@@ -1,5 +1,6 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.api.riotgames.UnknownRiotIdException;
 import dev.piste.vayna.config.SettingsConfig;
@@ -22,16 +23,11 @@ public class StatsCommand {
                 long discordId = (event.getOption("user") == null) ? event.getUser().getIdLong() : event.getOption("user").getAsLong();
                 Document foundAccount = Mongo.getLinkedAccountsCollection().find(eq("discordId", discordId)).first();
                 if (foundAccount == null) {
-                    Embed embed = new Embed();
-                    embed.setColor(255, 0, 0);
-                    embed.setAuthor(event.getUser().getName(), SettingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl());
-                    embed.setTitle("» Discord account not connected");
                     if (discordId == event.getUser().getIdLong()) {
-                        embed.setDescription("You haven't connected your Riot-Games account yet. You can do it with " + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getAsMention());
+                        event.getHook().editOriginalEmbeds(StatsEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
                     } else {
-                        embed.setDescription("This Discord user hasn't connected his Riot-Games account yet.");
+                        event.getHook().editOriginalEmbeds(StatsEmbed.getRiotAccountNotConnected(event.getUser(), Bot.getJDA().getUserById(discordId))).queue();
                     }
-                    event.getHook().editOriginalEmbeds(embed.build()).queue();
                     return;
                 }
                 account = new RiotAccount(foundAccount.getString("puuid"));
@@ -42,20 +38,12 @@ public class StatsCommand {
                 try {
                     account = new RiotAccount(gameName, tagLine);
                 } catch (UnknownRiotIdException e) {
-                    Embed embed = new Embed();
-                    embed.setColor(255, 0, 0);
-                    embed.setAuthor(event.getUser().getName(), SettingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl());
-                    embed.setTitle("» Riot-ID not found");
-                    embed.setDescription("The provided Riot-ID doesn't exist.");
-                    event.getHook().editOriginalEmbeds(embed.build()).queue();
+                    event.getHook().editOriginalEmbeds(StatsEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
                 }
             }
         }
 
-        Embed embed = new Embed();
-        embed.setAuthor(account.getRiotId(), SettingsConfig.getWebsiteUri(), account.getHenrikAccount().getPlayerCardSmall());
-        embed.addField("Level", Emoji.fromCustom("level", 862382934355214385L, false).getAsMention() + " " + account.getHenrikAccount().getLevel(), true);
         String regionEmoji = switch (account.getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
             case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
@@ -64,7 +52,6 @@ public class StatsCommand {
             case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
             default -> "none";
         };
-        embed.addField("Region", regionEmoji + " " + account.getRegionName(), true);
         event.getHook().editOriginalEmbeds(StatsEmbed.getStats(account.getRiotId(), account.getHenrikAccount().getPlayerCardSmall(), account.getHenrikAccount().getLevel(), account.getRegionName(), regionEmoji)).queue();
     }
 

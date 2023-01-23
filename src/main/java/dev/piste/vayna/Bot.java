@@ -1,5 +1,6 @@
 package dev.piste.vayna;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
 import dev.piste.vayna.listener.GuildJoinLeaveListener;
@@ -27,6 +28,10 @@ public class Bot {
 
     public static boolean isDebug() {
         return System.getProperty("os.name").startsWith("Windows");
+    }
+
+    public static ObjectMapper getObjectMapper() {
+        return new ObjectMapper();
     }
 
     public static String getConsolePrefix(String name) {

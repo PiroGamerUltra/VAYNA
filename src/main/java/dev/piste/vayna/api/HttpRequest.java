@@ -2,6 +2,7 @@ package dev.piste.vayna.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.TokensConfig;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -28,9 +29,7 @@ public class HttpRequest {
     private static JsonNode getJsonObject(HttpGet httpGet) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            String responseString = EntityUtils.toString(response.getEntity());
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readTree(responseString);
+            return Bot.getObjectMapper().readTree(EntityUtils.toString(response.getEntity()));
         } catch (ParseException | IOException e) {
             throw new RuntimeException(e);
         }
