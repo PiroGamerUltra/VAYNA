@@ -16,10 +16,10 @@ public class HelpCommand {
         embedBuilder.setTitle("» Help");
         embedBuilder.addField("Version", "The current version of the bot is `v" + settingsConfig.getVersion() + "`", true);
         embedBuilder.addField("Creator", "I've been developed by **Piste#1111**", true);
-        embedBuilder.addField("General Commands",  "» </help:" + CommandManager.findCommand("help").getId() + "> Retrieve general information about the bot and a list of all available commands", false);
-        embedBuilder.addField("Connection Commands",  "» </connection connect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "connect").getId() + "> Connect your Riot-Games account with your Discord account\n" +
-                "» </connection disconnect:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "disconnect").getId() + "> Disconnect your currently connected Riot-Games account from your Discord account\n" +
-                "» </connection info:" + CommandManager.findSubcommand(CommandManager.findCommand("connection"), "info").getId() + "> Retrieve information about the Riot-Games account that is currently connected with your Discord account", false);
+        embedBuilder.addField("General Commands",  "» " + CommandManager.findCommand("help").getAsMention() + " Retrieve general information about the bot and a list of all available commands", false);
+        embedBuilder.addField("Connection Commands",  "» " + CommandManager.findCommand("connection").getAsMention() + " Manage the connection to your Riot-Games account", false);
+        embedBuilder.addField("Statistic Commands", "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user").getAsMention() + " Retrieve general statistics about a provided Discord user or yourself\n" +
+                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riotid").getAsMention() + " Retrieve general statistics about a provided Riot-ID", false);
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Button.link(settingsConfig.getWebsiteUri() + "/redirect/discord", "Support Discord"),

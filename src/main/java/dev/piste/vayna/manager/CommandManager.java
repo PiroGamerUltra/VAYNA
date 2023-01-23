@@ -36,10 +36,7 @@ public class CommandManager {
                 Bot.getJDA().upsertCommand("help", "Get information about the bot and a list of all available commands").queue();
                 break;
             case "connection":
-                SubcommandData connectSub = new SubcommandData("connect", "Connect your Riot-Games account with your Discord account");
-                SubcommandData infoSub = new SubcommandData("info", "Get information about the Riot-Games account your Discord account is currently connected with");
-                SubcommandData disconnectSub = new SubcommandData("disconnect", "Disconnect your currently connected Riot-Games account from your Discord account");
-                Bot.getJDA().upsertCommand("connection", "Connection").addSubcommands(connectSub, disconnectSub, infoSub).queue();
+                Bot.getJDA().upsertCommand("connection", "Manage the connection to your Riot account").queue();
                 break;
             case "stats":
                 SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")

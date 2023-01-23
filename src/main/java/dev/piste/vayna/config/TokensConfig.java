@@ -23,11 +23,11 @@ public class TokensConfig {
     }
 
     public static String getRiotApiToken() {
-        return getJsonNode().get("riot_api").asText();
+        return getJsonNode().path("api").get("riot").asText();
     }
 
     public static String getHenrikApiToken() {
-        return getJsonNode().get("henrik_api").asText();
+        return getJsonNode().path("api").get("henrik").asText();
     }
 
     private static JsonNode getJsonNode() {

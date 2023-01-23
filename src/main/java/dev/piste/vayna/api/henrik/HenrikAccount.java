@@ -30,7 +30,7 @@ public class HenrikAccount {
         return puuid;
     }
 
-    public long getLevel() {
+    public int getLevel() {
         return level;
     }
 

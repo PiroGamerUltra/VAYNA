@@ -13,7 +13,35 @@ public class SettingsConfig {
     }
 
     public static String getWebsiteUri() {
-        return getJsonNode().get("website_uri").asText();
+        return getJsonNode().get("websiteUri").asText();
+    }
+
+    public static long getSupportGuildId() {
+        return getJsonNode().get("supportGuildId").asLong();
+    }
+
+    public static long getGuildJoinActivitiesChannelId() {
+        return getJsonNode().path("guildActivitiesChannel").get("join").asLong();
+    }
+
+    public static long getGuildLeaveActivitiesChannelId() {
+        return getJsonNode().path("guildActivitiesChannel").get("leave").asLong();
+    }
+
+    public static long getGuildCountChannelId() {
+        return getJsonNode().path("botStatsChannel").get("guild").asLong();
+    }
+
+    public static String getGuildCountChannelName() {
+        return getJsonNode().path("botStatsChannel").get("guildName").asText();
+    }
+
+    public static long getConnectionCountChannelId() {
+        return getJsonNode().path("botStatsChannel").get("connection").asLong();
+    }
+
+    public static String getConnectionCountChannelName() {
+        return getJsonNode().path("botStatsChannel").get("connectionName").asText();
     }
 
     private static JsonNode getJsonNode() {

@@ -3,6 +3,7 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.api.riotgames.UnknownRiotIdException;
 import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.Embed;
@@ -64,7 +65,7 @@ public class StatsCommand {
             default -> "none";
         };
         embed.addField("Region", regionEmoji + " " + account.getRegionName(), true);
-        event.getHook().editOriginalEmbeds(embed.build()).queue();
+        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(account.getRiotId(), account.getHenrikAccount().getPlayerCardSmall(), account.getHenrikAccount().getLevel(), account.getRegionName(), regionEmoji)).queue();
     }
 
 }

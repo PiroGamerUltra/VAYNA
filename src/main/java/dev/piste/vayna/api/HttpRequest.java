@@ -16,14 +16,12 @@ public class HttpRequest {
     public static JsonNode doRiotApiRequest(String uri) {
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("X-Riot-Token", TokensConfig.getRiotApiToken());
-        System.out.println(uri);
         return getJsonObject(httpGet);
     }
 
     public static JsonNode doHenrikApiRequest(String uri) {
         HttpGet httpGet = new HttpGet(uri);
         httpGet.addHeader("Authorization", TokensConfig.getHenrikApiToken());
-        System.out.println(uri);
         return getJsonObject(httpGet);
     }
 

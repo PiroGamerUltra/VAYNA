@@ -1,6 +1,8 @@
 package dev.piste.vayna;
 
 import dev.piste.vayna.config.TokensConfig;
+import dev.piste.vayna.listener.ButtonInteractionListener;
+import dev.piste.vayna.listener.GuildJoinLeaveListener;
 import dev.piste.vayna.listener.SlashCommandListener;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.Mongo;
@@ -45,6 +47,8 @@ public class Bot {
 
         jda = JDABuilder.createDefault(isDebug() ? TokensConfig.getDevelopmentBotToken() : TokensConfig.getPublicBotToken())
                 .addEventListeners(new SlashCommandListener())
+                .addEventListeners(new GuildJoinLeaveListener())
+                .addEventListeners(new ButtonInteractionListener())
                 .setActivity(Activity.playing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)
