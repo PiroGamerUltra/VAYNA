@@ -1,4 +1,4 @@
-package dev.piste.vayna.api;
+package dev.piste.vayna.api.riotgames;
 
 public class UnknownRiotIdException extends Exception {
 

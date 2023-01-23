@@ -1,34 +1,29 @@
 package dev.piste.vayna.config;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileReader;
 import java.io.IOException;
 
 public class SettingsConfig {
 
-    private final String version;
+    public static String getVersion() {
+        return getJsonNode().get("version").asText();
+    }
 
-    private final String websiteUri;
+    public static String getWebsiteUri() {
+        return getJsonNode().get("website_uri").asText();
+    }
 
-    public SettingsConfig() {
-        JSONObject jsonObject = new JSONObject();
+    private static JsonNode getJsonNode() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode;
         try (FileReader reader = new FileReader("settings.json")) {
-            jsonObject = (JSONObject) new JSONParser().parse(reader);
-        } catch (ParseException | IOException | NullPointerException e) {
-            e.printStackTrace();
+            jsonNode = objectMapper.readTree(reader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        this.version = (String) jsonObject.get("version");
-        this.websiteUri = (String) jsonObject.get("website_uri");
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public String getWebsiteUri() {
-        return websiteUri;
+        return jsonNode;
     }
 }

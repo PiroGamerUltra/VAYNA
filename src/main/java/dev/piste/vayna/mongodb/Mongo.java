@@ -16,7 +16,7 @@ public class Mongo {
 
     public static void connect() {
 
-        ConnectionString uri = new ConnectionString(new TokensConfig().getMongodbToken());
+        ConnectionString uri = new ConnectionString(TokensConfig.getMongodbToken());
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(uri)
                 .serverApi(ServerApi.builder()

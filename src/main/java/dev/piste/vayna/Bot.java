@@ -43,7 +43,7 @@ public class Bot {
 
         Mongo.connect();
 
-        jda = JDABuilder.createDefault(isDebug() ? new TokensConfig().getDevelopmentBotToken() : new TokensConfig().getPublicBotToken())
+        jda = JDABuilder.createDefault(isDebug() ? TokensConfig.getDevelopmentBotToken() : TokensConfig.getPublicBotToken())
                 .addEventListeners(new SlashCommandListener())
                 .setActivity(Activity.playing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)

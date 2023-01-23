@@ -1,52 +1,43 @@
 package dev.piste.vayna.config;
 
 import java.io.FileReader;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
 public class TokensConfig {
 
-    private final String publicBotToken;
-    private final String developmentBotToken;
-    private final String mongodbToken;
-    private final String riotApiToken;
-    private final String henrikApiToken;
 
-    public TokensConfig() {
-        JSONObject jsonObject = new JSONObject();
+    public static String getPublicBotToken() {
+        return getJsonNode().path("bot").get("public").asText();
+    }
+
+    public static String getDevelopmentBotToken() {
+        return getJsonNode().path("bot").get("development").asText();
+    }
+
+    public static String getMongodbToken() {
+        return getJsonNode().get("mongodb").asText();
+    }
+
+    public static String getRiotApiToken() {
+        return getJsonNode().get("riot_api").asText();
+    }
+
+    public static String getHenrikApiToken() {
+        return getJsonNode().get("henrik_api").asText();
+    }
+
+    private static JsonNode getJsonNode() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode;
         try (FileReader reader = new FileReader("tokens.json")) {
-            jsonObject = (JSONObject) new JSONParser().parse(reader);
-        } catch (ParseException | IOException | NullPointerException e) {
-            e.printStackTrace();
+            jsonNode = objectMapper.readTree(reader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        JSONObject botKeysObject = (JSONObject) jsonObject.get("bot");
-        this.developmentBotToken = (String) botKeysObject.get("development");
-        this.publicBotToken = (String) botKeysObject.get("public");
-        this.mongodbToken = (String) jsonObject.get("mongodb");
-        this.riotApiToken = (String) jsonObject.get("riot_api");
-        this.henrikApiToken = (String) jsonObject.get("henrik_api");
-    }
-
-    public String getPublicBotToken() {
-        return publicBotToken;
-    }
-
-    public String getDevelopmentBotToken() {
-        return developmentBotToken;
-    }
-
-    public String getMongodbToken() {
-        return mongodbToken;
-    }
-
-    public String getRiotApiToken() {
-        return riotApiToken;
-    }
-
-    public String getHenrikApiToken() {
-        return henrikApiToken;
+        return jsonNode;
     }
 }
