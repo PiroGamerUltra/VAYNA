@@ -24,7 +24,7 @@ public class DisconnectRiotAccount {
 
         String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
-        event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsTag())).setActionRow(
+        event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
                 Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
         ).setEphemeral(true).queue();
     }

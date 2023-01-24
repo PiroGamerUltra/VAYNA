@@ -2,7 +2,7 @@ package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.riotgames.RiotAccount;
-import dev.piste.vayna.api.riotgames.UnknownRiotIdException;
+import dev.piste.vayna.exceptions.UnknownRiotIdException;
 import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class StatsCommand {
 
     public static void performCommand(SlashCommandInteractionEvent event) {
-        RiotAccount account = null;
+        RiotAccount riotAccount = null;
         switch (event.getSubcommandName()) {
             case "user" -> {
                 long discordUserId = (event.getOption("user") == null) ? event.getUser().getIdLong() : event.getOption("user").getAsLong();
@@ -24,13 +24,13 @@ public class StatsCommand {
                     }
                     return;
                 }
-                account = new RiotAccount(linkedAccount.getRiotPuuid());
+                riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
             }
             case "riotid" -> {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
-                    account = new RiotAccount(gameName, tagLine);
+                    riotAccount = new RiotAccount(gameName, tagLine);
                 } catch (UnknownRiotIdException e) {
                     event.getHook().editOriginalEmbeds(StatsEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
@@ -38,7 +38,7 @@ public class StatsCommand {
             }
         }
 
-        String regionEmoji = switch (account.getActiveShard()) {
+        String regionEmoji = switch (riotAccount.getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
             case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
             case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
@@ -46,7 +46,8 @@ public class StatsCommand {
             case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
             default -> "none";
         };
-        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(account.getRiotId(), account.getHenrikAccount().getPlayerCardSmall(), account.getHenrikAccount().getLevel(), account.getRegionName(), regionEmoji)).queue();
+
+        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), riotAccount.getHenrikAccount().getPlayerCardSmall(), riotAccount.getHenrikAccount().getLevel(), riotAccount.getRegionName(), regionEmoji)).queue();
     }
 
 }

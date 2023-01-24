@@ -3,6 +3,7 @@ package dev.piste.vayna.api.riotgames;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.henrik.HenrikAccount;
+import dev.piste.vayna.exceptions.UnknownRiotIdException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

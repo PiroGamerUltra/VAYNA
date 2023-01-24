@@ -22,20 +22,20 @@ public class ConnectionCommand {
         countConnections();
 
         if(!linkedAccount.isExisting()) {
-            System.out.println("not found");
             // Account hasn't been found in the database
             String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
             // Sending reply
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsTag())).setActionRow(
+            event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
                     Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
             ).queue();
         } else {
             // Account has been found in the database
-            RiotAccount riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
+            RiotAccount riotAccount = null;
+            riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
 
             // Sending reply
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsTag())).setActionRow(
+            event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention())).setActionRow(
                     Button.danger("/connection;disconnect", "Disconnect")
             ).queue();
         }

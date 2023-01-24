@@ -48,6 +48,10 @@ public class SettingsConfig {
         return getJsonNode().path("botStatsChannel").get("connectionName").asText();
     }
 
+    public static String getExceptionLogChannelId() {
+        return getJsonNode().get("exceptionLogChannel").asText();
+    }
+
     private static JsonNode getJsonNode() {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode;
