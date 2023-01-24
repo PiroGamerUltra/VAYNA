@@ -19,16 +19,17 @@ import static com.mongodb.client.model.Filters.eq;
 public class DisconnectRiotAccount {
 
     public static void performButton(ButtonInteractionEvent event) {
-        MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountsCollection();
+
+        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         ConnectionCommand.countConnections();
 
-        if(LinkedAccount.isExisting(event.getUser().getIdLong())) {
+        if(linkedAccount.isExisting()) {
             // The account has been found in the database
-            linkedAccountsCollection.deleteOne(eq("discordId", event.getUser().getIdLong()));
+            linkedAccount.delete();
         }
 
-        String authKey = AuthKey.get(event.getUser());
+        String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
         event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsTag())).setActionRow(
                 Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())

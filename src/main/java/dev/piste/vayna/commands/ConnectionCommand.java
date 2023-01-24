@@ -23,11 +23,14 @@ public class ConnectionCommand {
 
     public static void performCommand(SlashCommandInteractionEvent event) {
 
+        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
+
         countConnections();
 
-        if(!LinkedAccount.isExisting(event.getUser().getIdLong())) {
+        if(!linkedAccount.isExisting()) {
+            System.out.println("not found");
             // Account hasn't been found in the database
-            String authKey = AuthKey.get(event.getUser());
+            String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
             // Sending reply
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsTag())).setActionRow(
@@ -35,7 +38,7 @@ public class ConnectionCommand {
             ).queue();
         } else {
             // Account has been found in the database
-            RiotAccount riotAccount = new RiotAccount(LinkedAccount.get(event.getUser().getIdLong()).getString("puuid"));
+            RiotAccount riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
 
             // Sending reply
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsTag())).setActionRow(
@@ -46,9 +49,9 @@ public class ConnectionCommand {
     }
 
     public static void countConnections() {
-        if(!Bot.isDebug()) return;
+        if(Bot.isDebug()) return;
         Guild supportGuild = Bot.getJDA().getGuildById(SettingsConfig.getSupportGuildId());
-        String connectionCountChannelName = SettingsConfig.getConnectionCountChannelName().replace("%count%", Mongo.getLinkedAccountsCollection().countDocuments() + "");
+        String connectionCountChannelName = SettingsConfig.getConnectionCountChannelName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
         VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(SettingsConfig.getConnectionCountChannelId());
         connectionCountChannel.getManager().setName(connectionCountChannelName).queue();
     }

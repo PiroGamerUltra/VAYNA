@@ -11,23 +11,24 @@ public class LinkedAccount {
 
     private long discordUserId;
     private String riotPuuid;
-    private static final MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountsCollection();
+    private static final MongoCollection<Document> linkedAccountCollection = Mongo.getLinkedAccountCollection();
     private Document linkedAccount;
     private boolean isExisting;
 
     public LinkedAccount(long discordUserId) {
         this.discordUserId = discordUserId;
-        linkedAccount = linkedAccountsCollection.find(eq("discordUserId", discordUserId)).first();
+        linkedAccount = linkedAccountCollection.find(eq("discordUserId", discordUserId)).first();
         if(linkedAccount == null) {
             isExisting = false;
         } else {
             isExisting = true;
+            this.riotPuuid = (String) linkedAccount.get("riotPuuid");
         }
     }
 
     public LinkedAccount(String riotPuuid) {
         this.riotPuuid = riotPuuid;
-        linkedAccount = linkedAccountsCollection.find(eq("riotPuuid", riotPuuid)).first();
+        linkedAccount = linkedAccountCollection.find(eq("riotPuuid", riotPuuid)).first();
         if(linkedAccount == null) {
             isExisting = false;
         } else {
@@ -40,9 +41,17 @@ public class LinkedAccount {
         return isExisting;
     }
 
-    public Document get() {
+    public long getDiscordUserId() {
         if(isExisting) {
-            return linkedAccount;
+            return discordUserId;
+        } else {
+            return 0;
+        }
+    }
+
+    public String getRiotPuuid() {
+        if(isExisting) {
+            return riotPuuid;
         } else {
             return null;
         }
@@ -50,8 +59,15 @@ public class LinkedAccount {
 
     public void delete() {
         if(isExisting) {
-            linkedAccountsCollection.deleteOne(linkedAccount);
+            linkedAccountCollection.deleteOne(linkedAccount);
         }
+    }
+
+    public static void insert(long discordUserId, String riotPuuid) {
+        Document newLinkedAccountDocument = new Document();
+        newLinkedAccountDocument.put("discordUserId", discordUserId);
+        newLinkedAccountDocument.put("riotPuuid", riotPuuid);
+        linkedAccountCollection.insertOne(newLinkedAccountDocument);
     }
 
 }

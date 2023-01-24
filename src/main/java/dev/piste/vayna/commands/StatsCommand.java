@@ -6,6 +6,7 @@ import dev.piste.vayna.api.riotgames.UnknownRiotIdException;
 import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.manager.CommandManager;
+import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -20,17 +21,18 @@ public class StatsCommand {
         RiotAccount account = null;
         switch (event.getSubcommandName()) {
             case "user" -> {
-                long discordId = (event.getOption("user") == null) ? event.getUser().getIdLong() : event.getOption("user").getAsLong();
-                Document foundAccount = Mongo.getLinkedAccountsCollection().find(eq("discordId", discordId)).first();
-                if (foundAccount == null) {
-                    if (discordId == event.getUser().getIdLong()) {
+                long discordUserId = (event.getOption("user") == null) ? event.getUser().getIdLong() : event.getOption("user").getAsLong();
+                LinkedAccount linkedAccount = new LinkedAccount(discordUserId);
+
+                if (!linkedAccount.isExisting()) {
+                    if (discordUserId == event.getUser().getIdLong()) {
                         event.getHook().editOriginalEmbeds(StatsEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
                     } else {
-                        event.getHook().editOriginalEmbeds(StatsEmbed.getRiotAccountNotConnected(event.getUser(), Bot.getJDA().getUserById(discordId))).queue();
+                        event.getHook().editOriginalEmbeds(StatsEmbed.getRiotAccountNotConnected(event.getUser(), Bot.getJDA().getUserById(discordUserId))).queue();
                     }
                     return;
                 }
-                account = new RiotAccount(foundAccount.getString("puuid"));
+                account = new RiotAccount(linkedAccount.getRiotPuuid());
             }
             case "riotid" -> {
                 String gameName = event.getOption("name").getAsString();

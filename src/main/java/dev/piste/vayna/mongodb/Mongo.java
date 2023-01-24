@@ -36,11 +36,11 @@ public class Mongo {
         return mongoClient.getDatabase("VAYNA");
     }
 
-    public static MongoCollection<Document> getLinkedAccountsCollection() {
+    public static MongoCollection<Document> getLinkedAccountCollection() {
         return getMongoDatabase().getCollection("linked-accounts");
     }
 
-    public static MongoCollection<Document> getAuthKeysCollection() {
+    public static MongoCollection<Document> getAuthKeyCollection() {
         return getMongoDatabase().getCollection("auth-keys");
     }
 
