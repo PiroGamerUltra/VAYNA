@@ -1,6 +1,5 @@
 package dev.piste.vayna.commands;
 
-import com.mongodb.client.MongoCollection;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.config.SettingsConfig;
@@ -13,11 +12,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.bson.Document;
-
-import java.util.UUID;
-
-import static com.mongodb.client.model.Filters.eq;
 
 public class ConnectionCommand {
 

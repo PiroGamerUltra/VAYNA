@@ -3,17 +3,9 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.api.riotgames.UnknownRiotIdException;
-import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.embeds.StatsEmbed;
-import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.LinkedAccount;
-import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.util.Embed;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.bson.Document;
-
-import static com.mongodb.client.model.Filters.eq;
 
 public class StatsCommand {
 
