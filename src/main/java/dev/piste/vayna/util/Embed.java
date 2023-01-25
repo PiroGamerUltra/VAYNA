@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class Embed {
 
     private EmbedBuilder embedBuilder;
-    private boolean colorExists = false;
-    private boolean footerExists = false;
+    private boolean colorModified = false;
+    private boolean footerModified = false;
 
     public Embed() {
         this.embedBuilder = new EmbedBuilder();
@@ -43,7 +43,12 @@ public class Embed {
 
     public Embed setColor(int red, int green, int blue) {
         embedBuilder.setColor(new Color(red, green, blue).getRGB());
-        colorExists = true;
+        colorModified = true;
+        return this;
+    }
+
+    public Embed removeColor() {
+        colorModified = true;
         return this;
     }
 
@@ -79,13 +84,18 @@ public class Embed {
 
     public Embed setFooter(String text, String iconUrl) {
         embedBuilder.setFooter(text, iconUrl);
-        footerExists = true;
+        footerModified = true;
+        return this;
+    }
+
+    public Embed removeFooter() {
+        footerModified = true;
         return this;
     }
 
     public MessageEmbed build() {
-        if(!colorExists) embedBuilder.setColor(new Color(157, 57, 191).getRGB());
-        if(!footerExists) embedBuilder.setFooter("VAYNA • VALORANT BOT", Bot.getJDA().getSelfUser().getAvatarUrl());
+        if(!colorModified) embedBuilder.setColor(new Color(157, 57, 191).getRGB());
+        if(!footerModified) embedBuilder.setFooter("VAYNA • VALORANT BOT", Bot.getJDA().getSelfUser().getAvatarUrl());
         return embedBuilder.build();
 
     }

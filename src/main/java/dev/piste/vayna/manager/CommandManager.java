@@ -1,6 +1,7 @@
 package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.api.valorantapi.Agent;
 import dev.piste.vayna.api.valorantapi.Map;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -21,6 +22,7 @@ public class CommandManager {
         commandList.add("connection");
         commandList.add("stats");
         commandList.add("map");
+        commandList.add("agent");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commandList.contains(command.getName())) {
@@ -36,13 +38,15 @@ public class CommandManager {
 
     private static void createCommand(String commandName) {
         switch (commandName) {
-            case "help":
+            case "help" -> {
                 Bot.getJDA().upsertCommand("help", "Look up general information about the bot and a list of all available commands").queue();
                 break;
-            case "connection":
+            }
+            case "connection" -> {
                 Bot.getJDA().upsertCommand("connection", "Manage the connection to your Riot-Games account").queue();
                 break;
-            case "stats":
+            }
+            case "stats" -> {
                 SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
                         .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
                 SubcommandData riotIdSub = new SubcommandData("riot-id", "Get general information about a VALORANT profile by providing a Riot-ID")
@@ -50,14 +54,23 @@ public class CommandManager {
                         .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
                 SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
                 Bot.getJDA().upsertCommand("stats", "Stats").addSubcommands(userSub, riotIdSub, meSub).queue();
-            case "map":
+            }
+            case "map" -> {
                 OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the map", true);
                 for(Map map : Map.getMaps()) {
-                    if(!map.getDisplayName().equalsIgnoreCase("The Range")) {
-                        optionData.addChoice(map.getDisplayName(), map.getDisplayName());
-                    }
+                    if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
+                    optionData.addChoice(map.getDisplayName(), map.getDisplayName());
                 }
                 Bot.getJDA().upsertCommand("map", "Get information about a specific VALORANT map").addOptions(optionData).queue();
+            }
+            case "agent" -> {
+                OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the agent", true);
+                for(Agent agent : Agent.getAgents()) {
+                    if(agent.getDeveloperName().equalsIgnoreCase("Hunter_NPE")) continue;
+                    optionData.addChoice(agent.getDisplayName(), agent.getDisplayName());
+                }
+                Bot.getJDA().upsertCommand("agent", "Get information about a specific VALORANT agent").addOptions(optionData).queue();
+            }
         }
     }
 

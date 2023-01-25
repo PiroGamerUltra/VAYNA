@@ -14,6 +14,7 @@ All commands work with the slash command function in Discord.
 - `/stats riot-id <name> <tag>` Get general information about a VALORANT profile by providing a Riot-ID
 ### Information Commands
 - `/map <name>` Get information about a specific VALORANT map
+- `/agent <name>` Get information about a specific VALORANT agent
 ## Used APIs
 - [Riot-Games offcial API](https://developer.riotgames.com/)
 - [HenrikDev's unofficial VALORANT API](https://github.com/Henrik-3/unofficial-valorant-api)
