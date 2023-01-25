@@ -16,11 +16,7 @@ public class DisconnectRiotAccount {
         StatsCounter.countConnections();
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-
-        if(linkedAccount.isExisting()) {
-            // The account has been found in the database
-            linkedAccount.delete();
-        }
+        if(linkedAccount.isExisting()) linkedAccount.delete();
 
         String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 

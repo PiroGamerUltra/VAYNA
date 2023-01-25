@@ -5,6 +5,7 @@ import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;

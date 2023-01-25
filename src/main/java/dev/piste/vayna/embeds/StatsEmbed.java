@@ -1,11 +1,9 @@
 package dev.piste.vayna.embeds;
 
 import dev.piste.vayna.config.SettingsConfig;
-import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 
 public class StatsEmbed {
 

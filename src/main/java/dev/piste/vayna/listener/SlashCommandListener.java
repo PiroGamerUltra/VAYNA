@@ -18,11 +18,7 @@ public class SlashCommandListener extends ListenerAdapter {
             }
             case "connection" -> {
                 event.deferReply().setEphemeral(true).queue();
-                try {
-                    ConnectionCommand.performCommand(event);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                ConnectionCommand.performCommand(event);
             }
             case "stats" -> {
                 event.deferReply().queue();

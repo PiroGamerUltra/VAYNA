@@ -22,6 +22,7 @@ public class RiotAccount {
         JsonNode accountNode = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8));
         if(accountNode.get("puuid") == null) throw new RiotAccountException();
         puuid = accountNode.get("puuid").asText();
+
         JsonNode puuidAccountNode = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid);
         this.gameName = puuidAccountNode.get("gameName").asText();
         this.tagLine = puuidAccountNode.get("tagLine").asText();

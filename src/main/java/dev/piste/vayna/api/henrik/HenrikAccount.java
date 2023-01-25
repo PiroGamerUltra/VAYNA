@@ -18,9 +18,7 @@ public class HenrikAccount {
     public HenrikAccount(String gameName, String tagLine) throws HenrikAccountException {
         JsonNode accountNode = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
         JsonNode dataNode = accountNode.get("data");
-
         if(dataNode == null) throw new HenrikAccountException();
-
         JsonNode cardNode = dataNode.get("card");
         puuid = dataNode.get("puuid").asText();
         level = dataNode.get("account_level").asInt();

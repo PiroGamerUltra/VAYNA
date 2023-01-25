@@ -51,6 +51,9 @@ public class StatsCommand {
                     return;
                 }
             }
+            default -> {
+                riotAccount = new RiotAccount(null);
+            }
         }
 
         String regionEmoji = switch (riotAccount.getActiveShard()) {
@@ -71,6 +74,10 @@ public class StatsCommand {
         }
 
         event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), henrikAccount.getPlayerCardSmall(), henrikAccount.getLevel(), riotAccount.getRegionName(), regionEmoji)).queue();
+    }
+
+    private void performMeSubcommand(SlashCommandInteractionEvent event) {
+
     }
 
 }

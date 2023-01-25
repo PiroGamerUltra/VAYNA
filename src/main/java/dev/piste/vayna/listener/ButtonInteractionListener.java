@@ -9,7 +9,7 @@ public class ButtonInteractionListener extends ListenerAdapter {
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
         switch (event.getButton().getId()) {
-            case "/connection;disconnect" -> DisconnectRiotAccount.performButton(event);
+            case "connection;disconnect" -> DisconnectRiotAccount.performButton(event);
         }
     }
 

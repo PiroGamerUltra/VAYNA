@@ -4,6 +4,7 @@ import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class HelpCommand {
@@ -13,14 +14,21 @@ public class HelpCommand {
         Embed embedBuilder = new Embed();
         embedBuilder.setTitle("» Help");
         embedBuilder.addField("Version", "The current version of the bot is `v" + SettingsConfig.getVersion() + "`", true);
+        // General
         embedBuilder.addField("General Commands",  "" +
-                "» " + CommandManager.findCommand("help").getAsMention() + " Retrieve general information about the bot and a list of all available commands", false);
+                "» " + CommandManager.findCommand("help").getAsMention() + " " + CommandManager.findCommand("help").getDescription(), false);
+        // /connection
         embedBuilder.addField("Connection Commands",  "" +
-                "» " + CommandManager.findCommand("connection").getAsMention() + " Manage the connection to your Riot-Games account", false);
+                "» " + CommandManager.findCommand("connection").getAsMention() + " " + CommandManager.findCommand("connection").getDescription(), false);
+        // /stats
+        Command.Subcommand meSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "me");
+        Command.Subcommand userSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user");
+        Command.Subcommand riotIdSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riot-id");
         embedBuilder.addField("Statistic Commands", "" +
-                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "me").getAsMention() + " Retrieve general statistics about your VALORANT account\n" +
-                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user").getAsMention() + " Retrieve general statistics about the VALORANT account from a provided Discord user\n" +
-                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riot-id").getAsMention() + " Retrieve general statistics about the VALORANT account from a provided Riot-ID", false);
+                "» " + meSubcommand.getAsMention() + " " + meSubcommand.getDescription() + "\n" +
+                "» " + userSubcommand.getAsMention() + " " + userSubcommand.getDescription() + "\n" +
+                "» " + riotIdSubcommand.getAsMention() + " " + riotIdSubcommand.getDescription(), false);
+
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Button.link(SettingsConfig.getSupportGuildInviteLink(), "Support"),
