@@ -21,9 +21,13 @@ public class HttpRequest {
         return getJsonNode("Authorization", TokensConfig.getHenrikApiToken(), uri);
     }
 
+    public static JsonNode doValorantApiRequest(String uri) {
+        return getJsonNode(null, null, uri);
+    }
+
     private static JsonNode getJsonNode(String headerName, String headerValue, String uri) {
         HttpGet httpGet = new HttpGet(uri);
-        httpGet.addHeader(headerName, headerValue);
+        if(headerName != null && headerValue != null) httpGet.addHeader(headerName, headerValue);
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             CloseableHttpResponse response = httpClient.execute(httpGet);
             return Bot.getObjectMapper().readTree(EntityUtils.toString(response.getEntity()));

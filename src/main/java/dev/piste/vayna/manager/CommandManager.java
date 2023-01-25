@@ -1,8 +1,11 @@
 package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.api.valorantapi.Map;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ public class CommandManager {
         commandList.add("help");
         commandList.add("connection");
         commandList.add("stats");
+        commandList.add("map");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commandList.contains(command.getName())) {
@@ -46,6 +50,14 @@ public class CommandManager {
                         .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
                 SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
                 Bot.getJDA().upsertCommand("stats", "Stats").addSubcommands(userSub, riotIdSub, meSub).queue();
+            case "map":
+                OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the map", true);
+                for(Map map : Map.getMaps()) {
+                    if(!map.getDisplayName().equalsIgnoreCase("The Range")) {
+                        optionData.addChoice(map.getDisplayName(), map.getDisplayName());
+                    }
+                }
+                Bot.getJDA().upsertCommand("map", "Get information about a specific VALORANT map").addOptions(optionData).queue();
         }
     }
 

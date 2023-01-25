@@ -29,6 +29,8 @@ public class HelpCommand {
                 "» " + meSubcommand.getAsMention() + " " + meSubcommand.getDescription() + "\n" +
                 "» " + userSubcommand.getAsMention() + " " + userSubcommand.getDescription() + "\n" +
                 "» " + riotIdSubcommand.getAsMention() + " " + riotIdSubcommand.getDescription(), false);
+        embedBuilder.addField("Information Commands", "" +
+                        "» " + CommandManager.findCommand("map").getAsMention() + " " + CommandManager.findCommand("map").getDescription(), false);
 
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
