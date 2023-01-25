@@ -23,7 +23,7 @@ public class StatsCommand {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
                     return;
                 }
-                riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
+                riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
             }
             // /stats user <@user>
             case "user" -> {
@@ -38,25 +38,25 @@ public class StatsCommand {
                     }
                     return;
                 }
-                riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
+                riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
             }
             // /stats riot-id <name> <tag>
             case "riot-id" -> {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
-                    riotAccount = new RiotAccount(gameName, tagLine);
+                    riotAccount = RiotAccount.getByRiotId(gameName, tagLine);
                 } catch (RiotAccountException e) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
                 }
             }
             default -> {
-                riotAccount = new RiotAccount(null);
+                riotAccount = null;
             }
         }
 
-        String regionEmoji = switch (riotAccount.getActiveShard()) {
+        String regionEmoji = switch (riotAccount.getActiveShard().getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
             case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
             case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
@@ -73,7 +73,7 @@ public class StatsCommand {
             return;
         }
 
-        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), henrikAccount.getPlayerCardSmall(), henrikAccount.getLevel(), riotAccount.getRegionName(), regionEmoji)).queue();
+        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), henrikAccount.getCard().getSmall(), henrikAccount.getAccountLevel(), riotAccount.getActiveShard().getPlatformData().getName(), regionEmoji)).queue();
     }
 
     private void performMeSubcommand(SlashCommandInteractionEvent event) {

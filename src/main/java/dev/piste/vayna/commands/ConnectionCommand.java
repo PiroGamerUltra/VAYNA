@@ -27,7 +27,7 @@ public class ConnectionCommand {
                     Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
             ).queue();
         } else {
-            RiotAccount riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
+            RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
 
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention())).setActionRow(
                     Button.danger("connection;disconnect", "Disconnect")

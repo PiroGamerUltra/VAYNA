@@ -1,6 +1,7 @@
 package dev.piste.vayna;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
 import dev.piste.vayna.listener.GuildJoinLeaveListener;

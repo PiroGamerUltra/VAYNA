@@ -46,8 +46,6 @@ public class Map {
         }
     }
 
-    public Map() {}
-
     public String getDisplayIcon() {
         return displayIcon;
     }

@@ -1,50 +1,48 @@
 package dev.piste.vayna.api.henrik;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.HttpRequest;
+import dev.piste.vayna.api.henrik.account.Card;
 import dev.piste.vayna.exceptions.HenrikAccountException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class HenrikAccount {
 
-    private final String puuid;
-    private final int level;
-    private final String playerCardSmall;
-    private final String playerCardLarge;
-    private final String playerCardWide;
+    private String puuid;
+    private int accountLevel;
+    private Card card;
 
-    public HenrikAccount(String gameName, String tagLine) throws HenrikAccountException {
+    public static HenrikAccount getByRiotId(String gameName, String tagLine) throws HenrikAccountException {
         JsonNode accountNode = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
+        if(accountNode.get("data") == null) throw new HenrikAccountException();
         JsonNode dataNode = accountNode.get("data");
-        if(dataNode == null) throw new HenrikAccountException();
-        JsonNode cardNode = dataNode.get("card");
-        puuid = dataNode.get("puuid").asText();
-        level = dataNode.get("account_level").asInt();
-        playerCardSmall = cardNode.get("small").asText();
-        playerCardLarge = cardNode.get("large").asText();
-        playerCardWide = cardNode.get("wide").asText();
+        try {
+            HenrikAccount henrikAccount = Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<HenrikAccount>() {});
+            return henrikAccount;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getPuuid() {
         return puuid;
     }
 
-    public int getLevel() {
-        return level;
+    public int getAccountLevel() {
+        return accountLevel;
     }
 
-    public String getPlayerCardSmall() {
-        return playerCardSmall;
+    public Card getCard() {
+        return card;
     }
-
-    public String getPlayerCardLarge() {
-        return playerCardLarge;
-    }
-
-    public String getPlayerCardWide() {
-        return playerCardWide;
-    }
-
 }
