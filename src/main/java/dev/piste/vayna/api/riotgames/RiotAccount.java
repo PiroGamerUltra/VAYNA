@@ -3,7 +3,8 @@ package dev.piste.vayna.api.riotgames;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.henrik.HenrikAccount;
-import dev.piste.vayna.exceptions.UnknownRiotIdException;
+import dev.piste.vayna.exceptions.HenrikAccountException;
+import dev.piste.vayna.exceptions.InvalidRiotIdException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -17,13 +18,13 @@ public class RiotAccount {
     private String regionName;
     private HenrikAccount henrikAccount;
 
-    public RiotAccount(String gameName, String tagLine) throws UnknownRiotIdException {
+    public RiotAccount(String gameName, String tagLine) throws InvalidRiotIdException {
         JsonNode accountNode = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8));
+        if(accountNode.get("puuid") == null) throw new InvalidRiotIdException();
         puuid = accountNode.get("puuid").asText();
         JsonNode puuidAccountNode = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid);
         this.gameName = puuidAccountNode.get("gameName").asText();
         this.tagLine = puuidAccountNode.get("tagLine").asText();
-        if(puuid == null) throw new UnknownRiotIdException();
     }
 
     public RiotAccount(String puuid) {
@@ -65,7 +66,7 @@ public class RiotAccount {
         return regionName;
     }
 
-    public HenrikAccount getHenrikAccount() {
+    public HenrikAccount getHenrikAccount() throws HenrikAccountException {
         if(henrikAccount == null) henrikAccount = new HenrikAccount(gameName, tagLine);
         return henrikAccount;
     }

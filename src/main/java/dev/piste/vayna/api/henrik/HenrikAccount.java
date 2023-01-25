@@ -2,6 +2,7 @@ package dev.piste.vayna.api.henrik;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.piste.vayna.api.HttpRequest;
+import dev.piste.vayna.exceptions.HenrikAccountException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,11 +15,13 @@ public class HenrikAccount {
     private final String playerCardLarge;
     private final String playerCardWide;
 
-    public HenrikAccount(String gameName, String tagLine) {
+    public HenrikAccount(String gameName, String tagLine) throws HenrikAccountException {
         JsonNode accountNode = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
-        JsonNode dataNode = accountNode.path("data");
-        JsonNode cardNode = dataNode.path("card");
+        JsonNode dataNode = accountNode.get("data");
 
+        if(dataNode == null) throw new HenrikAccountException();
+
+        JsonNode cardNode = dataNode.get("card");
         puuid = dataNode.get("puuid").asText();
         level = dataNode.get("account_level").asInt();
         playerCardSmall = cardNode.get("small").asText();

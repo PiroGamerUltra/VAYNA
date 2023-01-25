@@ -40,11 +40,12 @@ public class CommandManager {
                 break;
             case "stats":
                 SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
-                        .addOption(OptionType.USER, "user", "The discord user to get the stats from");
-                SubcommandData riotIdSub = new SubcommandData("riotid", "Get general information about a VALORANT profile by providing a Riot-ID")
+                        .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
+                SubcommandData riotIdSub = new SubcommandData("riot-id", "Get general information about a VALORANT profile by providing a Riot-ID")
                         .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
                         .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
-                Bot.getJDA().upsertCommand("stats", "Stats").addSubcommands(userSub, riotIdSub).queue();
+                SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
+                Bot.getJDA().upsertCommand("stats", "Stats").addSubcommands(userSub, riotIdSub, meSub).queue();
         }
     }
 

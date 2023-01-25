@@ -54,7 +54,7 @@ public class Bot {
                 .addEventListeners(new SlashCommandListener())
                 .addEventListeners(new GuildJoinLeaveListener())
                 .addEventListeners(new ButtonInteractionListener())
-                .setActivity(Activity.playing("VALORANT"))
+                .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)

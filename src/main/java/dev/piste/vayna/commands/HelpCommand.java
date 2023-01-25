@@ -13,10 +13,14 @@ public class HelpCommand {
         Embed embedBuilder = new Embed();
         embedBuilder.setTitle("» Help");
         embedBuilder.addField("Version", "The current version of the bot is `v" + SettingsConfig.getVersion() + "`", true);
-        embedBuilder.addField("General Commands",  "» " + CommandManager.findCommand("help").getAsMention() + " Retrieve general information about the bot and a list of all available commands", false);
-        embedBuilder.addField("Connection Commands",  "» " + CommandManager.findCommand("connection").getAsMention() + " Manage the connection to your Riot-Games account", false);
-        embedBuilder.addField("Statistic Commands", "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user").getAsMention() + " Retrieve general statistics about a provided Discord user or yourself\n" +
-                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riotid").getAsMention() + " Retrieve general statistics about a provided Riot-ID", false);
+        embedBuilder.addField("General Commands",  "" +
+                "» " + CommandManager.findCommand("help").getAsMention() + " Retrieve general information about the bot and a list of all available commands", false);
+        embedBuilder.addField("Connection Commands",  "" +
+                "» " + CommandManager.findCommand("connection").getAsMention() + " Manage the connection to your Riot-Games account", false);
+        embedBuilder.addField("Statistic Commands", "" +
+                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "me").getAsMention() + " Retrieve general statistics about your VALORANT account\n" +
+                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user").getAsMention() + " Retrieve general statistics about the VALORANT account from a provided Discord user\n" +
+                "» " + CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riot-id").getAsMention() + " Retrieve general statistics about the VALORANT account from a provided Riot-ID", false);
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Button.link(SettingsConfig.getSupportGuildInviteLink(), "Support"),

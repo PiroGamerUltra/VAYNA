@@ -21,31 +21,4 @@ public class StatsEmbed {
         return embed.build();
     }
 
-    public static MessageEmbed getRiotIdNotFound(User user, String riotId) {
-        Embed embed = new Embed();
-        embed.setAuthor(user.getName(), SettingsConfig.getWebsiteUri(), user.getAvatarUrl());
-        embed.setColor(255, 0, 0);
-        embed.setTitle("» Error");
-        embed.setDescription("The Riot-ID `" + riotId + "` couldn't be found. Please check your input values and try again.");
-        return embed.build();
-    }
-
-    public static MessageEmbed getRiotAccountNotConnected(User user, User target) {
-        Embed embed = new Embed();
-        embed.setAuthor(user.getName(), SettingsConfig.getWebsiteUri(), user.getAvatarUrl());
-        embed.setColor(255, 0, 0);
-        embed.setTitle("» Error");
-        embed.setDescription(target.getAsMention() + " hasn't connected his **Riot-Games** account yet.");
-        return embed.build();
-    }
-
-    public static MessageEmbed getSelfRiotAccountNotConnected(User user) {
-        Embed embed = new Embed();
-        embed.setAuthor(user.getName(), SettingsConfig.getWebsiteUri(), user.getAvatarUrl());
-        embed.setColor(255, 0, 0);
-        embed.setTitle("» Error");
-        embed.setDescription("You haven't connected your **Riot-Games** account yet. If you want to, you can do it with " + CommandManager.findCommand("connection").getAsMention() + ".");
-        return embed.build();
-    }
-
 }
