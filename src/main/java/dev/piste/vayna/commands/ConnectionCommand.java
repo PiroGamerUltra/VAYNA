@@ -3,6 +3,7 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
@@ -15,11 +16,13 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class ConnectionCommand {
 
+    private static long rateLimitTimestampMillis = 0;
+
     public static void performCommand(SlashCommandInteractionEvent event) {
 
-        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
+        StatsCounter.countConnections();
 
-        countConnections();
+        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
             // Account hasn't been found in the database
@@ -40,14 +43,6 @@ public class ConnectionCommand {
             ).queue();
         }
 
-    }
-
-    public static void countConnections() {
-        if(Bot.isDebug()) return;
-        Guild supportGuild = Bot.getJDA().getGuildById(SettingsConfig.getSupportGuildId());
-        String connectionCountChannelName = SettingsConfig.getConnectionCountChannelName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
-        VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(SettingsConfig.getConnectionCountChannelId());
-        connectionCountChannel.getManager().setName(connectionCountChannelName).queue();
     }
 
 }

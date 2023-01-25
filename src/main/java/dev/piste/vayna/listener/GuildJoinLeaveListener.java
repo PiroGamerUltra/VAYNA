@@ -2,6 +2,7 @@ package dev.piste.vayna.listener;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -25,7 +26,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         TextChannel textChannel = supportGuild.getTextChannelById(SettingsConfig.getGuildJoinActivitiesChannelId());
         textChannel.sendMessageEmbeds(embed.build()).queue();
 
-        countGuilds(supportGuild);
+        StatsCounter.countGuilds();
     }
 
     @Override
@@ -41,14 +42,9 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         TextChannel textChannel = supportGuild.getTextChannelById(SettingsConfig.getGuildLeaveActivitiesChannelId());
         textChannel.sendMessageEmbeds(embed.build()).queue();
 
-        countGuilds(supportGuild);
+        StatsCounter.countGuilds();
     }
 
-    private void countGuilds(Guild supportGuild) {
-        if(Bot.isDebug()) return;
-        String guildCountChannelName = SettingsConfig.getGuildCountChannelName().replace("%count%", Bot.getJDA().getGuilds().size() + "");
-        VoiceChannel guildCountChannel = supportGuild.getVoiceChannelById(SettingsConfig.getGuildCountChannelId());
-        guildCountChannel.getManager().setName(guildCountChannelName).queue();
-    }
+
 
 }

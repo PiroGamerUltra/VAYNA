@@ -1,7 +1,7 @@
 package dev.piste.vayna.buttons;
 
-import dev.piste.vayna.commands.ConnectionCommand;
 import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
@@ -13,9 +13,9 @@ public class DisconnectRiotAccount {
 
     public static void performButton(ButtonInteractionEvent event) {
 
-        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
+        StatsCounter.countConnections();
 
-        ConnectionCommand.countConnections();
+        LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(linkedAccount.isExisting()) {
             // The account has been found in the database

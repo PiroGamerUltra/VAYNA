@@ -5,7 +5,7 @@ import dev.piste.vayna.api.henrik.HenrikAccount;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.exceptions.HenrikAccountException;
-import dev.piste.vayna.exceptions.InvalidRiotIdException;
+import dev.piste.vayna.exceptions.RiotAccountException;
 import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,9 +15,9 @@ public class StatsCommand {
     public static void performCommand(SlashCommandInteractionEvent event) {
         RiotAccount riotAccount = null;
         switch (event.getSubcommandName()) {
+            // /stats me
             case "me" -> {
-                long discordUserId = event.getUser().getIdLong();
-                LinkedAccount linkedAccount = new LinkedAccount(discordUserId);
+                LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
                 if (!linkedAccount.isExisting()) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
@@ -25,6 +25,7 @@ public class StatsCommand {
                 }
                 riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
             }
+            // /stats user <@user>
             case "user" -> {
                 long discordUserId = event.getOption("user").getAsLong();
                 LinkedAccount linkedAccount = new LinkedAccount(discordUserId);
@@ -39,12 +40,13 @@ public class StatsCommand {
                 }
                 riotAccount = new RiotAccount(linkedAccount.getRiotPuuid());
             }
+            // /stats riot-id <name> <tag>
             case "riot-id" -> {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
                     riotAccount = new RiotAccount(gameName, tagLine);
-                } catch (InvalidRiotIdException e) {
+                } catch (RiotAccountException e) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
                 }
