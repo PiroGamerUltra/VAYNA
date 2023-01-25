@@ -18,4 +18,12 @@ public class Emoji {
         return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("Level", 1067191892858646628L, false);
     }
 
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getGitHub() {
+        return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("GitHub", 1067215631214186556L, false);
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getTopGG() {
+        return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("TopGG", 1067899900773273720L, false);
+    }
+
 }

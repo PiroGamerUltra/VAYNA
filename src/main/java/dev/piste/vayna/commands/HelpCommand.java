@@ -3,6 +3,7 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.config.SettingsConfig;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
+import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -31,9 +32,9 @@ public class HelpCommand {
 
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
-                Button.link(SettingsConfig.getSupportGuildInviteLink(), "Support"),
-                Button.link(SettingsConfig.getWebsiteUri() + "/redirect/github", "GitHub"),
-                Button.link(SettingsConfig.getWebsiteUri() + "/redirect/topgg", "Top.GG")
+                Button.link(SettingsConfig.getSupportGuildInviteLink(), "Support").withEmoji(Emoji.getDiscord()),
+                Button.link(SettingsConfig.getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
+                Button.link(SettingsConfig.getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
         ).queue();
 
     }
