@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class StatsEmbed {
 
-    public static MessageEmbed getStats(String riotId, String playerCardSmall, int level, String regionName, String regionEmoji) {
+    public static MessageEmbed getStats(String riotId, String playerCardSmall, int level, String regionName, String regionEmoji, String connectionMention) {
         Embed embed = new Embed();
         embed.setAuthor(riotId, Configs.getSettings().getWebsiteUri(), playerCardSmall);
         embed.setColor(209, 54, 57);
@@ -15,7 +15,9 @@ public class StatsEmbed {
         embed.setDescription("Click on one of the buttons below to see more information.");
         embed.addField("Level", Emoji.getLevel().getFormatted() + " " + level, true);
         embed.addField("Region", regionEmoji + " " + regionName, true);
-        embed.addField("Rank", "`Coming soon`", true);
+        if(connectionMention != null) {
+            embed.addField("Connection", Emoji.getDiscord().getFormatted() + " " + connectionMention, true);
+        }
         return embed.build();
     }
 

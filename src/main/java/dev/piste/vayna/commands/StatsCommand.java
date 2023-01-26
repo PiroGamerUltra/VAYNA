@@ -13,11 +13,12 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class StatsCommand {
 
     public static void performCommand(SlashCommandInteractionEvent event) {
+        LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
-                LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
+                linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
                 if (!linkedAccount.isExisting()) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
@@ -28,7 +29,7 @@ public class StatsCommand {
             // /stats user <@user>
             case "user" -> {
                 long discordUserId = event.getOption("user").getAsLong();
-                LinkedAccount linkedAccount = new LinkedAccount(discordUserId);
+                linkedAccount = new LinkedAccount(discordUserId);
 
                 if (!linkedAccount.isExisting()) {
                     if (discordUserId == event.getUser().getIdLong()) {
@@ -52,7 +53,7 @@ public class StatsCommand {
                 try {
                     riotAccount = RiotAccount.getByRiotId(gameName, tagLine);
 
-                    LinkedAccount linkedAccount = new LinkedAccount(riotAccount.getPuuid());
+                    linkedAccount = new LinkedAccount(riotAccount.getPuuid());
                     if (linkedAccount.isExisting()) {
                         if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
                             event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).queue();
@@ -86,7 +87,17 @@ public class StatsCommand {
             return;
         }
 
-        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), henrikAccount.getCard().getSmall(), henrikAccount.getAccountLevel(), riotAccount.getActiveShard().getPlatformData().getName(), regionEmoji)).queue();
+        String mention = null;
+        if(linkedAccount.getDiscordUserId() != 0) {
+            mention = Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention();
+        }
+
+        event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(),
+                henrikAccount.getCard().getSmall(),
+                henrikAccount.getAccountLevel(),
+                riotAccount.getActiveShard().getPlatformData().getName(),
+                regionEmoji,
+                mention)).queue();
     }
 
 }
