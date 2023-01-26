@@ -29,8 +29,19 @@ public class ConnectionCommand {
         } else {
             RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
 
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention())).setActionRow(
-                    Button.danger("connection;disconnect", "Disconnect")
+            String buttonId;
+            String emojiUnicode;
+            if(linkedAccount.isVisibleToPublic()) {
+                buttonId = "private";
+                emojiUnicode = "\uD83D\uDD12";
+            } else {
+                buttonId = "public";
+                emojiUnicode = "\uD83D\uDD13";
+            }
+
+            event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
+                    Button.danger("connection;disconnect", "Disconnect"),
+                    Button.secondary("connection;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
             ).queue();
         }
 

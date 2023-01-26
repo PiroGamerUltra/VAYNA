@@ -1,6 +1,5 @@
 package dev.piste.vayna.api.valorantapi.agent;
 
-
 public class Ability {
 
     private String slot;

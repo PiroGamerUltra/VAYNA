@@ -44,4 +44,11 @@ public class ErrorEmbed {
         return embed.build();
     }
 
+    public static MessageEmbed getLinkedAccountPrivate(User user) {
+        setupEmbed(user);
+        embed.setTitle("» Error");
+        embed.setDescription("This user has set his account to private mode.");
+        return embed.build();
+    }
+
 }

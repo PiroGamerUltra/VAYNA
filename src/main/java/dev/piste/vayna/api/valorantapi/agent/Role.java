@@ -1,6 +1,5 @@
 package dev.piste.vayna.api.valorantapi.agent;
 
-
 public class Role {
 
     private String uuid;

@@ -29,7 +29,7 @@ public class HelpCommand {
                 "» " + meSubcommand.getAsMention() + " " + meSubcommand.getDescription() + "\n" +
                 "» " + userSubcommand.getAsMention() + " " + userSubcommand.getDescription() + "\n" +
                 "» " + riotIdSubcommand.getAsMention() + " " + riotIdSubcommand.getDescription(), false);
-        //
+        // Info Commands
         embedBuilder.addField("Information Commands", "" +
                 "» " + CommandManager.findCommand("map").getAsMention() + " " + CommandManager.findCommand("map").getDescription() + "\n" +
                 "» " + CommandManager.findCommand("agent").getAsMention() + " " + CommandManager.findCommand("agent").getDescription(), false);

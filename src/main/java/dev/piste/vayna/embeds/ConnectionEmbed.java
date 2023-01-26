@@ -6,12 +6,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ConnectionEmbed {
 
-    public static MessageEmbed getConnectionPresent(String riotId, String discordMention) {
+    public static MessageEmbed getConnectionPresent(String riotId, String discordMention, boolean visibleToPublic) {
         Embed embed = new Embed();
         embed.setColor(209, 54, 57);
         embed.setTitle("» Connection");
         embed.setDescription("Your **Discord** account is currently connected with your **Riot-Games** account. To disconnect it, click the button below.");
-        embed.addField("Connection", discordMention + " " + Emoji.getDiscord().getFormatted() + " \uD83D\uDD17 " + Emoji.getRiotGames().getFormatted() + " `" + riotId + "`", false);
+        embed.addField("Connection", discordMention + " " + Emoji.getDiscord().getFormatted() + " \uD83D\uDD17 " + Emoji.getRiotGames().getFormatted() + " `" + riotId + "`", true);
+        embed.addField("Visibility", visibleToPublic ? "\uD83D\uDD13 Public" : "\uD83D\uDD12 Private", true);
         return embed.build();
     }
 

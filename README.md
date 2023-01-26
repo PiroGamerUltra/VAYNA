@@ -7,7 +7,7 @@ All commands work with the slash command function in Discord.
 ### General Commands
 - `/help` Look up general information about the bot and a list of all available commands
 ### Connection Commands
-- `/connection` Manage the connection to your Riot-Games account
+- `/connection` Manage the connection to your Riot-Games account and its visibility
 ### Statistic Commands
 - `/stats me` Get general information about your VALORANT profile
 - `/stats user <@user>` Get general information about a VALORANT profile from a Discord user

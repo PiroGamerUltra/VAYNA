@@ -44,6 +44,7 @@ public class Bot {
 
     public Bot() {
 
+
         Mongo.connect();
 
         TokensConfig tokensConfig = Configs.getTokens();

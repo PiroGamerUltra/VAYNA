@@ -38,7 +38,12 @@ public class StatsCommand {
                     }
                     return;
                 }
+                if(!linkedAccount.isVisibleToPublic() && (discordUserId != event.getUser().getIdLong())) {
+                    event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).queue();
+                    return;
+                }
                 riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
+
             }
             // /stats riot-id <name> <tag>
             case "riot-id" -> {
@@ -46,6 +51,14 @@ public class StatsCommand {
                 String tagLine = event.getOption("tag").getAsString();
                 try {
                     riotAccount = RiotAccount.getByRiotId(gameName, tagLine);
+
+                    LinkedAccount linkedAccount = new LinkedAccount(riotAccount.getPuuid());
+                    if (linkedAccount.isExisting()) {
+                        if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
+                            event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).queue();
+                            return;
+                        }
+                    }
                 } catch (RiotAccountException e) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
@@ -74,10 +87,6 @@ public class StatsCommand {
         }
 
         event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(), henrikAccount.getCard().getSmall(), henrikAccount.getAccountLevel(), riotAccount.getActiveShard().getPlatformData().getName(), regionEmoji)).queue();
-    }
-
-    private void performMeSubcommand(SlashCommandInteractionEvent event) {
-
     }
 
 }

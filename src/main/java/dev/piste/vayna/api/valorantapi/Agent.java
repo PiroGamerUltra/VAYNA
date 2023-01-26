@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.valorantapi.agent.Ability;
 import dev.piste.vayna.api.valorantapi.agent.Role;

@@ -26,4 +26,12 @@ public class Emoji {
         return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("TopGG", 1067899900773273720L, false);
     }
 
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getCheck() {
+        return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("Check", 1068238386441236530L, false);
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getCross() {
+        return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("Cross", 1068238620667957291L, false);
+    }
+
 }
