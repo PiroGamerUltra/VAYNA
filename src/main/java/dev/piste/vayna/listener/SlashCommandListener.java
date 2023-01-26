@@ -30,6 +30,10 @@ public class SlashCommandListener extends ListenerAdapter {
                 event.deferReply().queue();
                 AgentCommand.performCommand(event);
             }
+            case "gamemode" -> {
+                event.deferReply().queue();
+                GamemodeCommand.performCommand(event);
+            }
         }
 
     }

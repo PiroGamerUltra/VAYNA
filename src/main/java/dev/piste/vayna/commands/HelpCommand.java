@@ -32,7 +32,8 @@ public class HelpCommand {
         // Info Commands
         embedBuilder.addField("Information Commands", "" +
                 "» " + CommandManager.findCommand("map").getAsMention() + " " + CommandManager.findCommand("map").getDescription() + "\n" +
-                "» " + CommandManager.findCommand("agent").getAsMention() + " " + CommandManager.findCommand("agent").getDescription(), false);
+                "» " + CommandManager.findCommand("agent").getAsMention() + " " + CommandManager.findCommand("agent").getDescription() + "\n" +
+                "» " + CommandManager.findCommand("gamemode").getAsMention() + " " + CommandManager.findCommand("gamemode").getDescription(), false);
 
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(

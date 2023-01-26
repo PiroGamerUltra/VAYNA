@@ -2,10 +2,10 @@ package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.valorantapi.Agent;
+import dev.piste.vayna.api.valorantapi.Gamemode;
 import dev.piste.vayna.api.valorantapi.Map;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
@@ -23,6 +23,7 @@ public class CommandManager {
         commandList.add("stats");
         commandList.add("map");
         commandList.add("agent");
+        commandList.add("gamemode");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commandList.contains(command.getName())) {
@@ -68,6 +69,14 @@ public class CommandManager {
                     optionData.addChoice(agent.getDisplayName(), agent.getDisplayName());
                 }
                 Bot.getJDA().upsertCommand("agent", "Get information about a specific VALORANT agent").addOptions(optionData).queue();
+            }
+            case "gamemode" -> {
+                OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the gamemode", true);
+                for(Gamemode gamemode : Gamemode.getGamemodes()) {
+                    if(gamemode.getDisplayName().equalsIgnoreCase("Onboarding") || gamemode.getDisplayName().equalsIgnoreCase("PRACTICE")) continue;
+                    optionData.addChoice(gamemode.getDisplayName(), gamemode.getDisplayName());
+                }
+                Bot.getJDA().upsertCommand("gamemode", "Get information about a specific VALORANT gamemode").addOptions(optionData).queue();
             }
         }
     }
