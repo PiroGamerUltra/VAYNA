@@ -3,8 +3,6 @@ package dev.piste.vayna.mongodb;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
-import javax.print.Doc;
-
 import static com.mongodb.client.model.Filters.eq;
 
 public class LinkedAccount {

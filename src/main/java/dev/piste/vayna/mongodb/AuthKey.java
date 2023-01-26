@@ -1,7 +1,6 @@
 package dev.piste.vayna.mongodb;
 
 import com.mongodb.client.MongoCollection;
-import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 
 import java.util.UUID;
