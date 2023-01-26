@@ -1,11 +1,8 @@
 package dev.piste.vayna.api.henrik;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.henrik.account.Card;
@@ -14,24 +11,19 @@ import dev.piste.vayna.exceptions.HenrikAccountException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class HenrikAccount {
 
     private String puuid;
-    private int accountLevel;
+    private int account_level;
     private Card card;
 
     public static HenrikAccount getByRiotId(String gameName, String tagLine) throws HenrikAccountException {
-        JsonNode accountNode = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
-        if(accountNode.get("data") == null) throw new HenrikAccountException();
-        JsonNode dataNode = accountNode.get("data");
-        try {
-            HenrikAccount henrikAccount = Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<HenrikAccount>() {});
-            return henrikAccount;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        JsonObject jsonObject = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
+        JsonObject dataObject = jsonObject.getAsJsonObject("data");
+        System.out.println(dataObject.getAsString());
+        if(dataObject == null) throw new HenrikAccountException();
+        HenrikAccount henrikAccount = new Gson().fromJson(dataObject, HenrikAccount.class);
+        return henrikAccount;
     }
 
     public String getPuuid() {
@@ -39,7 +31,7 @@ public class HenrikAccount {
     }
 
     public int getAccountLevel() {
-        return accountLevel;
+        return account_level;
     }
 
     public Card getCard() {

@@ -1,15 +1,13 @@
 package dev.piste.vayna.api.valorantapi;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import dev.piste.vayna.Bot;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.api.HttpRequest;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Map {
 
     private String uuid;
@@ -20,30 +18,21 @@ public class Map {
     private String splash;
 
     public static Map getMapByName(String name) {
-        JsonNode mapsNode = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/maps");
-        JsonNode dataNode = mapsNode.get("data");
-        try {
-            List<Map> mapList = Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<List<Map>>() {});
-            Map map = new Map();
-            for(Map foundMap : mapList) {
-                if(foundMap.getDisplayName().equalsIgnoreCase(name)) {
-                    map = foundMap;
-                }
+        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/maps");
+        JsonArray dataArray = jsonObject.getAsJsonArray("data");
+        List<Map> mapList = new Gson().fromJson(dataArray, new TypeToken<List<Map>>(){}.getType());
+        for(Map foundMap : mapList) {
+            if(foundMap.getDisplayName().equalsIgnoreCase(name)) {
+                return foundMap;
             }
-            return map;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
+        return new Map();
     }
 
     public static List<Map> getMaps() {
-        JsonNode mapsNode = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/maps");
-        JsonNode dataNode = mapsNode.get("data");
-        try {
-            return Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<List<Map>>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/maps");
+        JsonArray dataArray = jsonObject.getAsJsonArray("data");
+        return new Gson().fromJson(dataArray, new TypeToken<List<Map>>(){}.getType());
     }
 
     public String getDisplayIcon() {

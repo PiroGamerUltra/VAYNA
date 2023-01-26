@@ -1,9 +1,10 @@
 package dev.piste.vayna.api.valorantapi;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.valorantapi.agent.Ability;
@@ -11,7 +12,6 @@ import dev.piste.vayna.api.valorantapi.agent.Role;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Agent {
 
     private String uuid;
@@ -25,30 +25,21 @@ public class Agent {
     private List<Ability> abilities;
 
     public static Agent getAgentByName(String name) {
-        JsonNode mapsNode = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/agents");
-        JsonNode dataNode = mapsNode.get("data");
-        try {
-            List<Agent> agentList = Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<List<Agent>>() {});
-            Agent agent = new Agent();
-            for(Agent foundAgent : agentList) {
-                if(foundAgent.getDisplayName().equalsIgnoreCase(name)) {
-                    agent = foundAgent;
-                }
+        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/agents");
+        JsonArray dataArray = jsonObject.getAsJsonArray("data");
+        List<Agent> agentList = new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
+        for(Agent foundAgent : agentList) {
+            if(foundAgent.getDisplayName().equalsIgnoreCase(name)) {
+                return foundAgent;
             }
-            return agent;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
+        return new Agent();
     }
 
     public static List<Agent> getAgents() {
-        JsonNode mapsNode = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/agents");
-        JsonNode dataNode = mapsNode.get("data");
-        try {
-            return Bot.getObjectMapper().readValue(Bot.getObjectMapper().writeValueAsString(dataNode), new TypeReference<List<Agent>>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/agents");
+        JsonArray dataArray = jsonObject.getAsJsonArray("data");
+        return new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
     }
 
     public String getUuid() {

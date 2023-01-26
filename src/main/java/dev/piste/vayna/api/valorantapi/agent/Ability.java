@@ -1,8 +1,6 @@
 package dev.piste.vayna.api.valorantapi.agent;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ability {
 
     private String slot;

@@ -1,8 +1,5 @@
 package dev.piste.vayna.api.henrik.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
 
     private String small;
