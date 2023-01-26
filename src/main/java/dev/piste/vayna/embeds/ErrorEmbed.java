@@ -1,6 +1,6 @@
 package dev.piste.vayna.embeds;
 
-import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -13,7 +13,7 @@ public class ErrorEmbed {
 
     private static void setupEmbed(User user) {
         embed.setColor(255, 0, 0);
-        embed.setAuthor(user.getName(), SettingsConfig.getWebsiteUri(), user.getAvatarUrl());
+        embed.setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
     }
 
     public static MessageEmbed getRiotIdNotFound(User user, String riotId) {

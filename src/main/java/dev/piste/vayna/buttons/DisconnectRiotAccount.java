@@ -1,6 +1,6 @@
 package dev.piste.vayna.buttons;
 
-import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
@@ -21,7 +21,7 @@ public class DisconnectRiotAccount {
         String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
         event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
-                Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
+                Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
         ).setEphemeral(true).queue();
     }
 

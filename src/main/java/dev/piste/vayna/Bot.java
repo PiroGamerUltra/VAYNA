@@ -1,8 +1,8 @@
 package dev.piste.vayna;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import dev.piste.vayna.config.TokensConfig;
+import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.tokens.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
 import dev.piste.vayna.listener.GuildJoinLeaveListener;
 import dev.piste.vayna.listener.SlashCommandListener;
@@ -51,7 +51,9 @@ public class Bot {
 
         Mongo.connect();
 
-        jda = JDABuilder.createDefault(isDebug() ? TokensConfig.getDevelopmentBotToken() : TokensConfig.getPublicBotToken())
+        TokensConfig tokensConfig = Configs.getTokens();
+
+        jda = JDABuilder.createDefault(isDebug() ? tokensConfig.getBot().getDevelopment() : tokensConfig.getBot().getVayna())
                 .addEventListeners(new SlashCommandListener())
                 .addEventListeners(new GuildJoinLeaveListener())
                 .addEventListeners(new ButtonInteractionListener())

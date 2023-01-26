@@ -1,7 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.api.riotgames.RiotAccount;
-import dev.piste.vayna.config.SettingsConfig;
+import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
@@ -24,7 +24,7 @@ public class ConnectionCommand {
             String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
-                    Button.link(SettingsConfig.getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
+                    Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());

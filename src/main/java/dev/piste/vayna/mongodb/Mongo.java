@@ -6,7 +6,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.config.TokensConfig;
+import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.FontColor;
 import org.bson.Document;
 
@@ -16,7 +16,7 @@ public class Mongo {
 
     public static void connect() {
 
-        ConnectionString uri = new ConnectionString(TokensConfig.getMongodbToken());
+        ConnectionString uri = new ConnectionString(Configs.getTokens().getMongodb());
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(uri)
                 .serverApi(ServerApi.builder()
