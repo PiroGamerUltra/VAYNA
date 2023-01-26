@@ -18,9 +18,9 @@ public class ChangeVisibilityButton {
         if(!linkedAccount.isExisting()) {
             String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
+            event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
                     Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
-            ).queue();
+            ).setEphemeral(true).queue();
         } else {
             RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
 
