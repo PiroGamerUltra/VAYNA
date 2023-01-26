@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.valorantapi.weapon.ShopData;
-import dev.piste.vayna.api.valorantapi.weapon.Skins;
 import dev.piste.vayna.api.valorantapi.weapon.WeaponStats;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class Weapon {
     private String displayIcon;
     private WeaponStats weaponStats;
     private ShopData shopData;
-    private List<Skins> skins;
 
     public static Weapon getWeaponByName(String name) {
         JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/weapons");
@@ -53,7 +51,4 @@ public class Weapon {
         return shopData;
     }
 
-    public List<Skins> getSkins() {
-        return skins;
-    }
 }

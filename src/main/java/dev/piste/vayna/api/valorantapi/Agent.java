@@ -19,7 +19,6 @@ public class Agent {
     private String developerName;
     private String displayIcon;
     private String fullPortrait;
-    private String background;
     private Role role;
     private List<Ability> abilities;
 
@@ -41,10 +40,6 @@ public class Agent {
         return new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
@@ -63,10 +58,6 @@ public class Agent {
 
     public String getFullPortrait() {
         return fullPortrait;
-    }
-
-    public String getBackground() {
-        return background;
     }
 
     public Role getRole() {

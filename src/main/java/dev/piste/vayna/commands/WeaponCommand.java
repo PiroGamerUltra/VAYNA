@@ -6,7 +6,6 @@ import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 public class WeaponCommand {
 

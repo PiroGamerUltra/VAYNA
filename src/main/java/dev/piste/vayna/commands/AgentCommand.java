@@ -40,11 +40,11 @@ public class AgentCommand {
             if(ability.getSlot().equalsIgnoreCase("Passive")) continue;
             String abilityKey;
             switch (ability.getSlot()) {
-                case "Ability1" -> { abilityKey = "Q";}
-                case "Ability2" -> { abilityKey = "E";}
-                case "Grenade" -> { abilityKey = "C";}
-                case "Ultimate" -> { abilityKey = "X";}
-                default -> { abilityKey = "Error";}
+                case "Ability1" -> abilityKey = "Q";
+                case "Ability2" -> abilityKey = "E";
+                case "Grenade" -> abilityKey = "C";
+                case "Ultimate" -> abilityKey = "X";
+                default -> abilityKey = "Error";
             }
             Embed abilityEmbed = new Embed();
             abilityEmbed.setTitle("» " + ability.getDisplayName() + " (" + abilityKey + ")")

@@ -12,8 +12,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class ConnectionCommand {
 
-    private static long rateLimitTimestampMillis = 0;
-
     public static void performCommand(SlashCommandInteractionEvent event) {
 
         StatsCounter.countConnections();
@@ -29,15 +27,8 @@ public class ConnectionCommand {
         } else {
             RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
 
-            String buttonId;
-            String emojiUnicode;
-            if(linkedAccount.isVisibleToPublic()) {
-                buttonId = "private";
-                emojiUnicode = "\uD83D\uDD12";
-            } else {
-                buttonId = "public";
-                emojiUnicode = "\uD83D\uDD13";
-            }
+            String buttonId = linkedAccount.isVisibleToPublic() ? "private" : "public";
+            String emojiUnicode = linkedAccount.isVisibleToPublic() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Button.danger("connection;disconnect", "Disconnect"),

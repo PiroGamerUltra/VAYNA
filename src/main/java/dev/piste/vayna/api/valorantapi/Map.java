@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Map {
 
-    private String uuid;
     private String displayName;
     private String coordinates;
     private String displayIcon;
@@ -41,10 +40,6 @@ public class Map {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public String getUuid() {
-        return uuid;
     }
 
     public String getCoordinates() {

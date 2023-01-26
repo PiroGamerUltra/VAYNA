@@ -1,8 +1,4 @@
 package dev.piste.vayna.util;
-/*
- * Author: Piste
- * Date: 26.05.2021
- */
 
 import dev.piste.vayna.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;

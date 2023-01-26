@@ -12,8 +12,8 @@ public class AuthKey {
     private long discordUserId;
     private String authKey;
     private static final MongoCollection<Document> authKeyCollection = Mongo.getAuthKeyCollection();
-    private Document authKeyDocument;
-    private boolean isExisting;
+    private final Document authKeyDocument;
+    private final boolean isExisting;
 
 
     public AuthKey(long discordUserId) {

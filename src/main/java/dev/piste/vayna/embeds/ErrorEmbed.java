@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 
 public class ErrorEmbed {
 
-    private static Embed embed = new Embed();
+    private static final Embed embed = new Embed();
 
     private static void setupEmbed(User user) {
         embed.setColor(255, 0, 0);

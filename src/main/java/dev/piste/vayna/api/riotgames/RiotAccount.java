@@ -1,7 +1,6 @@
 package dev.piste.vayna.api.riotgames;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.piste.vayna.api.HttpRequest;
 import dev.piste.vayna.api.henrik.HenrikAccount;

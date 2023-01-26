@@ -41,12 +41,8 @@ public class CommandManager {
 
     private static void createCommand(String commandName) {
         switch (commandName) {
-            case "help" -> {
-                Bot.getJDA().upsertCommand("help", "Look up general information about the bot and a list of all available commands").queue();
-            }
-            case "connection" -> {
-                Bot.getJDA().upsertCommand("connection", "Manage the connection to your Riot-Games account and its visibility").queue();
-            }
+            case "help" -> Bot.getJDA().upsertCommand("help", "Look up general information about the bot and a list of all available commands").queue();
+            case "connection" -> Bot.getJDA().upsertCommand("connection", "Manage the connection to your Riot-Games account and its visibility").queue();
             case "stats" -> {
                 SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
                         .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
