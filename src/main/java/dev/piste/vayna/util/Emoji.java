@@ -34,4 +34,8 @@ public class Emoji {
         return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("Cross", 1068238620667957291L, false);
     }
 
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getVP() {
+        return net.dv8tion.jda.api.entities.emoji.Emoji.fromCustom("VP", 1068279053292941453L, false);
+    }
+
 }

@@ -4,6 +4,7 @@ import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.valorantapi.Agent;
 import dev.piste.vayna.api.valorantapi.Gamemode;
 import dev.piste.vayna.api.valorantapi.Map;
+import dev.piste.vayna.api.valorantapi.Weapon;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -24,6 +25,7 @@ public class CommandManager {
         commandList.add("map");
         commandList.add("agent");
         commandList.add("gamemode");
+        commandList.add("weapon");
 
         for(Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commandList.contains(command.getName())) {
@@ -77,6 +79,13 @@ public class CommandManager {
                     optionData.addChoice(gamemode.getDisplayName(), gamemode.getDisplayName());
                 }
                 Bot.getJDA().upsertCommand("gamemode", "Get information about a specific VALORANT gamemode").addOptions(optionData).queue();
+            }
+            case "weapon" -> {
+                OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the weapon", true);
+                for(Weapon weapon : Weapon.getWeapons()) {
+                    optionData.addChoice(weapon.getDisplayName(), weapon.getDisplayName());
+                }
+                Bot.getJDA().upsertCommand("weapon", "Get information about a specific VALORANT weapon").addOptions(optionData).queue();
             }
         }
     }

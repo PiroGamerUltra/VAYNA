@@ -65,9 +65,6 @@ public class StatsCommand {
                     return;
                 }
             }
-            default -> {
-                riotAccount = null;
-            }
         }
 
         String regionEmoji = switch (riotAccount.getActiveShard().getActiveShard()) {

@@ -43,4 +43,5 @@ public class Gamemode {
     public String getDuration() {
         return duration;
     }
+
 }

@@ -16,6 +16,7 @@ All commands work with the slash command function in Discord.
 - `/map <name>` Get information about a specific VALORANT map
 - `/agent <name>` Get information about a specific VALORANT agent
 - `/gamemode <name>` Get information about a specific VALORANT gamemode
+- `/weapon <name>` Get information about a specific VALORANT weapon
 ## Used APIs
 - [Riot-Games offcial API](https://developer.riotgames.com/)
 - [HenrikDev's unofficial VALORANT API](https://github.com/Henrik-3/unofficial-valorant-api)
