@@ -2,6 +2,7 @@ package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.api.henrik.HenrikAccount;
+import dev.piste.vayna.api.riotgames.ActiveShard;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.exceptions.HenrikAccountException;
@@ -67,14 +68,23 @@ public class StatsCommand {
             }
         }
 
-        String regionEmoji = switch (riotAccount.getActiveShard().getActiveShard()) {
-            case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
-            case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
-            case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
-            case "kr" -> "\uD83C\uDDF0\uD83C\uDDF7";
-            case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
-            default -> "none";
-        };
+        String regionEmoji = null;
+        String regionName = null;
+        try {
+            ActiveShard activeShard = riotAccount.getActiveShard();
+            regionEmoji = switch (activeShard.getActiveShard()) {
+                case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
+                case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
+                case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
+                case "kr" -> "\uD83C\uDDF0\uD83C\uDDF7";
+                case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
+                default -> "none";
+            };
+            regionName = riotAccount.getActiveShard().getPlatformData().getName();
+        } catch (RiotAccountException e) {
+            regionEmoji = "❓";
+            regionName = "None";
+        }
 
         HenrikAccount henrikAccount;
         try {
@@ -92,7 +102,7 @@ public class StatsCommand {
         event.getHook().editOriginalEmbeds(StatsEmbed.getStats(riotAccount.getRiotId(),
                 henrikAccount.getCard().getSmall(),
                 henrikAccount.getAccountLevel(),
-                riotAccount.getActiveShard().getPlatformData().getName(),
+                regionName,
                 regionEmoji,
                 mention)).queue();
     }

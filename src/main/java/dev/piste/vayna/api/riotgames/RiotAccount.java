@@ -45,7 +45,7 @@ public class RiotAccount {
         return gameName + "#" + tagLine;
     }
 
-    public ActiveShard getActiveShard() {
+    public ActiveShard getActiveShard() throws RiotAccountException {
         return ActiveShard.getByPuuid(puuid);
     }
 
