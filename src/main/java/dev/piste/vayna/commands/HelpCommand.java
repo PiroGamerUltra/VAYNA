@@ -1,40 +1,42 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class HelpCommand {
+public class HelpCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
-
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().setEphemeral(true).queue();
         Embed embedBuilder = new Embed();
         embedBuilder.setTitle("» Help");
         embedBuilder.addField("Version", "The current version of the bot is `v" + Configs.getSettings().getVersion() + "`", true);
         // General
         embedBuilder.addField("General Commands",  "" +
-                "» " + CommandManager.findCommand("help").getAsMention() + " " + CommandManager.findCommand("help").getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new HelpCommand()).getDescription(), false);
         // /connection
         embedBuilder.addField("Connection Commands",  "" +
-                "» " + CommandManager.findCommand("connection").getAsMention() + " " + CommandManager.findCommand("connection").getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getDescription(), false);
         // /stats
-        Command.Subcommand meSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "me");
-        Command.Subcommand userSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "user");
-        Command.Subcommand riotIdSubcommand = CommandManager.findSubcommand(CommandManager.findCommand("stats"), "riot-id");
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand1 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(0);
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand2 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(1);
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand3 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(2);
         embedBuilder.addField("Statistic Commands", "" +
-                "» " + meSubcommand.getAsMention() + " " + meSubcommand.getDescription() + "\n" +
-                "» " + userSubcommand.getAsMention() + " " + userSubcommand.getDescription() + "\n" +
-                "» " + riotIdSubcommand.getAsMention() + " " + riotIdSubcommand.getDescription(), false);
+                "» " + subcommand1.getAsMention() + " " + subcommand1.getDescription() + "\n" +
+                "» " + subcommand2.getAsMention() + " " + subcommand2.getDescription() + "\n" +
+                "» " + subcommand3.getAsMention() + " " + subcommand3.getDescription(), false);
         // Info Commands
         embedBuilder.addField("Information Commands", "" +
-                "» " + CommandManager.findCommand("map").getAsMention() + " " + CommandManager.findCommand("map").getDescription() + "\n" +
-                "» " + CommandManager.findCommand("agent").getAsMention() + " " + CommandManager.findCommand("agent").getDescription() + "\n" +
-                "» " + CommandManager.findCommand("gamemode").getAsMention() + " " + CommandManager.findCommand("gamemode").getDescription() + "\n" +
-                "» " + CommandManager.findCommand("weapon").getAsMention() + " " + CommandManager.findCommand("weapon").getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new MapCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new MapCommand()).getDescription() + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new AgentCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new AgentCommand()).getDescription() + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getDescription() + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new WeaponCommand()).getDescription(), false);
 
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
@@ -42,7 +44,20 @@ public class HelpCommand {
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
         ).queue();
-
     }
 
+    @Override
+    public void register() {
+        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+    }
+
+    @Override
+    public String getName() {
+        return "help";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Look up general information about the bot and a list of all available commands";
+    }
 }

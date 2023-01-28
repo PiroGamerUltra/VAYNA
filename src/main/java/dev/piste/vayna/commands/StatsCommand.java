@@ -1,6 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.api.henrik.HenrikAccount;
 import dev.piste.vayna.api.riotgames.ActiveShard;
 import dev.piste.vayna.api.riotgames.RiotAccount;
@@ -10,10 +11,15 @@ import dev.piste.vayna.exceptions.RiotAccountException;
 import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
-public class StatsCommand {
+public class StatsCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
         LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
         switch (event.getSubcommandName()) {
@@ -88,7 +94,7 @@ public class StatsCommand {
 
         HenrikAccount henrikAccount;
         try {
-             henrikAccount = riotAccount.getHenrikAccount();
+            henrikAccount = riotAccount.getHenrikAccount();
         } catch (HenrikAccountException e) {
             event.getHook().editOriginalEmbeds(ErrorEmbed.getHenrikApiError(event.getUser())).queue();
             return;
@@ -107,4 +113,24 @@ public class StatsCommand {
                 mention)).queue();
     }
 
+    @Override
+    public void register() {
+        SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
+                .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
+        SubcommandData riotIdSub = new SubcommandData("riot-id", "Get general information about a VALORANT profile by providing a Riot-ID")
+                .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
+                .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
+        SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
+        Bot.getJDA().upsertCommand(getName(), getDescription()).addSubcommands(userSub, riotIdSub, meSub).queue();
+    }
+
+    @Override
+    public String getName() {
+        return "stats";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Get general information about a VALORANT profile";
+    }
 }

@@ -1,5 +1,6 @@
 package dev.piste.vayna.embeds;
 
+import dev.piste.vayna.commands.ConnectionCommand;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
@@ -40,7 +41,7 @@ public class ErrorEmbed {
     public static MessageEmbed getSelfRiotAccountNotConnected(User user) {
         setupEmbed(user);
         embed.setTitle("» Error");
-        embed.setDescription("You haven't connected your **Riot-Games** account yet. If you want to, you can do it with " + CommandManager.findCommand("connection").getAsMention() + ".");
+        embed.setDescription("You haven't connected your **Riot-Games** account yet. If you want to, you can do it with " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + ".");
         return embed.build();
     }
 

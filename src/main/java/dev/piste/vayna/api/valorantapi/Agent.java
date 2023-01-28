@@ -20,6 +20,7 @@ public class Agent {
     private String displayIcon;
     private String fullPortrait;
     private Role role;
+    private boolean isPlayableCharacter;
     private List<Ability> abilities;
 
     public static Agent getAgentByName(String name) {
@@ -27,6 +28,7 @@ public class Agent {
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         List<Agent> agentList = new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
         for(Agent foundAgent : agentList) {
+            if(!foundAgent.isPlayableCharacter) continue;
             if(foundAgent.getDisplayName().equalsIgnoreCase(name)) {
                 return foundAgent;
             }
@@ -62,6 +64,10 @@ public class Agent {
 
     public Role getRole() {
         return role;
+    }
+
+    public boolean isPlayableCharacter() {
+        return isPlayableCharacter;
     }
 
     public List<Ability> getAbilities() {

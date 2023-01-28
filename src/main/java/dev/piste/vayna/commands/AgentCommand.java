@@ -1,5 +1,7 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.api.valorantapi.Agent;
 import dev.piste.vayna.api.valorantapi.agent.Ability;
 import dev.piste.vayna.config.Configs;
@@ -7,13 +9,18 @@ import dev.piste.vayna.config.settings.SettingsConfig;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgentCommand {
+public class AgentCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
         SettingsConfig settingsConfig = Configs.getSettings();
         Agent agent = Agent.getAgentByName(event.getOption("name").getAsString());
 
@@ -58,4 +65,24 @@ public class AgentCommand {
         event.getHook().editOriginalEmbeds(embedList).queue();
     }
 
+
+    @Override
+    public String getName() {
+        return "agent";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Retrieve general information about a VALORANT agent";
+    }
+
+    @Override
+    public void register() {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the agent", true);
+        for(Agent agent : Agent.getAgents()) {
+            if(!agent.isPlayableCharacter()) continue;
+            optionData.addChoice(agent.getDisplayName(), agent.getDisplayName());
+        }
+        Bot.getJDA().upsertCommand(getName(), getDescription()).addOptions(optionData).queue();
+    }
 }

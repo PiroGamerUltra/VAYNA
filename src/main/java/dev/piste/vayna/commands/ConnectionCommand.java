@@ -1,5 +1,7 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.api.riotgames.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
@@ -10,9 +12,11 @@ import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class ConnectionCommand {
+public class ConnectionCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().setEphemeral(true).queue();
 
         StatsCounter.countConnections();
 
@@ -35,7 +39,20 @@ public class ConnectionCommand {
                     Button.secondary("connection;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
             ).queue();
         }
-
     }
 
+    @Override
+    public void register() {
+        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+    }
+
+    @Override
+    public String getName() {
+        return "connection";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Manage the connection to your Riot-Games account and its visibility";
+    }
 }

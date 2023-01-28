@@ -1,13 +1,21 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.api.valorantapi.Map;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class MapCommand {
+public class MapCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
+
         Map map = Map.getMapByName(event.getOption("name").getAsString());
 
         Embed embed = new Embed();
@@ -17,6 +25,26 @@ public class MapCommand {
         embed.setImage(map.getSplash());
         embed.setThumbnail(map.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
+    }
+
+    @Override
+    public void register() {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the map", true);
+        for(Map map : Map.getMaps()) {
+            if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
+            optionData.addChoice(map.getDisplayName(), map.getDisplayName());
+        }
+        Bot.getJDA().upsertCommand(getName(), getDescription()).addOptions(optionData).queue();
+    }
+
+    @Override
+    public String getName() {
+        return "map";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Get information about a specific VALORANT map";
     }
 
 }

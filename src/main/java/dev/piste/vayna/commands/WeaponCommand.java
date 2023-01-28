@@ -1,15 +1,21 @@
 package dev.piste.vayna.commands;
 
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.Command;
 import dev.piste.vayna.api.valorantapi.Weapon;
 import dev.piste.vayna.api.valorantapi.weapon.DamageRanges;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class WeaponCommand {
+public class WeaponCommand implements Command {
 
-    public static void performCommand(SlashCommandInteractionEvent event) {
+    @Override
+    public void perform(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
 
         Weapon weapon = Weapon.getWeaponByName(event.getOption("name").getAsString());
 
@@ -32,7 +38,24 @@ public class WeaponCommand {
         }
         embed.setImage(weapon.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
-
     }
 
+    @Override
+    public void register() {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the weapon", true);
+        for(Weapon weapon : Weapon.getWeapons()) {
+            optionData.addChoice(weapon.getDisplayName(), weapon.getDisplayName());
+        }
+        Bot.getJDA().upsertCommand(getName(), getDescription()).addOptions(optionData).queue();
+    }
+
+    @Override
+    public String getName() {
+        return "weapon";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Get information about a specific VALORANT weapon";
+    }
 }

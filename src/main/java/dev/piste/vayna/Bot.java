@@ -61,7 +61,7 @@ public class Bot {
                 .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .build();
 
-        CommandManager.createCommands();
+        CommandManager.registerCommands();
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 
