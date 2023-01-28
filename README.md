@@ -19,7 +19,7 @@ All commands work with the slash command function in Discord.
 - `/weapon <name>` Get information about a specific VALORANT weapon
 - `/store <name>` Get information about the current bundle in the VALORANT store
 ## Used APIs
-- [Riot-Games offcial API](https://developer.riotgames.com/)
+- [Riot-Games official API](https://developer.riotgames.com/)
 - [HenrikDev's unofficial VALORANT API](https://github.com/Henrik-3/unofficial-valorant-api)
 - [VALORANT-API.com](https://valorant-api.com/)
 ## Contact
