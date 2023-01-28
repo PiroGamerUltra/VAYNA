@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.apis.HttpRequest;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.exceptions.HenrikAccountException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,10 +14,10 @@ import java.util.List;
 
 public class HenrikAPI {
 
-    public static HenrikAccount getAccountByRiotId(String gameName, String tagLine) throws HenrikAccountException {
+    public static HenrikAccount getAccountByRiotId(String gameName, String tagLine) throws HenrikApiException {
         JsonObject jsonObject = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
-        if(dataObject == null) throw new HenrikAccountException();
+        if(dataObject == null) throw new HenrikApiException();
         return new Gson().fromJson(dataObject, HenrikAccount.class);
     }
 

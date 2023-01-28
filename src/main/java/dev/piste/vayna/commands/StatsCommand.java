@@ -7,8 +7,8 @@ import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.embeds.ErrorEmbed;
-import dev.piste.vayna.exceptions.HenrikAccountException;
-import dev.piste.vayna.exceptions.RiotAccountException;
+import dev.piste.vayna.apis.henrik.HenrikApiException;
+import dev.piste.vayna.apis.riotgames.RiotApiException;
 import dev.piste.vayna.embeds.StatsEmbed;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -68,7 +68,7 @@ public class StatsCommand implements Command {
                             return;
                         }
                     }
-                } catch (RiotAccountException e) {
+                } catch (RiotApiException e) {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).queue();
                     return;
                 }
@@ -88,7 +88,7 @@ public class StatsCommand implements Command {
                 default -> "none";
             };
             regionName = riotAccount.getActiveShard().getPlatformData().getName();
-        } catch (RiotAccountException e) {
+        } catch (RiotApiException e) {
             regionEmoji = "❓";
             regionName = "None";
         }
@@ -96,7 +96,7 @@ public class StatsCommand implements Command {
         HenrikAccount henrikAccount;
         try {
             henrikAccount = riotAccount.getHenrikAccount();
-        } catch (HenrikAccountException e) {
+        } catch (HenrikApiException e) {
             event.getHook().editOriginalEmbeds(ErrorEmbed.getHenrikApiError(event.getUser())).queue();
             return;
         }

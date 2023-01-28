@@ -3,8 +3,8 @@ package dev.piste.vayna.apis.riotgames.gson;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
-import dev.piste.vayna.exceptions.HenrikAccountException;
-import dev.piste.vayna.exceptions.RiotAccountException;
+import dev.piste.vayna.apis.henrik.HenrikApiException;
+import dev.piste.vayna.apis.riotgames.RiotApiException;
 
 // GSON CLAS
 public class RiotAccount {
@@ -29,11 +29,11 @@ public class RiotAccount {
         return gameName + "#" + tagLine;
     }
 
-    public HenrikAccount getHenrikAccount() throws HenrikAccountException {
+    public HenrikAccount getHenrikAccount() throws HenrikApiException {
         return HenrikAPI.getAccountByRiotId(gameName, tagLine);
     }
 
-    public ActiveShard getActiveShard() throws RiotAccountException {
+    public ActiveShard getActiveShard() throws RiotApiException {
         return RiotAPI.getActiveShard(puuid);
     }
 
