@@ -1,12 +1,15 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.api.valorantapi.Buddy;
-import dev.piste.vayna.api.valorantapi.Playercard;
-import dev.piste.vayna.api.valorantapi.Spray;
+import dev.piste.vayna.apis.henrik.HenrikAPI;
+import dev.piste.vayna.apis.valorantapi.ValorantAPI;
+import dev.piste.vayna.apis.valorantapi.gson.Buddy;
+import dev.piste.vayna.apis.valorantapi.gson.Bundle;
+import dev.piste.vayna.apis.valorantapi.gson.Playercard;
+import dev.piste.vayna.apis.valorantapi.gson.Spray;
 import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.api.henrik.CurrentBundle;
-import dev.piste.vayna.api.henrik.store.Item;
+import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
+import dev.piste.vayna.apis.henrik.gson.store.Item;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.settings.SettingsConfig;
 import dev.piste.vayna.util.Embed;
@@ -28,17 +31,18 @@ public class StoreCommand implements Command {
 
         List<MessageEmbed> embedList = new ArrayList<>();
 
-        for(CurrentBundle currentBundle : CurrentBundle.getCurrentBundles()) {
+        for(CurrentBundle currentBundle : HenrikAPI.getCurrentBundles()) {
+            Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid());
             Embed bundleEmbed = new Embed()
                     .setAuthor(event.getUser().getName(), settingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl())
-                    .setTitle("» " + currentBundle.getBundle().getDisplayName())
+                    .setTitle("» " + bundle.getDisplayName())
                     .addField("Price", currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
-                    .setImage(currentBundle.getBundle().getDisplayIcon());
+                    .setImage(bundle.getDisplayIcon());
             embedList.add(bundleEmbed.build());
 
             for(Item item : currentBundle.getItems()) {
                 if(item.getType().equalsIgnoreCase("buddy")) {
-                    Buddy buddy = Buddy.get(item.getUuid());
+                    Buddy buddy = ValorantAPI.getBuddy(item.getUuid());
                     Embed itemEmbed = new Embed()
                             .removeFooter()
                             .setTitle("» " + buddy.getDisplayName())
@@ -47,7 +51,7 @@ public class StoreCommand implements Command {
                             .setThumbnail(buddy.getDisplayIcon());
                     embedList.add(itemEmbed.build());
                 } else if(item.getType().equalsIgnoreCase("player_card")) {
-                    Playercard playercard = Playercard.get(item.getUuid());
+                    Playercard playercard = ValorantAPI.getPlayercard(item.getUuid());
                     Embed itemEmbed = new Embed()
                             .removeFooter()
                             .setTitle("» " + playercard.getDisplayName())
@@ -57,7 +61,7 @@ public class StoreCommand implements Command {
                             .setImage(playercard.getWideArt());
                     embedList.add(itemEmbed.build());
                 } else if(item.getType().equalsIgnoreCase("spray")) {
-                    Spray spray = Spray.get(item.getUuid());
+                    Spray spray = ValorantAPI.getSpray(item.getUuid());
                     Embed itemEmbed = new Embed()
                             .removeFooter()
                             .setTitle("» " + spray.getDisplayName())

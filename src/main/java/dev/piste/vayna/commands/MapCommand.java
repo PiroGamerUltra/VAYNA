@@ -1,8 +1,9 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.api.valorantapi.Map;
+import dev.piste.vayna.apis.valorantapi.gson.Map;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,7 +17,7 @@ public class MapCommand implements Command {
         event.deferReply().queue();
 
 
-        Map map = Map.getMapByName(event.getOption("name").getAsString());
+        Map map = ValorantAPI.getMapByName(event.getOption("name").getAsString());
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
@@ -30,7 +31,7 @@ public class MapCommand implements Command {
     @Override
     public void register() {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the map", true);
-        for(Map map : Map.getMaps()) {
+        for(Map map : ValorantAPI.getMaps()) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
             optionData.addChoice(map.getDisplayName(), map.getDisplayName());
         }

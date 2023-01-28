@@ -1,6 +1,7 @@
 package dev.piste.vayna.buttons;
 
-import dev.piste.vayna.api.riotgames.RiotAccount;
+import dev.piste.vayna.apis.riotgames.RiotAPI;
+import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
@@ -22,7 +23,7 @@ public class ChangeVisibilityButton {
                     Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
             ).setEphemeral(true).queue();
         } else {
-            RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
+            RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
             linkedAccount.delete();
 

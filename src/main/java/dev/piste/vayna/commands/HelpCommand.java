@@ -36,7 +36,8 @@ public class HelpCommand implements Command {
                 "» " + CommandManager.getAsJdaCommand(new MapCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new MapCommand()).getDescription() + "\n" +
                 "» " + CommandManager.getAsJdaCommand(new AgentCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new AgentCommand()).getDescription() + "\n" +
                 "» " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new WeaponCommand()).getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new WeaponCommand()).getDescription() + "\n" +
+                "» "  + CommandManager.getAsJdaCommand(new StoreCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new StoreCommand()).getDescription(), false);
 
 
         event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(

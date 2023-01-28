@@ -1,8 +1,9 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.api.riotgames.RiotAccount;
+import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.embeds.ConnectionEmbed;
@@ -29,7 +30,7 @@ public class ConnectionCommand implements Command {
                     Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
             ).queue();
         } else {
-            RiotAccount riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
+            RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
             String buttonId = linkedAccount.isVisibleToPublic() ? "private" : "public";
             String emojiUnicode = linkedAccount.isVisibleToPublic() ? "\uD83D\uDD12" : "\uD83D\uDD13";

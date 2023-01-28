@@ -1,10 +1,11 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.api.henrik.HenrikAccount;
-import dev.piste.vayna.api.riotgames.ActiveShard;
-import dev.piste.vayna.api.riotgames.RiotAccount;
+import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
+import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
+import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.exceptions.HenrikAccountException;
 import dev.piste.vayna.exceptions.RiotAccountException;
@@ -31,7 +32,7 @@ public class StatsCommand implements Command {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).queue();
                     return;
                 }
-                riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
+                riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
             }
             // /stats user <@user>
             case "user" -> {
@@ -50,7 +51,7 @@ public class StatsCommand implements Command {
                     event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).queue();
                     return;
                 }
-                riotAccount = RiotAccount.getByPuuid(linkedAccount.getRiotPuuid());
+                riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
             }
             // /stats riot-id <name> <tag>
@@ -58,7 +59,7 @@ public class StatsCommand implements Command {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
-                    riotAccount = RiotAccount.getByRiotId(gameName, tagLine);
+                    riotAccount = RiotAPI.getAccountByRiotId(gameName, tagLine);
 
                     linkedAccount = new LinkedAccount(riotAccount.getPuuid());
                     if (linkedAccount.isExisting()) {
