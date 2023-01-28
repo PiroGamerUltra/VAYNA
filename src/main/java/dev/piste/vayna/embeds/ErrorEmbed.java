@@ -52,4 +52,11 @@ public class ErrorEmbed {
         return embed.build();
     }
 
+    public static MessageEmbed getNoRegion(User user) {
+        setupEmbed(user);
+        embed.setTitle("» Error");
+        embed.setDescription("An error occurred while trying to receive the region for this Riot-ID.");
+        return embed.build();
+    }
+
 }
