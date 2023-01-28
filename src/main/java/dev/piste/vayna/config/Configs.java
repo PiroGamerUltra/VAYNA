@@ -11,8 +11,7 @@ public class Configs {
 
     public static SettingsConfig getSettings() {
         try (FileReader reader = new FileReader("settings.json")) {
-            SettingsConfig settingsConfig = new Gson().fromJson(reader, SettingsConfig.class);
-            return settingsConfig;
+            return new Gson().fromJson(reader, SettingsConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -20,8 +19,7 @@ public class Configs {
 
     public static TokensConfig getTokens() {
         try (FileReader reader = new FileReader("tokens.json")) {
-            TokensConfig tokensConfig = new Gson().fromJson(reader, TokensConfig.class);
-            return tokensConfig;
+            return new Gson().fromJson(reader, TokensConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

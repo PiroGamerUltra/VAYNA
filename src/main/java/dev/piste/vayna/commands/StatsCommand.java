@@ -74,8 +74,8 @@ public class StatsCommand implements Command {
             }
         }
 
-        String regionEmoji = null;
-        String regionName = null;
+        String regionEmoji;
+        String regionName;
         try {
             ActiveShard activeShard = riotAccount.getActiveShard();
             regionEmoji = switch (activeShard.getActiveShard()) {

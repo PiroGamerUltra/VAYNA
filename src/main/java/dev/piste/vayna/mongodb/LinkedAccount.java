@@ -11,8 +11,8 @@ public class LinkedAccount {
     private String riotPuuid;
     private boolean visibleToPublic;
     private static final MongoCollection<Document> linkedAccountCollection = Mongo.getLinkedAccountCollection();
-    private Document linkedAccount;
-    private boolean isExisting;
+    private final Document linkedAccount;
+    private final boolean isExisting;
 
     public LinkedAccount(long discordUserId) {
         this.discordUserId = discordUserId;

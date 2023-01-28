@@ -2,11 +2,8 @@ package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.Command;
-import dev.piste.vayna.api.valorantapi.Agent;
 import dev.piste.vayna.commands.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collection;
 import java.util.HashMap;
