@@ -1,7 +1,6 @@
 package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.Command;
 import dev.piste.vayna.commands.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -21,6 +20,7 @@ public class CommandManager {
         addCommand(new MapCommand());
         addCommand(new StatsCommand());
         addCommand(new WeaponCommand());
+        addCommand(new StoreCommand());
 
         for(net.dv8tion.jda.api.interactions.commands.Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commands.containsKey(command.getName().toLowerCase())) {

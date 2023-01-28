@@ -1,7 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.Command;
+import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.api.henrik.HenrikAccount;
 import dev.piste.vayna.api.riotgames.ActiveShard;
 import dev.piste.vayna.api.riotgames.RiotAccount;

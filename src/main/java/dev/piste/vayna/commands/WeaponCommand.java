@@ -1,7 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.Command;
+import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.api.valorantapi.Weapon;
 import dev.piste.vayna.api.valorantapi.weapon.DamageRanges;
 import dev.piste.vayna.config.Configs;
