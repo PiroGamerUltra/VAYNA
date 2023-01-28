@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
+import java.util.UUID;
+
 public class StatsCommand implements Command {
 
     @Override
@@ -27,6 +29,8 @@ public class StatsCommand implements Command {
 
         LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
+
+        if(event.getSubcommandName() == null) return;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
@@ -121,6 +125,10 @@ public class StatsCommand implements Command {
             return;
         }
 
+        String uuid = UUID.randomUUID().toString();
+
+        Bot.getStatsButtonMap().put(uuid, riotAccount);
+
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall());
         embed.setColor(209, 54, 57);
@@ -131,6 +139,9 @@ public class StatsCommand implements Command {
         if(linkedAccount.isExisting()) {
             embed.addField("Connection", Emoji.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
         }
+        event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
+                Button.secondary("rank;" + uuid, "Rank").withEmoji(Emoji.getRankByTierName("Unranked"))
+        ).queue();
     }
 
     @Override

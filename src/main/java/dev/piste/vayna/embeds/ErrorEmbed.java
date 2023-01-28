@@ -59,4 +59,11 @@ public class ErrorEmbed {
         return embed.build();
     }
 
+    public static MessageEmbed getButtonTooOld(User user) {
+        setupEmbed(user);
+        embed.setTitle("» Error");
+        embed.setDescription("This button is too old. Please execute the command again and try again.");
+        return embed.build();
+    }
+
 }

@@ -92,4 +92,14 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Spray.class);
     }
 
+    public static CompetitiveTier getLatestCompetitiveTier() {
+        return getCompetitiveTiers().get(getCompetitiveTiers().size()-1);
+    }
+
+    public static List<CompetitiveTier> getCompetitiveTiers() {
+        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/competitivetiers");
+        JsonArray dataArray = jsonObject.getAsJsonArray("data");
+        return new Gson().fromJson(dataArray, new TypeToken<List<CompetitiveTier>>(){}.getType());
+    }
+
 }

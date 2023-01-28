@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.entities.Guild;
 
 public class Emoji {
 
-    private static Guild emojiGuild1 = Bot.getJDA().getGuildById(1067157722967052402L);
-    private static Guild emojiGuild2 = Bot.getJDA().getGuildById(1067158120670961785L);
+    private static final Guild emojiGuild1 = Bot.getJDA().getGuildById(1067157722967052402L);
+    private static final Guild emojiGuild2 = Bot.getJDA().getGuildById(1067158120670961785L);
 
     public static net.dv8tion.jda.api.entities.emoji.Emoji getRiotGames() {
         return emojiGuild1.getEmojiById(1067160525487747192L);
@@ -42,6 +42,77 @@ public class Emoji {
 
     public static net.dv8tion.jda.api.entities.emoji.Emoji getVP() {
         return emojiGuild1.getEmojiById(1068279053292941453L);
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getRankByTierName(String tierName) {
+        net.dv8tion.jda.api.entities.emoji.Emoji emoji = null;
+        switch (tierName) {
+            case "Unranked" -> emoji = emojiGuild2.getEmojiById(1068966345468817459L);
+            case "Iron 1" -> emoji = emojiGuild2.getEmojiById(1068965683179827210L);
+            case "Iron 2" -> emoji = emojiGuild2.getEmojiById(1068965679736295524L);
+            case "Iron 3" -> emoji = emojiGuild2.getEmojiById(1068965675336482927L);
+            case "Bronze 1" -> emoji = emojiGuild2.getEmojiById(1068965669439291402L);
+            case "Bronze 2" -> emoji = emojiGuild2.getEmojiById(1068965664783609897L);
+            case "Bronze 3" -> emoji = emojiGuild2.getEmojiById(1068965659955970068L);
+            case "Silver 1" -> emoji = emojiGuild2.getEmojiById(1068965656189480960L);
+            case "Silver 2" -> emoji = emojiGuild2.getEmojiById(1068965651735117824L);
+            case "Silver 3" -> emoji = emojiGuild2.getEmojiById(1068965647058468917L);
+            case "Gold 1" -> emoji = emojiGuild2.getEmojiById(1068965641991749723L);
+            case "Gold 2" -> emoji = emojiGuild2.getEmojiById(1068965637277364274L);
+            case "Gold 3" -> emoji = emojiGuild2.getEmojiById(1068965632160309411L);
+            case "Platinum 1" -> emoji = emojiGuild2.getEmojiById(1068965626468642828L);
+            case "Platinum 2" -> emoji = emojiGuild2.getEmojiById(1068965622702149782L);
+            case "Platinum 3" -> emoji = emojiGuild2.getEmojiById(1068965619531268146L);
+            case "Diamond 1" -> emoji = emojiGuild2.getEmojiById(1068965614829457428L);
+            case "Diamond 2" -> emoji = emojiGuild2.getEmojiById(1068965610161197168L);
+            case "Diamond 3" -> emoji = emojiGuild2.getEmojiById(1068965606025597092L);
+            case "Ascendant 1" -> emoji = emojiGuild2.getEmojiById(1068965601910984744L);
+            case "Ascendant 2" -> emoji = emojiGuild2.getEmojiById(1068965598870118470L);
+            case "Ascendant 3" -> emoji = emojiGuild2.getEmojiById(1068965596223508542L);
+            case "Immortal 1" -> emoji = emojiGuild2.getEmojiById(1068965592205373461L);
+            case "Immortal 2" -> emoji = emojiGuild2.getEmojiById(1068965586316558367L);
+            case "Immortal 3" -> emoji = emojiGuild2.getEmojiById(1068965581614755951L);
+            case "Radiant" -> emoji = emojiGuild2.getEmojiById(1068965576061505579L);
+        }
+        return emoji;
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getProgressBarGreen(String part) {
+        switch (part) {
+            case "start" -> {
+                return emojiGuild1.getEmojiById(1068975127456387212L);
+            }
+            case "line" -> {
+                return emojiGuild1.getEmojiById(1068975125757702174L);
+            }
+            case "end" -> {
+                return emojiGuild1.getEmojiById(1068975122586812437L);
+            }
+        }
+        return null;
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getProgressBarRed(String part) {
+        switch (part) {
+            case "start" -> {
+                return emojiGuild1.getEmojiById(1068975194217128037L);
+            }
+            case "line" -> {
+                return emojiGuild1.getEmojiById(1068975207831846982L);
+            }
+            case "end" -> {
+                return emojiGuild1.getEmojiById(1068975224009281578L);
+            }
+        }
+        return null;
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getIncrease() {
+        return emojiGuild1.getEmojiById(1068996182979907704L);
+    }
+
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getDecrease() {
+        return emojiGuild1.getEmojiById(1068996186746396724L);
     }
 
 }

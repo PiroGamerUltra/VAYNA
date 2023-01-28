@@ -36,8 +36,8 @@ public class ConnectionCommand implements Command {
             String emojiUnicode = linkedAccount.isVisibleToPublic() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
-                    Button.danger("connection;disconnect", "Disconnect"),
-                    Button.secondary("connection;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
+                    Button.danger("disconnect", "Disconnect"),
+                    Button.secondary("change-visibility;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
             ).queue();
         }
     }

@@ -11,7 +11,8 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class DisconnectRiotAccountButton {
 
-    public static void performButton(ButtonInteractionEvent event) {
+    public static void perform(ButtonInteractionEvent event) {
+        event.deferReply().setEphemeral(true).queue();
 
         StatsCounter.countConnections();
 
@@ -20,9 +21,9 @@ public class DisconnectRiotAccountButton {
 
         String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
 
-        event.replyEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
+        event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
                 Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
-        ).setEphemeral(true).queue();
+        ).queue();
     }
 
 }

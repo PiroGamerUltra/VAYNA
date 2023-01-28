@@ -1,5 +1,6 @@
 package dev.piste.vayna.apis.henrik.gson;
 
+import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.account.Card;
 
 // GSON CLASS
@@ -19,5 +20,9 @@ public class HenrikAccount {
 
     public Card getCard() {
         return card;
+    }
+
+    public MMR getMmr() {
+        return HenrikAPI.getMMR(puuid);
     }
 }

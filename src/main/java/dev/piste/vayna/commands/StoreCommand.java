@@ -17,6 +17,7 @@ import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class StoreCommand implements Command {
                     .setAuthor(event.getUser().getName(), settingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setTitle("» " + bundle.getDisplayName())
                     .addField("Price", currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
+                    .addField("Duration", "This bundle will be removed from the store <t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>", true)
                     .setImage(bundle.getDisplayIcon());
             embedList.add(bundleEmbed.build());
 

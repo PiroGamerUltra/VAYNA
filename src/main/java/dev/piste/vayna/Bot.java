@@ -1,5 +1,6 @@
 package dev.piste.vayna;
 
+import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.tokens.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
@@ -17,6 +18,8 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bot {
 
@@ -30,21 +33,17 @@ public class Bot {
         return System.getProperty("os.name").startsWith("Windows");
     }
 
+    private static final Map<String, RiotAccount> statsButtonMap = new HashMap<>();
+
     public static String getConsolePrefix(String name) {
         return FontColor.WHITE + "[" + FontColor.PURPLE + name + FontColor.WHITE + "]" + FontColor.RESET + " ";
     }
 
-    public static void main(String[] args) {
-        try {
-            new Bot();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static Map<String, RiotAccount> getStatsButtonMap() {
+        return statsButtonMap;
     }
 
-    public Bot() {
-
-
+    public static void main(String[] args) {
         Mongo.connect();
 
         TokensConfig tokensConfig = Configs.getTokens();
@@ -65,11 +64,12 @@ public class Bot {
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 
-        shutdownListener();
-
+        new Bot().listenShutdown();
     }
 
-    private void shutdownListener() {
+
+
+    private void listenShutdown() {
         new Thread(() -> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
