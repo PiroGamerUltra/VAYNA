@@ -16,6 +16,7 @@ public class ModalInteractionListener extends ListenerAdapter {
     @Override
     public void onModalInteraction(ModalInteractionEvent event) {
         if(event.getModalId().equalsIgnoreCase("feedback")) {
+            if(Bot.isDebug()) return;
             event.deferReply().setEphemeral(true).queue();
             SettingsConfig settingsConfig = Configs.getSettings();
             TextChannel feedbackChannel = Bot.getJDA().getGuildById(settingsConfig.getSupportGuild().getId()).getTextChannelById(settingsConfig.getLogChannels().getFeedback());
