@@ -8,6 +8,7 @@ VAYNA is a discord bot that provides player statistics, general information abou
 All commands work with the slash command function in Discord.
 ### General Commands
 - `/help` Look up general information about the bot and a list of all available commands
+- `/feedback` Share feedback to the developer of VAYNA
 ### Connection Commands
 - `/connection` Manage the connection to your Riot-Games account and its visibility
 ### Statistic Commands / Buttons

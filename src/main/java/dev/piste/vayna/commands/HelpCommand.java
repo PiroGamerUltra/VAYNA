@@ -19,7 +19,8 @@ public class HelpCommand implements Command {
         embedBuilder.addField("Version", "The current version of the bot is `v" + Configs.getSettings().getVersion() + "`", true);
         // General
         embedBuilder.addField("General Commands",  "" +
-                "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new HelpCommand()).getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new HelpCommand()).getDescription() + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new FeedbackCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new FeedbackCommand()).getDescription(), false);
         // /connection
         embedBuilder.addField("Connection Commands",  "" +
                 "» " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getDescription(), false);
