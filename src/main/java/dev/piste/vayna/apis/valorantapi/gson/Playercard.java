@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis.valorantapi.gson;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Playercard {
 
     private String displayName;

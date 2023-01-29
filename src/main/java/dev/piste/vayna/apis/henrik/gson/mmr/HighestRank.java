@@ -1,5 +1,7 @@
 package dev.piste.vayna.apis.henrik.gson.mmr;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class HighestRank {
 
     private String patched_tier;

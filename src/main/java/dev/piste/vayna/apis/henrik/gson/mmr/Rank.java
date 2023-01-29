@@ -3,6 +3,7 @@ package dev.piste.vayna.apis.henrik.gson.mmr;
 import dev.piste.vayna.apis.henrik.gson.mmr.rank.Images;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Rank {
 
     private int currenttier;

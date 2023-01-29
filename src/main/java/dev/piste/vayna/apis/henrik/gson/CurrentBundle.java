@@ -5,6 +5,7 @@ import dev.piste.vayna.apis.henrik.gson.store.Item;
 import java.util.List;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class CurrentBundle {
 
     private String bundle_uuid;

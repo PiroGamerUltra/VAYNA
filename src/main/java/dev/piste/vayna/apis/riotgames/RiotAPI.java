@@ -13,23 +13,23 @@ import java.nio.charset.StandardCharsets;
 public class RiotAPI {
 
     public static RiotAccount getAccountByRiotId(String gameName, String tagLine) throws RiotApiException {
-        JsonObject jsonObject = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8));
+        JsonObject jsonObject = new HttpRequest().doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8));
         if(jsonObject.get("puuid") == null) throw new RiotApiException();
         return new Gson().fromJson(jsonObject, RiotAccount.class);
     }
 
     public static RiotAccount getAccountByPuuid(String puuid) {
-        JsonObject jsonObject = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid);
+        JsonObject jsonObject = new HttpRequest().doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid);
         return new Gson().fromJson(jsonObject, RiotAccount.class);
     }
 
     public static PlatformData getPlatformData(String region) {
-        JsonObject jsonObject = HttpRequest.doRiotApiRequest("https://" + region + ".api.riotgames.com/val/status/v1/platform-data");
+        JsonObject jsonObject = new HttpRequest().doRiotApiRequest("https://" + region + ".api.riotgames.com/val/status/v1/platform-data");
         return new Gson().fromJson(jsonObject, PlatformData.class);
     }
 
     public static ActiveShard getActiveShard(String puuid) throws RiotApiException {
-        JsonObject jsonObject = HttpRequest.doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/" + puuid);
+        JsonObject jsonObject = new HttpRequest().doRiotApiRequest("https://europe.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/" + puuid);
         if(jsonObject.get("activeShard") == null) throw new RiotApiException();
         return new Gson().fromJson(jsonObject, ActiveShard.class);
     }

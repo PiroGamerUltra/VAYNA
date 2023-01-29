@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis.henrik.gson.mmr.rank;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Images {
 
     private String small;

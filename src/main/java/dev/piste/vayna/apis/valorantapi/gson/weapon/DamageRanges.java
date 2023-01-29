@@ -1,5 +1,7 @@
 package dev.piste.vayna.apis.valorantapi.gson.weapon;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class DamageRanges {
 
     private int rangeStartMeters;

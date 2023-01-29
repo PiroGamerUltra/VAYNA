@@ -21,7 +21,7 @@ public class ValorantAPI {
     }
 
     public static List<Agent> getAgents() {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/agents");
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/agents");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
     }
@@ -35,7 +35,7 @@ public class ValorantAPI {
     }
 
     public static List<Gamemode> getGamemodes() {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/gamemodes");
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/gamemodes");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<Gamemode>>(){}.getType());
     }
@@ -49,7 +49,7 @@ public class ValorantAPI {
     }
 
     public static List<Map> getMaps() {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/maps");
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/maps");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<Map>>(){}.getType());
     }
@@ -63,31 +63,31 @@ public class ValorantAPI {
     }
 
     public static List<Weapon> getWeapons() {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/weapons");
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/weapons");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<Weapon>>(){}.getType());
     }
 
     public static Buddy getBuddy(String uuid) {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/buddies/" + uuid);
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/buddies/" + uuid);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Buddy.class);
     }
 
     public static Bundle getBundle(String uuid) {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/bundles/" + uuid);
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/bundles/" + uuid);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Bundle.class);
     }
 
     public static Playercard getPlayercard(String uuid) {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/playercards/" + uuid);
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/playercards/" + uuid);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Playercard.class);
     }
 
     public static Spray getSpray(String uuid) {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/sprays/" + uuid);
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/sprays/" + uuid);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Spray.class);
     }
@@ -97,7 +97,7 @@ public class ValorantAPI {
     }
 
     public static List<CompetitiveTier> getCompetitiveTiers() {
-        JsonObject jsonObject = HttpRequest.doValorantApiRequest("https://valorant-api.com/v1/competitivetiers");
+        JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/competitivetiers");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<CompetitiveTier>>(){}.getType());
     }

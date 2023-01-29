@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis.riotgames.gson;
 
-// GSON CLAS
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class RiotAccount {
 
     private String puuid;

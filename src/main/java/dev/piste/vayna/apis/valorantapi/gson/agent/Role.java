@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis.valorantapi.gson.agent;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Role {
 
     private String displayName;

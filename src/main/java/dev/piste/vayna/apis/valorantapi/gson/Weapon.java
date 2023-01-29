@@ -4,6 +4,7 @@ import dev.piste.vayna.apis.valorantapi.gson.weapon.ShopData;
 import dev.piste.vayna.apis.valorantapi.gson.weapon.WeaponStats;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Weapon {
 
     private String displayName;

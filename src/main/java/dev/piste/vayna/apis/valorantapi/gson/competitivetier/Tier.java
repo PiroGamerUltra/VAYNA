@@ -1,5 +1,7 @@
 package dev.piste.vayna.apis.valorantapi.gson.competitivetier;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class Tier {
 
     private int tier;

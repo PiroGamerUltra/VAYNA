@@ -4,6 +4,7 @@ import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.account.Card;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class HenrikAccount {
 
     private String puuid;

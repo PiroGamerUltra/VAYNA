@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis.henrik.gson.store;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Item {
 
     private String uuid;

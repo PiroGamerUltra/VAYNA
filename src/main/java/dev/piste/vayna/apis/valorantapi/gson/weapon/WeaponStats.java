@@ -2,6 +2,8 @@ package dev.piste.vayna.apis.valorantapi.gson.weapon;
 
 import java.util.List;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class WeaponStats {
 
     private double fireRate;

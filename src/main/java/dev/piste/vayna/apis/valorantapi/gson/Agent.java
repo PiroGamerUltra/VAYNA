@@ -6,6 +6,7 @@ import dev.piste.vayna.apis.valorantapi.gson.agent.Role;
 import java.util.List;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class Agent {
 
     private String uuid;

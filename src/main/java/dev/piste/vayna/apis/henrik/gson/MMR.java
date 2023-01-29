@@ -4,6 +4,7 @@ import dev.piste.vayna.apis.henrik.gson.mmr.HighestRank;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
 
 // GSON CLASS
+@SuppressWarnings("ALL")
 public class MMR {
 
     private Rank current_data;

@@ -16,20 +16,20 @@ import java.util.List;
 public class HenrikAPI {
 
     public static HenrikAccount getAccountByRiotId(String gameName, String tagLine) throws HenrikApiException {
-        JsonObject jsonObject = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
+        JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/account/" + URLEncoder.encode(gameName, StandardCharsets.UTF_8) + "/" + URLEncoder.encode(tagLine, StandardCharsets.UTF_8) + "?force=true");
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         if(dataObject == null) throw new HenrikApiException();
         return new Gson().fromJson(dataObject, HenrikAccount.class);
     }
 
     public static List<CurrentBundle> getCurrentBundles() {
-        JsonObject jsonObject = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/store-featured");
+        JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/store-featured");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<List<CurrentBundle>>(){}.getType());
     }
 
     public static MMR getMMR(String puuid) {
-        JsonObject jsonObject = HttpRequest.doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/by-puuid/mmr/eu/" + puuid);
+        JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/by-puuid/mmr/eu/" + puuid);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, MMR.class);
     }

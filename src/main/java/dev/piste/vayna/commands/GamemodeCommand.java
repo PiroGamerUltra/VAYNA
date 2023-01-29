@@ -15,7 +15,6 @@ public class GamemodeCommand implements Command {
     @Override
     public void perform(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
-
         Gamemode gamemode = ValorantAPI.getGamemodeByName(event.getOption("name").getAsString());
 
         Embed embed = new Embed();

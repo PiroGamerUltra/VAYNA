@@ -16,11 +16,10 @@ import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.jetbrains.annotations.NotNull;
 
 public class RankButton {
 
-    public void perform(@NotNull ButtonInteractionEvent event) {
+    public void perform(ButtonInteractionEvent event) {
         event.deferReply().queue();
         RiotAccount oldRiotAccount = Bot.getStatsButtonMap().get(event.getButton().getId().split(";")[1]);
 
