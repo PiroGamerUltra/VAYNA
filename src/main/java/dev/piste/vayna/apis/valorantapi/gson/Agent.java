@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.valorantapi.gson;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Role;
 
-import java.util.List;
+import java.util.ArrayList;
 
 // GSON CLASS
 @SuppressWarnings("ALL")
@@ -16,7 +16,7 @@ public class Agent {
     private String fullPortrait;
     private Role role;
     private boolean isPlayableCharacter;
-    private List<Ability> abilities;
+    private ArrayList<Ability> abilities;
 
     public String getDisplayName() {
         return displayName;
@@ -42,7 +42,7 @@ public class Agent {
         return isPlayableCharacter;
     }
 
-    public List<Ability> getAbilities() {
+    public ArrayList<Ability> getAbilities() {
         return abilities;
     }
 }

@@ -1,6 +1,6 @@
 package dev.piste.vayna.apis.valorantapi.gson.weapon;
 
-import java.util.List;
+import java.util.ArrayList;
 
 // GSON CLASS
 @SuppressWarnings("ALL")
@@ -10,7 +10,7 @@ public class WeaponStats {
     private int magazineSize;
     private double equipTimeSeconds;
     private double reloadTimeSeconds;
-    private List<DamageRanges> damageRanges;
+    private ArrayList<DamageRanges> damageRanges;
 
     public double getFireRate() {
         return fireRate;
@@ -28,7 +28,7 @@ public class WeaponStats {
         return reloadTimeSeconds;
     }
 
-    public List<DamageRanges> getDamageRanges() {
+    public ArrayList<DamageRanges> getDamageRanges() {
         return damageRanges;
     }
 }

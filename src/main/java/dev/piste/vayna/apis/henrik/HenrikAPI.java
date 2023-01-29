@@ -7,11 +7,11 @@ import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.apis.HttpRequest;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.apis.henrik.gson.MMRHistory;
+import dev.piste.vayna.apis.henrik.gson.MMR;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.ArrayList;
 
 public class HenrikAPI {
 
@@ -22,16 +22,16 @@ public class HenrikAPI {
         return new Gson().fromJson(dataObject, HenrikAccount.class);
     }
 
-    public static List<CurrentBundle> getCurrentBundles() {
+    public static ArrayList<CurrentBundle> getCurrentBundles() {
         JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/store-featured");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<CurrentBundle>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<CurrentBundle>>(){}.getType());
     }
 
-    public static List<MMRHistory> getMmrHistory(String puuid, String region) {
-        JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr-history/" + region + "/" + puuid);
-        JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<MMRHistory>>(){}.getType());
+    public static MMR getMmr(String puuid, String region) {
+        JsonObject jsonObject = new HttpRequest().doHenrikApiRequest("https://api.henrikdev.xyz/valorant/v2/by-puuid/mmr/" + region + "/" + puuid);
+        JsonObject dataObject = jsonObject.getAsJsonObject("data");
+        return new Gson().fromJson(dataObject, MMR.class);
     }
 
 

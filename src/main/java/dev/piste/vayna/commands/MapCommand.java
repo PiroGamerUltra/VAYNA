@@ -16,7 +16,6 @@ public class MapCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
 
-
         Map map = ValorantAPI.getMapByName(event.getOption("name").getAsString());
 
         Embed embed = new Embed();

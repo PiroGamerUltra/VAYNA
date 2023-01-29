@@ -21,7 +21,7 @@ public class CommandManager {
         addCommand(new StatsCommand());
         addCommand(new WeaponCommand());
         addCommand(new StoreCommand());
-        //addCommand(new LeaderboardCommand());
+        addCommand(new LeaderboardCommand());
 
         for(net.dv8tion.jda.api.interactions.commands.Command command : Bot.getJDA().retrieveCommands().complete()) {
             if(!commands.containsKey(command.getName().toLowerCase())) {

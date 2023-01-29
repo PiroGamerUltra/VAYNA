@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.apis.HttpRequest;
 import dev.piste.vayna.apis.valorantapi.gson.*;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ValorantAPI {
 
@@ -20,10 +20,10 @@ public class ValorantAPI {
         return new Agent();
     }
 
-    public static List<Agent> getAgents() {
+    public static ArrayList<Agent> getAgents() {
         JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/agents");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<Agent>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Agent>>(){}.getType());
     }
 
     // Gamemodes
@@ -34,10 +34,10 @@ public class ValorantAPI {
         return new Gamemode();
     }
 
-    public static List<Gamemode> getGamemodes() {
+    public static ArrayList<Gamemode> getGamemodes() {
         JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/gamemodes");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<Gamemode>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Gamemode>>(){}.getType());
     }
 
     // Maps
@@ -48,10 +48,10 @@ public class ValorantAPI {
         return new Map();
     }
 
-    public static List<Map> getMaps() {
+    public static ArrayList<Map> getMaps() {
         JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/maps");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<Map>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Map>>(){}.getType());
     }
 
     // Weapons
@@ -62,10 +62,10 @@ public class ValorantAPI {
         return new Weapon();
     }
 
-    public static List<Weapon> getWeapons() {
+    public static ArrayList<Weapon> getWeapons() {
         JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/weapons");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<Weapon>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Weapon>>(){}.getType());
     }
 
     public static Buddy getBuddy(String uuid) {
@@ -96,10 +96,10 @@ public class ValorantAPI {
         return getCompetitiveTiers().get(getCompetitiveTiers().size()-1);
     }
 
-    public static List<CompetitiveTier> getCompetitiveTiers() {
+    public static ArrayList<CompetitiveTier> getCompetitiveTiers() {
         JsonObject jsonObject = new HttpRequest().doValorantApiRequest("https://valorant-api.com/v1/competitivetiers");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<List<CompetitiveTier>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<CompetitiveTier>>(){}.getType());
     }
 
 }

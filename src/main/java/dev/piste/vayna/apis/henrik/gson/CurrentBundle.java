@@ -2,7 +2,7 @@ package dev.piste.vayna.apis.henrik.gson;
 
 import dev.piste.vayna.apis.henrik.gson.store.Item;
 
-import java.util.List;
+import java.util.ArrayList;
 
 // GSON CLASS
 @SuppressWarnings("ALL")
@@ -10,7 +10,7 @@ public class CurrentBundle {
 
     private String bundle_uuid;
     private int bundle_price;
-    private List<Item> items;
+    private ArrayList<Item> items;
     private int seconds_remaining;
 
     public String getBundleUuid() {
@@ -21,7 +21,7 @@ public class CurrentBundle {
         return bundle_price;
     }
 
-    public List<Item> getItems() {
+    public ArrayList<Item> getItems() {
         return items;
     }
 

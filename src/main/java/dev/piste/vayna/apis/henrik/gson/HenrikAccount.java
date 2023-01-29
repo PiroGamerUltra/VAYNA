@@ -3,8 +3,6 @@ package dev.piste.vayna.apis.henrik.gson;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.account.Card;
 
-import java.util.List;
-
 // GSON CLASS
 @SuppressWarnings("ALL")
 public class HenrikAccount {
@@ -30,7 +28,7 @@ public class HenrikAccount {
         return card;
     }
 
-    public List<MMRHistory> getMmrHistory() {
-        return HenrikAPI.getMmrHistory(puuid, region);
+    public MMR getMmr() {
+        return HenrikAPI.getMmr(puuid, region);
     }
 }

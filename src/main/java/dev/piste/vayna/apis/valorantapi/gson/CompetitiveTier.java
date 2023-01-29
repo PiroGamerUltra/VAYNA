@@ -2,15 +2,15 @@ package dev.piste.vayna.apis.valorantapi.gson;
 
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
 
-import java.util.List;
+import java.util.ArrayList;
 
 // GSON CLASS
 @SuppressWarnings("ALL")
 public class CompetitiveTier {
 
-    private List<Tier> tiers;
+    private ArrayList<Tier> tiers;
 
-    public List<Tier> getTiers() {
+    public ArrayList<Tier> getTiers() {
         return tiers;
     }
 
