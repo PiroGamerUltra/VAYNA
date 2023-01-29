@@ -1,18 +1,18 @@
-package dev.piste.vayna.apis.henrik.gson.mmr;
+package dev.piste.vayna.apis.henrik.gson;
 
-import dev.piste.vayna.apis.henrik.gson.mmr.rank.Images;
-
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 // GSON CLASS
 @SuppressWarnings("ALL")
-public class Rank {
+public class MMRHistory {
 
     private int currenttier;
     private String currenttierpatched;
-    private Images images;
     private int ranking_in_tier;
     private int mmr_change_to_last_game;
     private int elo;
-    private int games_needed_for_rating;
+    private long date_raw;
 
     public int getCurrentTier() {
         return currenttier;
@@ -20,10 +20,6 @@ public class Rank {
 
     public String getCurrentTierPatched() {
         return currenttierpatched;
-    }
-
-    public Images getImages() {
-        return images;
     }
 
     public int getRankingInTier() {
@@ -38,8 +34,7 @@ public class Rank {
         return elo;
     }
 
-    public int getGamesNeededForRating() {
-        return games_needed_for_rating;
+    public long getDateRaw() {
+        return date_raw;
     }
-
 }

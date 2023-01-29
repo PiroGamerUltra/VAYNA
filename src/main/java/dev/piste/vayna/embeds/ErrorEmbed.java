@@ -66,4 +66,11 @@ public class ErrorEmbed {
         return embed.build();
     }
 
+    public static MessageEmbed getNoGuildChannel(User user) {
+        setupEmbed(user);
+        embed.setTitle("» Error");
+        embed.setDescription("This command is only usable in guilds.");
+        return embed.build();
+    }
+
 }

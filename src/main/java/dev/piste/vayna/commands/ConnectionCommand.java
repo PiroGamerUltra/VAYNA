@@ -24,10 +24,8 @@ public class ConnectionCommand implements Command {
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
-            String authKey = new AuthKey(event.getUser().getIdLong()).getAuthKey();
-
             event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
-                    Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, "Connect").withEmoji(Emoji.getRiotGames())
+                    Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + new AuthKey(event.getUser().getIdLong()).getAuthKey(), "Connect").withEmoji(Emoji.getRiotGames())
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());

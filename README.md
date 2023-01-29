@@ -15,6 +15,7 @@ All commands work with the slash command function in Discord.
 - `/stats me` Get general information about your VALORANT profile
 - `/stats user <@user>` Get general information about a VALORANT profile from a Discord user
 - `/stats riot-id <name> <tag>` Get general information about a VALORANT profile by providing a Riot-ID
+- `/leaderboard` Get a list of the best 20 players in this server.
 #### Buttons
 - `Rank` Get the current rank of the VALORANT profile
 ### Information Commands

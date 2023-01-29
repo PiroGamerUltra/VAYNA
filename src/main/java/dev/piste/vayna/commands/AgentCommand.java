@@ -22,24 +22,22 @@ public class AgentCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
 
-        SettingsConfig settingsConfig = Configs.getSettings();
+        String websiteUri = Configs.getSettings().getWebsiteUri();
         Agent agent = ValorantAPI.getAgentByName(event.getOption("name").getAsString());
 
-        Embed agentEmbed = new Embed();
-        agentEmbed.setAuthor(event.getUser().getName(), settingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl())
+        List<MessageEmbed> embedList = new ArrayList<>();
+
+        Embed agentEmbed = new Embed().setAuthor(event.getUser().getName(), websiteUri, event.getUser().getAvatarUrl())
                 .setTitle("» " + agent.getDisplayName())
                 .setDescription(agent.getDescription())
                 .setThumbnail(agent.getDisplayIcon())
                 .setImage(agent.getFullPortrait());
 
-        Embed roleEmbed = new Embed();
-        roleEmbed.setAuthor("Role", settingsConfig.getWebsiteUri(), agent.getDisplayIcon())
+        Embed roleEmbed = new Embed().setAuthor("Role", websiteUri, agent.getDisplayIcon())
                 .setTitle("» " + agent.getRole().getDisplayName())
                 .setDescription(agent.getRole().getDescription())
                 .setThumbnail(agent.getRole().getDisplayIcon())
                 .removeFooter();
-
-        List<MessageEmbed> embedList = new ArrayList<>();
 
         embedList.add(agentEmbed.build());
         embedList.add(roleEmbed.build());
@@ -54,9 +52,8 @@ public class AgentCommand implements Command {
                 case "Ultimate" -> abilityKey = "X";
                 default -> abilityKey = "Error";
             }
-            Embed abilityEmbed = new Embed();
-            abilityEmbed.setTitle("» " + ability.getDisplayName() + " (" + abilityKey + ")")
-                    .setAuthor("Ability", settingsConfig.getWebsiteUri(), agent.getDisplayIcon())
+            Embed abilityEmbed = new Embed().setTitle("» " + ability.getDisplayName() + " (" + abilityKey + ")")
+                    .setAuthor("Ability", websiteUri, agent.getDisplayIcon())
                     .setDescription(ability.getDescription())
                     .setThumbnail(ability.getDisplayIcon())
                     .removeFooter();

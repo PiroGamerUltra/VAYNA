@@ -19,6 +19,7 @@ public class StatsCounter {
             Guild supportGuild = Bot.getJDA().getGuildById(settingsConfig.getSupportGuild().getId());
             String connectionCountChannelName = settingsConfig.getBotStatsChannels().getConnectionChannelName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
             VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(settingsConfig.getBotStatsChannels().getConnectionChannelId());
+            if(connectionCountChannel.getName().equals(connectionCountChannelName)) return;
             connectionCountChannel.getManager().setName(connectionCountChannelName).queue();
             connectionsCounterRateLimitTimestampMillis = System.currentTimeMillis()+520000;
         }
@@ -31,6 +32,7 @@ public class StatsCounter {
             Guild supportGuild = Bot.getJDA().getGuildById(settingsConfig.getSupportGuild().getId());
             String guildCountChannelName = settingsConfig.getBotStatsChannels().getGuildChannelName().replace("%count%", Bot.getJDA().getGuilds().size() + "");
             VoiceChannel guildCountChannel = supportGuild.getVoiceChannelById(settingsConfig.getBotStatsChannels().getGuildChannelId());
+            if(guildCountChannel.getName().equals(guildCountChannelName)) return;
             guildCountChannel.getManager().setName(guildCountChannelName).queue();
             guildsCounterRateLimitTimestampMillis = System.currentTimeMillis()+520000;
         }

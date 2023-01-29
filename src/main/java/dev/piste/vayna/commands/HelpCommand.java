@@ -23,14 +23,15 @@ public class HelpCommand implements Command {
         // /connection
         embedBuilder.addField("Connection Commands",  "" +
                 "» " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getDescription(), false);
-        // /stats
+        // /stats & /leaderboard
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand1 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(0);
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand2 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(1);
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand3 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(2);
         embedBuilder.addField("Statistic Commands", "" +
                 "» " + subcommand1.getAsMention() + " " + subcommand1.getDescription() + "\n" +
                 "» " + subcommand2.getAsMention() + " " + subcommand2.getDescription() + "\n" +
-                "» " + subcommand3.getAsMention() + " " + subcommand3.getDescription(), false);
+                "» " + subcommand3.getAsMention() + " " + subcommand3.getDescription() + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new LeaderboardCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new LeaderboardCommand()).getDescription(), false);
         // Info Commands
         embedBuilder.addField("Information Commands", "" +
                 "» " + CommandManager.getAsJdaCommand(new MapCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new MapCommand()).getDescription() + "\n" +

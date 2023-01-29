@@ -4,7 +4,7 @@ import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
+import dev.piste.vayna.apis.henrik.gson.MMRHistory;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
@@ -49,28 +49,27 @@ public class RankButton {
                 .setTitle("» Rank")
                 .setColor(209, 54, 57);
 
-        Rank rank = henrikAccount.getMmr().getRank();
+        MMRHistory mmrHistory = henrikAccount.getMmrHistory().get(0);
 
         CompetitiveTier competitiveTier = ValorantAPI.getLatestCompetitiveTier();
-        if(rank.getCurrentTierPatched() == null) {
+        if(mmrHistory.getCurrentTierPatched() == null) {
             Tier tier = competitiveTier.getTiers().get(0);
             embed.addField("Rank", Emoji.getRankByTierName(tier.getTierName()).getFormatted()  + " " + tier.getTierName(), true)
-                    .setThumbnail(tier.getLargeIcon())
-                    .addField("Games needed", "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? "game" : "games"), true);
+                    .setThumbnail(tier.getLargeIcon());
             event.getHook().editOriginalEmbeds(embed.build()).queue();
             return;
         }
         for(Tier tier : competitiveTier.getTiers()) {
-            if(tier.getTier() == rank.getCurrentTier()) {
+            if(tier.getTier() == mmrHistory.getCurrentTier()) {
                 embed.addField("Rank", Emoji.getRankByTierName(tier.getTierName()).getFormatted() + " " + tier.getTierName(), false)
                         .setThumbnail(tier.getLargeIcon());
-                if(rank.getCurrentTier() > 23) {
-                    embed.addField("Rating", "**" + rank.getRankingInTier() + "** » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+                if(mmrHistory.getCurrentTier() > 23) {
+                    embed.addField("Rating", "**" + mmrHistory.getRankingInTier() + "** » " +
+                            (mmrHistory.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + mmrHistory.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + mmrHistory.getMmrChangeToLastGame() + "**"), false);
                 } else {
-                    embed.addField("Rating", getProgressBar(rank.getRankingInTier()) + "\n" +
-                            "**" + rank.getRankingInTier() + "**/**100** » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+                    embed.addField("Rating", getProgressBar(mmrHistory.getRankingInTier()) + "\n" +
+                            "**" + mmrHistory.getRankingInTier() + "**/**100** » " +
+                            (mmrHistory.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + mmrHistory.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + mmrHistory.getMmrChangeToLastGame() + "**"), false);
                 }
 
                 event.getHook().editOriginalEmbeds(embed.build()).queue();

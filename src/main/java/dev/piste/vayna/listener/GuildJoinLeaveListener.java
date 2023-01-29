@@ -14,6 +14,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
+        if(Bot.isDebug()) return;
         Guild supportGuild = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId());
         Embed embed = new Embed();
         embed.setColor(0, 255, 0);
@@ -30,6 +31,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
+        if(Bot.isDebug()) return;
         Guild supportGuild = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId());
         Embed embed = new Embed();
         embed.setColor(255, 0, 0);
