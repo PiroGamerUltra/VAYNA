@@ -10,10 +10,13 @@ All commands work with the slash command function in Discord.
 - `/help` Look up general information about the bot and a list of all available commands
 ### Connection Commands
 - `/connection` Manage the connection to your Riot-Games account and its visibility
-### Statistic Commands
+### Statistic Commands / Buttons
+#### Commands
 - `/stats me` Get general information about your VALORANT profile
 - `/stats user <@user>` Get general information about a VALORANT profile from a Discord user
 - `/stats riot-id <name> <tag>` Get general information about a VALORANT profile by providing a Riot-ID
+#### Buttons
+- `Rank` Get the current rank of the VALORANT profile
 ### Information Commands
 - `/map <name>` Get information about a specific VALORANT map
 - `/agent <name>` Get information about a specific VALORANT agent
