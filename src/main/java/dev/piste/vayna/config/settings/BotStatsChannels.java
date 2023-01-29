@@ -1,5 +1,7 @@
 package dev.piste.vayna.config.settings;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class BotStatsChannels {
 
     private long guildChannelId;

@@ -1,11 +1,13 @@
 package dev.piste.vayna.config.settings;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class SettingsConfig {
 
     private String version;
     private String websiteUri;
     private SupportGuild supportGuild;
-    private GuildActivitiesChannels guildActivitiesChannels;
+    private LogChannels logChannels;
     private BotStatsChannels botStatsChannels;
 
     public String getVersion() {
@@ -20,8 +22,8 @@ public class SettingsConfig {
         return supportGuild;
     }
 
-    public GuildActivitiesChannels getGuildActivitiesChannels() {
-        return guildActivitiesChannels;
+    public LogChannels getLogChannels() {
+        return logChannels;
     }
 
     public BotStatsChannels getBotStatsChannels() {

@@ -1,5 +1,7 @@
 package dev.piste.vayna.config.tokens;
 
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class TokensConfig {
 
     private Bot bot;

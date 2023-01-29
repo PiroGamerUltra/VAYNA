@@ -5,6 +5,7 @@ import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.tokens.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
 import dev.piste.vayna.listener.GuildJoinLeaveListener;
+import dev.piste.vayna.listener.ModalInteractionListener;
 import dev.piste.vayna.listener.SlashCommandListener;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.Mongo;
@@ -52,6 +53,7 @@ public class Bot {
                 .addEventListeners(new SlashCommandListener())
                 .addEventListeners(new GuildJoinLeaveListener())
                 .addEventListeners(new ButtonInteractionListener())
+                .addEventListeners(new ModalInteractionListener())
                 .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)

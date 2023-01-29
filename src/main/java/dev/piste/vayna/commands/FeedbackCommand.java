@@ -19,7 +19,7 @@ public class FeedbackCommand implements Command {
                 .setPlaceholder("Enter your feedback here")
                 .setMaxLength(1000)
                 .build();
-        Modal modal = Modal.create("test", "test1")
+        Modal modal = Modal.create("feedback", "Share your feedback with the developer")
                 .addActionRows(ActionRow.of(feedbackInput))
                 .build();
 
