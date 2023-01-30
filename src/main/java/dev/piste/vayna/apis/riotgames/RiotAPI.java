@@ -42,9 +42,18 @@ public class RiotAPI {
         return new Gson().fromJson(jsonObject, PlatformData.class);
     }
 
-    public static ActiveShard getActiveShard(String puuid) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://europe.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/" + puuid);
-        return new Gson().fromJson(jsonObject, ActiveShard.class);
+    public static ActiveShard getActiveShard(String puuid) throws StatusCodeException, InvalidRegionException {
+        try {
+            JsonObject jsonObject = performHttpRequest("https://europe.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/" + puuid);
+            return new Gson().fromJson(jsonObject, ActiveShard.class);
+        } catch (StatusCodeException e) {
+            String[] message = e.getMessage().split(" ");
+            int statusCode = Integer.parseInt(message[0]);
+            if(statusCode == 404) {
+                throw new InvalidRegionException();
+            }
+            throw new StatusCodeException(e.getMessage());
+        }
     }
 
     private static JsonObject performHttpRequest(String uri) throws StatusCodeException {

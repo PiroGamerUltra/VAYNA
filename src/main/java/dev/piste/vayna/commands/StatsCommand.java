@@ -3,8 +3,10 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
+import dev.piste.vayna.apis.riotgames.InvalidRegionException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
@@ -28,6 +30,8 @@ public class StatsCommand implements Command {
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
+
+        Language language = Language.getLanguage(event.getGuild());
 
         LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
@@ -97,7 +101,14 @@ public class StatsCommand implements Command {
             }
         }
 
-        ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
+        ActiveShard activeShard = null;
+        try {
+            activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
+        } catch (InvalidRegionException e) {
+            event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegionMessage(event.getUser(), event.getGuild(), riotAccount.getRiotId())).queue();
+            return;
+        }
+
         String regionEmoji = switch (activeShard.getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
             case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
@@ -117,15 +128,15 @@ public class StatsCommand implements Command {
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall());
         embed.setColor(209, 54, 57);
-        embed.setTitle("» Statistics");
-        embed.setDescription("Click on one of the buttons below to see more information.");
-        embed.addField("Level", Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
-        embed.addField("Region", regionEmoji + " " + regionName, true);
+        embed.setTitle(language.getPrefix() + language.getCommands().getStats().getTitle());
+        embed.setDescription(language.getCommands().getStats().getDescription());
+        embed.addField(language.getCommands().getStats().getLevel(), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
+        embed.addField(language.getCommands().getStats().getRegion(), regionEmoji + " " + regionName, true);
         if(linkedAccount.isExisting()) {
-            embed.addField("Connection", Emoji.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
+            embed.addField(language.getCommands().getStats().getConnection(), Emoji.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
         }
         event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                Button.secondary("rank;" + uuid, "Rank").withEmoji(Emoji.getRankByTierName("Unranked"))
+                Button.secondary("rank;" + uuid, language.getCommands().getStats().getRank()).withEmoji(Emoji.getRankByTierName("Unranked"))
         ).queue();
     }
 

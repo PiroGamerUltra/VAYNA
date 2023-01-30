@@ -1,9 +1,6 @@
 package dev.piste.vayna.config.translations;
 
-import dev.piste.vayna.config.translations.commands.Agent;
-import dev.piste.vayna.config.translations.commands.Gamemode;
-import dev.piste.vayna.config.translations.commands.Map;
-import dev.piste.vayna.config.translations.commands.Weapon;
+import dev.piste.vayna.config.translations.commands.*;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -14,6 +11,7 @@ public class Commands {
     private Gamemode gamemode;
     private Map map;
     private Weapon weapon;
+    private Stats stats;
 
     public Agent getAgent() {
         return agent;
@@ -29,5 +27,9 @@ public class Commands {
 
     public Weapon getWeapon() {
         return weapon;
+    }
+
+    public Stats getStats() {
+        return stats;
     }
 }

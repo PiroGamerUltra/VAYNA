@@ -17,13 +17,6 @@ public class ErrorEmbed {
         embed.setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
     }
 
-    public static MessageEmbed getHenrikApiError(User user) {
-        setupEmbed(user);
-        embed.setTitle("» Error");
-        embed.setDescription("There has been an error while retrieving the data for the provided Riot-ID.");
-        return embed.build();
-    }
-
     public static MessageEmbed getRiotAccountNotConnected(User user, User target) {
         setupEmbed(user);
         embed.setTitle("» Error");
@@ -42,13 +35,6 @@ public class ErrorEmbed {
         setupEmbed(user);
         embed.setTitle("» Error");
         embed.setDescription("This user has set his account to private mode.");
-        return embed.build();
-    }
-
-    public static MessageEmbed getNoRegion(User user) {
-        setupEmbed(user);
-        embed.setTitle("» Error");
-        embed.setDescription("An error occurred while trying to receive the region for this Riot-ID.");
         return embed.build();
     }
 

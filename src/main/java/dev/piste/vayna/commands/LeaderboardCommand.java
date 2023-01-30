@@ -53,9 +53,14 @@ public class LeaderboardCommand implements Command {
                     RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
                     HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
                     eloMap.put(member.getUser(), henrikAccount.getMmr());
-                } catch (StatusCodeException e) {
+                } catch (StatusCodeException ignored) {
                 }
             }
+        }
+
+        if(eloMap.size() == 0) {
+            // TODO: leaderboard no players
+            return;
         }
 
         // Create a list of the elos and sort it // Calculate the average elo of this guild

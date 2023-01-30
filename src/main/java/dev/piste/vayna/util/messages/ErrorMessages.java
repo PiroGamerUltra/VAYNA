@@ -71,10 +71,32 @@ public class ErrorMessages {
 
         Embed embed = new Embed().setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl())
                 .setColor(255, 0, 0)
-                .setTitle(language.getPrefix() + language.getError().getRiotId().getTitle())
-                .setDescription(language.getError().getRiotId().getDescription()
+                .setTitle(language.getPrefix() + language.getCommands().getStats().getErrors().getRiotId().getTitle())
+                .setDescription(language.getCommands().getStats().getErrors().getRiotId().getDescription()
                         .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
                         .replaceAll("%riotid%", riotId));
+        return embed.build();
+    }
+
+    public static MessageEmbed getInvalidRegionMessage(User user, Guild guild, String riotId) {
+        Language language = Language.getLanguage(guild);
+
+        Embed embed = new Embed().setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl())
+                .setColor(255, 0, 0)
+                .setTitle(language.getPrefix() + language.getCommands().getStats().getErrors().getRegion().getTitle())
+                .setDescription(language.getCommands().getStats().getErrors().getRegion().getDescription()
+                        .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
+                        .replaceAll("%riotid%", riotId));
+        return embed.build();
+    }
+
+    public static MessageEmbed getLeaderboardNoPlayersMessage(User user, Guild guild) {
+        Language language = Language.getLanguage(guild);
+
+        Embed embed = new Embed().setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl())
+                .setColor(255, 0, 0)
+                .setTitle(language.getPrefix() + language.getCommands().getStats().getErrors().getRegion().getTitle())
+                .setDescription(language.getCommands().getStats().getErrors().getRegion().getDescription());
         return embed.build();
     }
 

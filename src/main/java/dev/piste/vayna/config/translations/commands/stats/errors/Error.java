@@ -1,9 +1,9 @@
-package dev.piste.vayna.config.translations.error;
+package dev.piste.vayna.config.translations.commands.stats.errors;
 
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class RiotID {
+public class Error {
 
     private String title;
     private String description;

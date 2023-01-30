@@ -43,7 +43,7 @@ public class HenrikAPI {
                 .uri(URI.create(uri))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("Authorization", Configs.getTokens().getApi().getHenrik())
+                //.header("Authorization", Configs.getTokens().getApi().getHenrik())
                 .GET()
                 .build();
         return new ApiHttpRequest().performHttpRequest(request);

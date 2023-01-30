@@ -22,6 +22,7 @@ public class RankButton {
 
     public void perform(ButtonInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
+
         RiotAccount oldRiotAccount = Bot.getStatsButtonMap().get(event.getButton().getId().split(";")[1]);
 
         Bot.getStatsButtonMap().remove(event.getButton().getId().split(";")[1]);
