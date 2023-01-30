@@ -27,7 +27,8 @@ public class ModalInteractionListener extends ListenerAdapter {
             feedbackChannel.sendMessageEmbeds(feedbackEmbed.build()).queue();
             Embed replyEmbed = new Embed().setAuthor(event.getUser().getName(), settingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setTitle("» Success")
-                    .setDescription("Your feedback has successfully been shard with the developer of **VAYNA**. Thank you!");
+                    .setColor(0, 255, 0)
+                    .setDescription("Your feedback has successfully been shared with the developer of **VAYNA**. Thank you!");
             event.getHook().editOriginalEmbeds(replyEmbed.build()).queue();
         }
     }

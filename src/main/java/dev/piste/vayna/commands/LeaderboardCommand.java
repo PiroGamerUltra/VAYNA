@@ -1,6 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
@@ -31,7 +32,7 @@ public class LeaderboardCommand implements Command {
 
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
         if(event.getChannelType() == ChannelType.PRIVATE) {
@@ -48,13 +49,11 @@ public class LeaderboardCommand implements Command {
             LinkedAccount linkedAccount = new LinkedAccount(member.getUser().getIdLong());
 
             if(linkedAccount.isExisting() && linkedAccount.isVisibleToPublic()) {
-                RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
                 try {
+                    RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
                     HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
-                    if(henrikAccount.getMmr().getRank().getCurrentTierPatched() == null) continue;
                     eloMap.put(member.getUser(), henrikAccount.getMmr());
-                } catch (HenrikApiException e) {
-                    e.printStackTrace();
+                } catch (StatusCodeException e) {
                 }
             }
         }
@@ -116,7 +115,6 @@ public class LeaderboardCommand implements Command {
             embed.setTitle("» Leaderboard (Average: " + guildTier.getTierName() + " - " + guildRatingInTier + "RR)");
             embed.setThumbnail(guildTier.getLargeIcon());
         }
-
 
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }

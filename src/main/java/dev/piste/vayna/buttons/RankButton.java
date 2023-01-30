@@ -1,6 +1,7 @@
 package dev.piste.vayna.buttons;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
@@ -19,7 +20,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class RankButton {
 
-    public void perform(ButtonInteractionEvent event) {
+    public void perform(ButtonInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
         RiotAccount oldRiotAccount = Bot.getStatsButtonMap().get(event.getButton().getId().split(";")[1]);
 
@@ -34,15 +35,7 @@ public class RankButton {
 
         RiotAccount riotAccount = RiotAPI.getAccountByPuuid(oldRiotAccount.getPuuid());
 
-        HenrikAccount henrikAccount;
-        try {
-            henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
-        } catch (HenrikApiException e) {
-            event.getHook().editOriginalEmbeds(ErrorEmbed.getHenrikApiError(event.getUser())).setActionRow(
-                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-            ).queue();
-            return;
-        }
+        HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
         Embed embed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall())

@@ -1,5 +1,6 @@
 package dev.piste.vayna.buttons;
 
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
@@ -12,7 +13,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class ChangeVisibilityButton {
 
-    public static void perform(ButtonInteractionEvent event) {
+    public static void perform(ButtonInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());

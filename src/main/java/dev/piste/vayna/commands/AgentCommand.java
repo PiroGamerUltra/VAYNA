@@ -1,12 +1,14 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
+import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Agent;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.settings.SettingsConfig;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -19,11 +21,14 @@ import java.util.List;
 public class AgentCommand implements Command {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
+        Language language = Language.getLanguage(event.getGuild());
+
         String websiteUri = Configs.getSettings().getWebsiteUri();
-        Agent agent = ValorantAPI.getAgentByName(event.getOption("name").getAsString());
+        String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
+        Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
         List<MessageEmbed> embedList = new ArrayList<>();
 
@@ -33,7 +38,7 @@ public class AgentCommand implements Command {
                 .setThumbnail(agent.getDisplayIcon())
                 .setImage(agent.getFullPortrait());
 
-        Embed roleEmbed = new Embed().setAuthor("Role", websiteUri, agent.getDisplayIcon())
+        Embed roleEmbed = new Embed().setAuthor(language.getCommands().getAgent().getRole(), websiteUri, agent.getDisplayIcon())
                 .setTitle("» " + agent.getRole().getDisplayName())
                 .setDescription(agent.getRole().getDescription())
                 .setThumbnail(agent.getRole().getDisplayIcon())
@@ -53,7 +58,7 @@ public class AgentCommand implements Command {
                 default -> abilityKey = "Error";
             }
             Embed abilityEmbed = new Embed().setTitle("» " + ability.getDisplayName() + " (" + abilityKey + ")")
-                    .setAuthor("Ability", websiteUri, agent.getDisplayIcon())
+                    .setAuthor(language.getCommands().getAgent().getAbility(), websiteUri, agent.getDisplayIcon())
                     .setDescription(ability.getDescription())
                     .setThumbnail(ability.getDisplayIcon())
                     .removeFooter();
@@ -75,9 +80,9 @@ public class AgentCommand implements Command {
     }
 
     @Override
-    public void register() {
+    public void register() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the agent", true);
-        for(Agent agent : ValorantAPI.getAgents()) {
+        for(Agent agent : ValorantAPI.getAgents("en-US")) {
             if(!agent.isPlayableCharacter()) continue;
             optionData.addChoice(agent.getDisplayName(), agent.getDisplayName());
         }

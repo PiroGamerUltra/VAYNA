@@ -6,6 +6,7 @@ public class LogChannels {
 
     private long guild;
     private long feedback;
+    private long error;
 
     public long getGuild() {
         return guild;
@@ -15,4 +16,7 @@ public class LogChannels {
         return feedback;
     }
 
+    public long getError() {
+        return error;
+    }
 }

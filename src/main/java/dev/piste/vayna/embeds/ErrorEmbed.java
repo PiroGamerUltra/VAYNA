@@ -17,13 +17,6 @@ public class ErrorEmbed {
         embed.setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
     }
 
-    public static MessageEmbed getRiotIdNotFound(User user, String riotId) {
-        setupEmbed(user);
-        embed.setTitle("» Error");
-        embed.setDescription("The Riot-ID " + Emoji.getRiotGames().getFormatted() + " `" + riotId + "` couldn't be found. Please check your input values and try again.");
-        return embed.build();
-    }
-
     public static MessageEmbed getHenrikApiError(User user) {
         setupEmbed(user);
         embed.setTitle("» Error");

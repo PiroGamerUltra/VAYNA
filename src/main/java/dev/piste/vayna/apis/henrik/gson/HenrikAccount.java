@@ -1,5 +1,6 @@
 package dev.piste.vayna.apis.henrik.gson;
 
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.account.Card;
 
@@ -28,7 +29,7 @@ public class HenrikAccount {
         return card;
     }
 
-    public MMR getMmr() {
+    public MMR getMmr() throws StatusCodeException {
         return HenrikAPI.getMmr(puuid, region);
     }
 }

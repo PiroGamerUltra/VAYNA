@@ -17,7 +17,7 @@ public class FeedbackCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) {
         TextInput feedbackInput = TextInput.create("feedback", "Feedback", TextInputStyle.PARAGRAPH)
                 .setPlaceholder("Enter your feedback here")
-                .setMaxLength(1000)
+                .setMaxLength(4000)
                 .build();
         Modal modal = Modal.create("feedback", "Share your feedback with the developer")
                 .addActionRows(ActionRow.of(feedbackInput))

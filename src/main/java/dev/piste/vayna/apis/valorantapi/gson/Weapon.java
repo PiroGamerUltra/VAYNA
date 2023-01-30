@@ -7,10 +7,15 @@ import dev.piste.vayna.apis.valorantapi.gson.weapon.WeaponStats;
 @SuppressWarnings("ALL")
 public class Weapon {
 
+    private String uuid;
     private String displayName;
     private String displayIcon;
     private WeaponStats weaponStats;
     private ShopData shopData;
+
+    public String getUuid() {
+        return uuid;
+    }
 
     public String getDisplayName() {
         return displayName;

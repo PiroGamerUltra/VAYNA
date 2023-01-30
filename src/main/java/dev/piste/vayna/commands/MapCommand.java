@@ -1,7 +1,9 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Map;
 import dev.piste.vayna.config.Configs;
@@ -13,24 +15,27 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 public class MapCommand implements Command {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        Map map = ValorantAPI.getMapByName(event.getOption("name").getAsString());
+        Language language = Language.getLanguage(event.getGuild());
+
+        String uuid = ValorantAPI.getMapByName(event.getOption("name").getAsString(), "en-US").getUuid();
+        Map map = ValorantAPI.getMap(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
         embed.setTitle("» " + map.getDisplayName());
-        embed.addField("Coordinates", map.getCoordinates(), true);
+        embed.addField(language.getCommands().getMap().getCoordinates(), map.getCoordinates(), true);
         embed.setImage(map.getSplash());
         embed.setThumbnail(map.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 
     @Override
-    public void register() {
+    public void register() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the map", true);
-        for(Map map : ValorantAPI.getMaps()) {
+        for(Map map : ValorantAPI.getMaps("en-US")) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
             optionData.addChoice(map.getDisplayName(), map.getDisplayName());
         }

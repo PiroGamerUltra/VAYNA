@@ -14,6 +14,7 @@ public class HelpCommand implements Command {
     @Override
     public void perform(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
+
         Embed embedBuilder = new Embed();
         embedBuilder.setTitle("» Help");
         embedBuilder.addField("Version", "The current version of the bot is `v" + Configs.getSettings().getVersion() + "`", true);
@@ -42,7 +43,7 @@ public class HelpCommand implements Command {
                 "» "  + CommandManager.getAsJdaCommand(new StoreCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new StoreCommand()).getDescription(), false);
 
 
-        event.getHook().editOriginalEmbeds(embedBuilder.build()).setActionRow(
+        event.getHook().setEphemeral(true).editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())

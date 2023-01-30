@@ -44,5 +44,9 @@ public class Mongo {
         return getMongoDatabase().getCollection("auth-keys");
     }
 
+    public static MongoCollection<Document> getGuildSettingsCollection() {
+        return getMongoDatabase().getCollection("guild-settings");
+    }
+
 
 }

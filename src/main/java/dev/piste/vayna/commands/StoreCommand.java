@@ -1,6 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.Buddy;
@@ -25,7 +26,7 @@ public class StoreCommand implements Command {
 
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
         SettingsConfig settingsConfig = Configs.getSettings();

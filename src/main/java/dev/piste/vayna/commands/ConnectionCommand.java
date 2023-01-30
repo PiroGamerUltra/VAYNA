@@ -1,6 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 public class ConnectionCommand implements Command {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
         StatsCounter.countConnections();
@@ -29,11 +30,10 @@ public class ConnectionCommand implements Command {
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
-
             String buttonId = linkedAccount.isVisibleToPublic() ? "private" : "public";
             String emojiUnicode = linkedAccount.isVisibleToPublic() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
+            event.getHook().setEphemeral(true).editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Button.danger("disconnect", "Disconnect"),
                     Button.secondary("change-visibility;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
             ).queue();

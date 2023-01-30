@@ -1,19 +1,21 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
-import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.apis.henrik.HenrikApiException;
-import dev.piste.vayna.apis.riotgames.RiotApiException;
+import dev.piste.vayna.apis.riotgames.InvalidRiotIdException;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -24,7 +26,7 @@ import java.util.UUID;
 public class StatsCommand implements Command {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
         LinkedAccount linkedAccount = null;
@@ -86,8 +88,8 @@ public class StatsCommand implements Command {
                             return;
                         }
                     }
-                } catch (RiotApiException e) {
-                    event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotIdNotFound(event.getUser(), gameName + "#" + tagLine)).setActionRow(
+                } catch (InvalidRiotIdException e) {
+                    event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRiotIdMessage(event.getUser(), event.getGuild(), gameName + "#" + tagLine)).setActionRow(
                             Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
                     ).queue();
                     return;
@@ -95,35 +97,18 @@ public class StatsCommand implements Command {
             }
         }
 
-        String regionEmoji;
-        String regionName;
-        try {
-            ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
-            regionEmoji = switch (activeShard.getActiveShard()) {
-                case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
-                case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
-                case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
-                case "kr" -> "\uD83C\uDDF0\uD83C\uDDF7";
-                case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
-                default -> "none";
-            };
-            regionName = RiotAPI.getPlatformData(activeShard.getActiveShard()).getName();
-        } catch (RiotApiException e) {
-            event.getHook().editOriginalEmbeds(ErrorEmbed.getNoRegion(event.getUser())).setActionRow(
-                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-            ).queue();
-            return;
-        }
+        ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
+        String regionEmoji = switch (activeShard.getActiveShard()) {
+            case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
+            case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
+            case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
+            case "kr" -> "\uD83C\uDDF0\uD83C\uDDF7";
+            case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
+            default -> "none";
+        };
+        String regionName = RiotAPI.getPlatformData(activeShard.getActiveShard()).getName();
 
-        HenrikAccount henrikAccount;
-        try {
-            henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
-        } catch (HenrikApiException e) {
-            event.getHook().editOriginalEmbeds(ErrorEmbed.getHenrikApiError(event.getUser())).setActionRow(
-                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-            ).queue();
-            return;
-        }
+        HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
         String uuid = UUID.randomUUID().toString();
 

@@ -18,6 +18,10 @@ public class Agent {
     private boolean isPlayableCharacter;
     private ArrayList<Ability> abilities;
 
+    public String getUuid() {
+        return uuid;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

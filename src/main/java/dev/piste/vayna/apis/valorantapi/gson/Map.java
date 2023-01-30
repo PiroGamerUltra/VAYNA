@@ -4,11 +4,16 @@ package dev.piste.vayna.apis.valorantapi.gson;
 @SuppressWarnings("ALL")
 public class Map {
 
+    private String uuid;
     private String displayName;
     private String coordinates;
     private String displayIcon;
     private String listViewIcon;
     private String splash;
+
+    public String getUuid() {
+        return uuid;
+    }
 
     public String getDisplayIcon() {
         return displayIcon;
