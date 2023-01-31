@@ -9,6 +9,9 @@ public class Errors {
 
     private Error riotId;
     private Error region;
+    private Error noConnectionSelf;
+    private Error noConnection;
+    private Error privateAccount;
 
     public Error getRiotId() {
         return riotId;
@@ -16,5 +19,17 @@ public class Errors {
 
     public Error getRegion() {
         return region;
+    }
+
+    public Error getNoConnectionSelf() {
+        return noConnectionSelf;
+    }
+
+    public Error getNoConnection() {
+        return noConnection;
+    }
+
+    public Error getPrivateAccount() {
+        return privateAccount;
     }
 }

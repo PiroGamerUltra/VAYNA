@@ -96,26 +96,26 @@ public class ValorantAPI {
         return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Weapon>>(){}.getType());
     }
 
-    public static Buddy getBuddy(String uuid) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/buddies/" + uuid);
+    public static Buddy getBuddy(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/buddies/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Buddy.class);
     }
 
-    public static Bundle getBundle(String uuid) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/bundles/" + uuid);
+    public static Bundle getBundle(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/bundles/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Bundle.class);
     }
 
-    public static Playercard getPlayercard(String uuid) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/playercards/" + uuid);
+    public static Playercard getPlayercard(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/playercards/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Playercard.class);
     }
 
-    public static Spray getSpray(String uuid) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/sprays/" + uuid);
+    public static Spray getSpray(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/sprays/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Spray.class);
     }
@@ -128,6 +128,12 @@ public class ValorantAPI {
         JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/competitivetiers");
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<ArrayList<CompetitiveTier>>(){}.getType());
+    }
+
+    public static Skin getSkin(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/weapons/skins/" + uuid + "?language=" + languageCode);
+        JsonObject dataObject = jsonObject.getAsJsonObject("data");
+        return new Gson().fromJson(dataObject, Skin.class);
     }
 
     private static JsonObject performHttpRequest(String uri) throws StatusCodeException {

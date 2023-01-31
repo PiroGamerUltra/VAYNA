@@ -3,7 +3,6 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.MMR;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
@@ -12,7 +11,7 @@ import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.embeds.ErrorEmbed;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
@@ -35,9 +34,11 @@ public class LeaderboardCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
+        Language language = Language.getLanguage(event.getGuild());
+
         if(event.getChannelType() == ChannelType.PRIVATE) {
-            event.getHook().editOriginalEmbeds(ErrorEmbed.getNoGuildChannel(event.getUser())).setActionRow(
-                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
+            event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getPrivateChannel().getMessageEmbed(event.getUser())).setActionRow(
+                    language.getErrors().getSupportButton()
             ).queue();
             return;
         }
@@ -59,7 +60,9 @@ public class LeaderboardCommand implements Command {
         }
 
         if(eloMap.size() == 0) {
-            // TODO: leaderboard no players
+            event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getNoPlayersDisplayable().getMessageEmbed(event.getUser())).setActionRow(
+                    language.getErrors().getSupportButton()
+            ).queue();
             return;
         }
 
@@ -97,7 +100,6 @@ public class LeaderboardCommand implements Command {
                 }
             }
         }
-
 
         // Put the average guild elo in the embed
         if(guildElo < 2100) {

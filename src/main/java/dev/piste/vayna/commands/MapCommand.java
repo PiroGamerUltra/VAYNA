@@ -25,7 +25,7 @@ public class MapCommand implements Command {
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle("» " + map.getDisplayName());
+        embed.setTitle(Configs.getTranslations().getTitlePrefix() + map.getDisplayName());
         embed.addField(language.getCommands().getMap().getCoordinates(), map.getCoordinates(), true);
         embed.setImage(map.getSplash());
         embed.setThumbnail(map.getDisplayIcon());

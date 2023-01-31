@@ -7,8 +7,13 @@ package dev.piste.vayna.config.translations;
 @SuppressWarnings("ALL")
 public class TranslationsConfig {
 
+    private String titlePrefix;
     private Language de;
     private Language en;
+
+    public String getTitlePrefix() {
+        return titlePrefix;
+    }
 
     public Language getLanguage(String countryCode) {
         switch (countryCode) {

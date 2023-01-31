@@ -25,7 +25,7 @@ public class GamemodeCommand implements Command {
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle("» " + gamemode.getDisplayName());
+        embed.setTitle(Configs.getTranslations().getTitlePrefix() + gamemode.getDisplayName());
         embed.addField(language.getCommands().getGamemode().getDuration(), gamemode.getDuration(), true);
         embed.setThumbnail(gamemode.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();

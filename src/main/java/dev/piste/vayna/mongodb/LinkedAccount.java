@@ -1,7 +1,10 @@
 package dev.piste.vayna.mongodb;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -40,6 +43,15 @@ public class LinkedAccount {
 
     public boolean isExisting() {
         return isExisting;
+    }
+
+    public void update(boolean visibleToPublic) {
+        if(isExisting) {
+            this.visibleToPublic = visibleToPublic;
+            Bson updates = Updates.set("public", visibleToPublic);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            linkedAccountCollection.updateOne(linkedAccount, updates, options);
+        }
     }
 
     public long getDiscordUserId() {

@@ -1,6 +1,7 @@
 package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -15,15 +16,8 @@ public class FeedbackCommand implements Command {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) {
-        TextInput feedbackInput = TextInput.create("feedback", "Feedback", TextInputStyle.PARAGRAPH)
-                .setPlaceholder("Enter your feedback here")
-                .setMaxLength(4000)
-                .build();
-        Modal modal = Modal.create("feedback", "Share your feedback with the developer")
-                .addActionRows(ActionRow.of(feedbackInput))
-                .build();
-
-        event.replyModal(modal).queue();
+        Language language = Language.getLanguage(event.getGuild());
+        event.replyModal(language.getCommands().getFeedback().getModal()).queue();
     }
 
     @Override

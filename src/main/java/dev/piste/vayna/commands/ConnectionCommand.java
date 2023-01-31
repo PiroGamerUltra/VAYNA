@@ -3,11 +3,11 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
-import dev.piste.vayna.embeds.ConnectionEmbed;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Emoji;
@@ -20,22 +20,22 @@ public class ConnectionCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
+        Language language = Language.getLanguage(event.getGuild());
+
         StatsCounter.countConnections();
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
-            event.getHook().editOriginalEmbeds(ConnectionEmbed.getNoConnectionPresent(event.getUser().getAsMention())).setActionRow(
-                    Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + new AuthKey(event.getUser().getIdLong()).getAuthKey(), "Connect").withEmoji(Emoji.getRiotGames())
+            event.getHook().editOriginalEmbeds(language.getCommands().getConnection().getNone().getMessageEmbed(event.getUser())).setActionRow(
+                    language.getCommands().getConnection().getConnectButton(new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
-            String buttonId = linkedAccount.isVisibleToPublic() ? "private" : "public";
-            String emojiUnicode = linkedAccount.isVisibleToPublic() ? "\uD83D\uDD12" : "\uD83D\uDD13";
 
-            event.getHook().setEphemeral(true).editOriginalEmbeds(ConnectionEmbed.getConnectionPresent(riotAccount.getRiotId(), event.getUser().getAsMention(), linkedAccount.isVisibleToPublic())).setActionRow(
-                    Button.danger("disconnect", "Disconnect"),
-                    Button.secondary("change-visibility;" + buttonId, "Change visibility").withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode(emojiUnicode))
+            event.getHook().setEphemeral(true).editOriginalEmbeds(language.getCommands().getConnection().getPresent().getMessageEmbed(event.getUser(), riotAccount.getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+                    language.getCommands().getConnection().getDisconnectButton(),
+                    language.getCommands().getConnection().getVisibilityButton(linkedAccount.isVisibleToPublic())
             ).queue();
         }
     }

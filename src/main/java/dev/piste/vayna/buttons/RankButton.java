@@ -1,9 +1,7 @@
 package dev.piste.vayna.buttons;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
@@ -12,24 +10,25 @@ import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.CompetitiveTier;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.embeds.ErrorEmbed;
+import dev.piste.vayna.config.translations.Language;
+import dev.piste.vayna.manager.Button;
+import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class RankButton {
+public class RankButton implements Button {
 
-    public void perform(ButtonInteractionEvent event) throws StatusCodeException {
+    public void perform(ButtonInteractionEvent event, String arg) throws StatusCodeException {
         event.deferReply().queue();
 
-        RiotAccount oldRiotAccount = Bot.getStatsButtonMap().get(event.getButton().getId().split(";")[1]);
+        Language language = Language.getLanguage(event.getGuild());
 
-        Bot.getStatsButtonMap().remove(event.getButton().getId().split(";")[1]);
+        RiotAccount oldRiotAccount = ButtonManager.getRiotAccountFromStatsButtonMap(arg);
 
         if(oldRiotAccount == null) {
-            event.getHook().editOriginalEmbeds(ErrorEmbed.getButtonTooOld(event.getUser())).setActionRow(
-                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
+            event.getHook().editOriginalEmbeds(language.getButtons().getRank().getErrors().getButtonTooOld().getMessageEmbed(event.getUser())).setActionRow(
+                    language.getErrors().getSupportButton()
             ).queue();
             return;
         }
@@ -71,6 +70,11 @@ public class RankButton {
             }
         }
 
+    }
+
+    @Override
+    public String getName() {
+        return "rank;";
     }
 
     private String getProgressBar(int ranking) {

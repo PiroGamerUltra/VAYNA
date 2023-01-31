@@ -9,25 +9,30 @@ import net.dv8tion.jda.api.entities.Guild;
  */
 public class Language {
 
-    private String prefix;
     private String languageCode;
     private Errors errors;
     private Commands commands;
-
-    public String getPrefix() {
-        return prefix;
-    }
+    private Buttons buttons;
+    private Modals modals;
 
     public String getLanguageCode() {
         return languageCode;
     }
 
-    public Errors getError() {
+    public Errors getErrors() {
         return errors;
     }
 
     public Commands getCommands() {
         return commands;
+    }
+
+    public Buttons getButtons() {
+        return buttons;
+    }
+
+    public Modals getModals() {
+        return modals;
     }
 
     public static Language getLanguage(Guild guild) {

@@ -25,23 +25,7 @@ public class WeaponCommand implements Command {
         String uuid = ValorantAPI.getWeaponByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Weapon weapon = ValorantAPI.getWeapon(uuid, language.getLanguageCode());
 
-        Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle("» " + weapon.getDisplayName());
-        embed.addField(language.getCommands().getWeapon().getPrice(), weapon.getShopData().getCost() + " " + Emoji.getVP().getFormatted(), false);
-        embed.addField(language.getCommands().getWeapon().getType(), weapon.getShopData().getCategoryText() + "", false);
-        embed.addField(language.getCommands().getWeapon().getMagazine(), "**" + weapon.getWeaponStats().getMagazineSize() + "** " + language.getCommands().getWeapon().getBullets(), true);
-        embed.addField(language.getCommands().getWeapon().getFireRate(), "**" + weapon.getWeaponStats().getFireRate() + "** " + language.getCommands().getWeapon().getRps(), true);
-        embed.addField(language.getCommands().getWeapon().getEquipTime(), "**" + weapon.getWeaponStats().getEquipTimeSeconds() + "** " + language.getCommands().getWeapon().getSeconds(), true);
-        embed.addField(language.getCommands().getWeapon().getReloadTime(), "**" + weapon.getWeaponStats().getReloadTimeSeconds() + "** " + language.getCommands().getWeapon().getSeconds(), true);
-        for(DamageRanges damageRanges : weapon.getWeaponStats().getDamageRanges()) {
-            embed.addField(language.getCommands().getWeapon().getDamage() + " (" + damageRanges.getRangeStartMeters() + "-" + damageRanges.getRangeEndMeters() + "m)",
-                    language.getCommands().getWeapon().getHead() + " - **" + damageRanges.getHeadDamage() + "**\n" +
-                            language.getCommands().getWeapon().getBody() + " - **" + damageRanges.getBodyDamage() + "**\n" +
-                            language.getCommands().getWeapon().getLegs() + " - **" + damageRanges.getLegDamage() + "**", false);
-        }
-        embed.setImage(weapon.getDisplayIcon());
-        event.getHook().editOriginalEmbeds(embed.build()).queue();
+        event.getHook().editOriginalEmbeds(language.getCommands().getWeapon().getMessageEmbed(event.getUser(), weapon)).queue();
     }
 
     @Override

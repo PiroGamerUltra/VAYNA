@@ -7,23 +7,17 @@ import dev.piste.vayna.apis.riotgames.InvalidRegionException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.translations.Language;
-import dev.piste.vayna.embeds.ErrorEmbed;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
-import dev.piste.vayna.apis.henrik.HenrikApiException;
 import dev.piste.vayna.apis.riotgames.InvalidRiotIdException;
 import dev.piste.vayna.mongodb.LinkedAccount;
-import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-
-import java.util.UUID;
 
 public class StatsCommand implements Command {
 
@@ -35,46 +29,20 @@ public class StatsCommand implements Command {
 
         LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
-
+        long discordUserId = 0;
         if(event.getSubcommandName() == null) return;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
+                discordUserId = event.getUser().getIdLong();
                 linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-
-                if (!linkedAccount.isExisting()) {
-                    event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).setActionRow(
-                            Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-                    ).queue();
-                    return;
-                }
                 riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
             }
             // /stats user <@user>
             case "user" -> {
-                long discordUserId = event.getOption("user").getAsLong();
+                discordUserId = event.getOption("user").getAsLong();
                 linkedAccount = new LinkedAccount(discordUserId);
-
-                if (!linkedAccount.isExisting()) {
-                    if (discordUserId == event.getUser().getIdLong()) {
-                        event.getHook().editOriginalEmbeds(ErrorEmbed.getSelfRiotAccountNotConnected(event.getUser())).setActionRow(
-                                Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-                        ).queue();
-                    } else {
-                        event.getHook().editOriginalEmbeds(ErrorEmbed.getRiotAccountNotConnected(event.getUser(), Bot.getJDA().getUserById(discordUserId))).setActionRow(
-                                Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-                        ).queue();
-                    }
-                    return;
-                }
-                if(!linkedAccount.isVisibleToPublic() && (discordUserId != event.getUser().getIdLong())) {
-                    event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).setActionRow(
-                            Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-                    ).queue();
-                    return;
-                }
                 riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
-
             }
             // /stats riot-id <name> <tag>
             case "riot-id" -> {
@@ -84,28 +52,42 @@ public class StatsCommand implements Command {
                     riotAccount = RiotAPI.getAccountByRiotId(gameName, tagLine);
 
                     linkedAccount = new LinkedAccount(riotAccount.getPuuid());
-                    if (linkedAccount.isExisting()) {
-                        if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
-                            event.getHook().editOriginalEmbeds(ErrorEmbed.getLinkedAccountPrivate(event.getUser())).setActionRow(
-                                    Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
-                            ).queue();
-                            return;
-                        }
-                    }
                 } catch (InvalidRiotIdException e) {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRiotIdMessage(event.getUser(), event.getGuild(), gameName + "#" + tagLine)).setActionRow(
-                            Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
+                    event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getRiotId().getMessageEmbed(event.getUser(), gameName + "#" + tagLine)).setActionRow(
+                            language.getErrors().getSupportButton()
                     ).queue();
                     return;
                 }
             }
         }
 
-        ActiveShard activeShard = null;
+        if (linkedAccount.isExisting()) {
+            if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
+                event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getPrivateAccount().getMessageEmbed(event.getUser())).setActionRow(
+                        language.getErrors().getSupportButton()
+                ).queue();
+                return;
+            }
+        } else {
+            if(discordUserId != 0) {
+                if (discordUserId == event.getUser().getIdLong()) {
+                    event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getNoConnectionSelf().getMessageEmbed(event.getUser())).setActionRow(
+                            language.getErrors().getSupportButton()
+                    ).queue();
+                } else {
+                    event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getNoConnection().getMessageEmbed(event.getUser(), event.getJDA().getUserById(discordUserId))).setActionRow(
+                            language.getErrors().getSupportButton()
+                    ).queue();
+                }
+                return;
+            }
+        }
+
+        ActiveShard activeShard;
         try {
             activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
         } catch (InvalidRegionException e) {
-            event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegionMessage(event.getUser(), event.getGuild(), riotAccount.getRiotId())).queue();
+            event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getRegion().getMessageEmbed(event.getUser(), riotAccount.getRiotId())).queue();
             return;
         }
 
@@ -121,22 +103,8 @@ public class StatsCommand implements Command {
 
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
-        String uuid = UUID.randomUUID().toString();
-
-        Bot.getStatsButtonMap().put(uuid, riotAccount);
-
-        Embed embed = new Embed();
-        embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall());
-        embed.setColor(209, 54, 57);
-        embed.setTitle(language.getPrefix() + language.getCommands().getStats().getTitle());
-        embed.setDescription(language.getCommands().getStats().getDescription());
-        embed.addField(language.getCommands().getStats().getLevel(), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
-        embed.addField(language.getCommands().getStats().getRegion(), regionEmoji + " " + regionName, true);
-        if(linkedAccount.isExisting()) {
-            embed.addField(language.getCommands().getStats().getConnection(), Emoji.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
-        }
-        event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                Button.secondary("rank;" + uuid, language.getCommands().getStats().getRank()).withEmoji(Emoji.getRankByTierName("Unranked"))
+        event.getHook().editOriginalEmbeds(language.getCommands().getStats().getMessageEmbed(riotAccount, henrikAccount, linkedAccount, regionEmoji, regionName)).setActionRow(
+            language.getCommands().getStats().getRankButton(riotAccount)
         ).queue();
     }
 

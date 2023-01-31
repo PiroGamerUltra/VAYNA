@@ -4,9 +4,9 @@ import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.commands.*;
 import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -59,14 +59,21 @@ public class CommandManager {
     }
 
     public static void perform(SlashCommandInteractionEvent event) {
-        final String commandName = event.getName().toLowerCase();
+        Language language = Language.getLanguage(event.getGuild());
+
         Thread thread = new Thread(() -> {
             try {
-                commands.get(commandName).perform(event);
+                commands.get(event.getName().toLowerCase()).perform(event);
             } catch (StatusCodeException e) {
-                Embed embed = ErrorMessages.getStatusCodeErrorMessage(event.getUser(), event.getGuild(), e);
+                Embed embed;
+                if(e.getMessage().split(" ")[0].equalsIgnoreCase("429")) {
+                    embed = language.getErrors().getRateLimit().getEmbed(event.getUser(), e);
+                } else {
+                    embed = language.getErrors().getApi().getEmbed(event.getUser(), e);
+                }
+
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                        Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), "Support").withEmoji(Emoji.getDiscord())
+                        language.getErrors().getSupportButton()
                 ).queue();
                 if(Bot.isDebug()) return;
                 TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());

@@ -7,7 +7,9 @@ import dev.piste.vayna.listener.ButtonInteractionListener;
 import dev.piste.vayna.listener.GuildJoinLeaveListener;
 import dev.piste.vayna.listener.ModalInteractionListener;
 import dev.piste.vayna.listener.SlashCommandListener;
+import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.manager.CommandManager;
+import dev.piste.vayna.manager.ModalManager;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.FontColor;
 import net.dv8tion.jda.api.JDA;
@@ -34,14 +36,8 @@ public class Bot {
         return System.getProperty("os.name").startsWith("Windows");
     }
 
-    private static final Map<String, RiotAccount> statsButtonMap = new HashMap<>();
-
     public static String getConsolePrefix(String name) {
         return FontColor.WHITE + "[" + FontColor.PURPLE + name + FontColor.WHITE + "]" + FontColor.RESET + " ";
-    }
-
-    public static Map<String, RiotAccount> getStatsButtonMap() {
-        return statsButtonMap;
     }
 
     public static void main(String[] args) {
@@ -63,6 +59,8 @@ public class Bot {
                 .build();
 
         CommandManager.registerCommands();
+        ButtonManager.registerButtons();
+        ModalManager.registerModals();
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 
