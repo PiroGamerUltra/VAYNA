@@ -77,7 +77,7 @@ public class LeaderboardCommand implements Command {
         int guildElo = memberElos / eloMap.size();
 
         Embed embed = new Embed().setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
-                .setDescription("If you don't see yourself on the scoreboard, you haven't played competitive in your last 20 matches or there has been an error while fetching your statistics.");
+                .setDescription(language.getCommands().getLeaderboard().getDescription());
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i<20; i++) {
@@ -86,14 +86,21 @@ public class LeaderboardCommand implements Command {
                 User user = entry.getKey();
                 MMR mmr = entry.getValue();
                 Rank rank = mmr.getRank();
+                Tier tier = null;
+                for(Tier forTier : ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers()) {
+                    if(forTier.getTier() == rank.getCurrentTier()) {
+                        tier = forTier;
+                        break;
+                    }
+                }
                 if(entry.getValue().getRank().getElo() == eloList.get(i)) {
                     if(rank.getElo() >= 2100) {
                         embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + rank.getCurrentTierPatched() +
+                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "RR**)", false);
                     } else {
                         embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + rank.getCurrentTierPatched() +
+                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "**/**100**)", false);
                     }
 
@@ -102,26 +109,25 @@ public class LeaderboardCommand implements Command {
         }
 
         // Put the average guild elo in the embed
+        int guildRatingInTier;
+        Tier guildTier;
         if(guildElo < 2100) {
-            int guildRatingInTier = guildElo % 100;
-            Tier guildTier = ValorantAPI.getLatestCompetitiveTier().getTiers().get((int) ((guildElo / 100.0) + 3.0));
-            embed.setTitle("» Leaderboard (Average: " + guildTier.getTierName() + " - " + guildRatingInTier + "/100)");
-            embed.setThumbnail(guildTier.getLargeIcon());
+            guildRatingInTier = guildElo % 100;
+            guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get((int) ((guildElo / 100.0) + 3.0));
         } else {
-            int guildRatingInTier = guildElo - 2100;
-            Tier guildTier;
+            guildRatingInTier = guildElo - 2100;
             if(guildRatingInTier < 90) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier().getTiers().get(24);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(24);
             } else if(guildRatingInTier < 200) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier().getTiers().get(25);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(25);
             } else if(guildRatingInTier < 450) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier().getTiers().get(26);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(26);
             } else {
-                guildTier = ValorantAPI.getLatestCompetitiveTier().getTiers().get(27);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(27);
             }
-            embed.setTitle("» Leaderboard (Average: " + guildTier.getTierName() + " - " + guildRatingInTier + "RR)");
-            embed.setThumbnail(guildTier.getLargeIcon());
         }
+        embed.setTitle(Configs.getTranslations().getTitlePrefix() + language.getCommands().getLeaderboard().getTitle().replaceAll("%rank:name%", guildTier.getTierName()).replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
+        embed.setThumbnail(guildTier.getLargeIcon());
 
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }

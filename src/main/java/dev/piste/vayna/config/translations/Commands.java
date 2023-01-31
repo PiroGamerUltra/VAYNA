@@ -16,6 +16,7 @@ public class Commands {
     private Leaderboard leaderboard;
     private Feedback feedback;
     private Store store;
+    private Help help;
 
     public Commands() {
     }
@@ -54,5 +55,9 @@ public class Commands {
 
     public Store getStore() {
         return store;
+    }
+
+    public Help getHelp() {
+        return help;
     }
 }

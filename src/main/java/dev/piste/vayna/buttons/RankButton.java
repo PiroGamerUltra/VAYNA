@@ -37,72 +37,30 @@ public class RankButton implements Button {
 
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
-        Embed embed = new Embed()
-                .setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall())
-                .setTitle("» Rank")
-                .setColor(209, 54, 57);
-
         Rank rank = henrikAccount.getMmr().getRank();
 
-        CompetitiveTier competitiveTier = ValorantAPI.getLatestCompetitiveTier();
+        CompetitiveTier competitiveTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode());
+        CompetitiveTier enUsCompetitiveTier = ValorantAPI.getLatestCompetitiveTier("en-US");
+
         if(rank.getCurrentTierPatched() == null) {
             Tier tier = competitiveTier.getTiers().get(0);
-            embed.addField("Rank", Emoji.getRankByTierName(tier.getTierName()).getFormatted()  + " " + tier.getTierName(), true)
-                    .setThumbnail(tier.getLargeIcon())
-                    .addField("Games needed", "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? "game" : "games"), true);
-            event.getHook().editOriginalEmbeds(embed.build()).queue();
+            Tier enUsTier = enUsCompetitiveTier.getTiers().get(0);
+            event.getHook().editOriginalEmbeds(language.getButtons().getRank().getUnrankedMessageEmbed(riotAccount, henrikAccount, tier, enUsTier, rank)).queue();
             return;
         }
-        for(Tier tier : competitiveTier.getTiers()) {
+        for(int i = 0; i < competitiveTier.getTiers().size(); i++) {
+            Tier tier = competitiveTier.getTiers().get(i);
             if(tier.getTier() == rank.getCurrentTier()) {
-                embed.addField("Rank", Emoji.getRankByTierName(tier.getTierName()).getFormatted() + " " + tier.getTierName(), false)
-                        .setThumbnail(tier.getLargeIcon());
-                if(rank.getCurrentTier() > 23) {
-                    embed.addField("Rating", "**" + rank.getRankingInTier() + "**RR » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
-                } else {
-                    embed.addField("Rating", getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
-                }
-
-                event.getHook().editOriginalEmbeds(embed.build()).queue();
+                Tier enUsTier = enUsCompetitiveTier.getTiers().get(i);
+                event.getHook().editOriginalEmbeds(language.getButtons().getRank().getUnrankedMessageEmbed(riotAccount, henrikAccount, tier, enUsTier, rank)).queue();
                 return;
             }
         }
-
     }
 
     @Override
     public String getName() {
         return "rank;";
-    }
-
-    private String getProgressBar(int ranking) {
-        int value = (int) Math.round(ranking/10.0);
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0; i<value; i++) {
-            if(i==0) {
-                stringBuilder.append(Emoji.getProgressBarGreen("start").getFormatted());
-                continue;
-            }
-            if(i==9) {
-                stringBuilder.append(Emoji.getProgressBarGreen("end").getFormatted());
-                continue;
-            }
-            stringBuilder.append(Emoji.getProgressBarGreen("line").getFormatted());
-        }
-        for(int i = value; i<10; i++) {
-            if(i==0) {
-                stringBuilder.append(Emoji.getProgressBarRed("start").getFormatted());
-                continue;
-            }
-            if(i==9) {
-                stringBuilder.append(Emoji.getProgressBarRed("end").getFormatted());
-                continue;
-            }
-            stringBuilder.append(Emoji.getProgressBarRed("line").getFormatted());
-        }
-        return stringBuilder.toString();
     }
 
 }

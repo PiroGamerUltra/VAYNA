@@ -120,12 +120,13 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Spray.class);
     }
 
-    public static CompetitiveTier getLatestCompetitiveTier() throws StatusCodeException {
-        return getCompetitiveTiers().get(getCompetitiveTiers().size()-1);
+    public static CompetitiveTier getLatestCompetitiveTier(String languageCode) throws StatusCodeException {
+        ArrayList<CompetitiveTier> competitiveTiers = getCompetitiveTiers(languageCode);
+        return competitiveTiers.get(competitiveTiers.size()-1);
     }
 
-    public static ArrayList<CompetitiveTier> getCompetitiveTiers() throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/competitivetiers");
+    public static ArrayList<CompetitiveTier> getCompetitiveTiers(String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/competitivetiers?language=" + languageCode);
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<ArrayList<CompetitiveTier>>(){}.getType());
     }

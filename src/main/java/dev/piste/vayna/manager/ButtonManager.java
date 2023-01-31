@@ -38,8 +38,7 @@ public class ButtonManager {
         statsButtonMap.put(uuid, riotAccount);
         Thread thread = new Thread(() -> {
             try {
-                // TODO
-                Thread.sleep(60000);
+                Thread.sleep(600000);
                 statsButtonMap.remove(uuid);
             } catch (InterruptedException e) {
                 statsButtonMap.remove(uuid);
@@ -50,9 +49,7 @@ public class ButtonManager {
 
     public static RiotAccount getRiotAccountFromStatsButtonMap(String uuid) {
         if(statsButtonMap.get(uuid) == null) return null;
-        RiotAccount riotAccount = statsButtonMap.get(uuid);
-        statsButtonMap.remove(uuid);
-        return riotAccount;
+        return statsButtonMap.get(uuid);
     }
 
     public static void perform(ButtonInteractionEvent event) {
