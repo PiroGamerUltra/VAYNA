@@ -9,46 +9,21 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class AuthKey {
 
-    private long discordUserId;
+    private final long discordUserId;
     private String authKey;
     private static final MongoCollection<Document> authKeyCollection = Mongo.getAuthKeyCollection();
-    private final Document authKeyDocument;
     private final boolean isExisting;
 
 
     public AuthKey(long discordUserId) {
         this.discordUserId = discordUserId;
-        authKeyDocument = authKeyCollection.find(eq("discordUserId", discordUserId)).first();
+        Document authKeyDocument = authKeyCollection.find(eq("discordUserId", discordUserId)).first();
         if(authKeyDocument == null) {
             isExisting = false;
         } else {
             isExisting = true;
             this.authKey = (String) authKeyDocument.get("authKey");
         }
-    }
-
-    public AuthKey(String authKey) {
-        this.authKey = authKey;
-        authKeyDocument = authKeyCollection.find(eq("authKey", authKey)).first();
-        if(authKeyDocument == null) {
-            isExisting = false;
-        } else {
-            isExisting = true;
-            this.discordUserId = (long) authKeyDocument.get("discordUserId");
-        }
-    }
-
-    public boolean isExisting() {
-        return isExisting;
-    }
-
-    public long getDiscordUserId() {
-        if (isExisting) {
-            return discordUserId;
-        } else {
-            return 0;
-        }
-
     }
 
     public String getAuthKey() {
@@ -64,12 +39,6 @@ public class AuthKey {
         newAuthKeyDocument.put("discordUserId", discordUserId);
         newAuthKeyDocument.put("authKey", authKey);
         authKeyCollection.insertOne(newAuthKeyDocument);
-    }
-
-    public void delete() {
-        if(isExisting) {
-            authKeyCollection.deleteOne(authKeyDocument);
-        }
     }
 
 }

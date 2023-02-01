@@ -5,14 +5,14 @@ package dev.piste.vayna.config.tokens;
 public class TokensConfig {
 
     private Bot bot;
-    private String mongodb;
+    private MongoDbConfig mongodb;
     private Api api;
 
     public Bot getBot() {
         return bot;
     }
 
-    public String getMongodb() {
+    public MongoDbConfig getMongodb() {
         return mongodb;
     }
 

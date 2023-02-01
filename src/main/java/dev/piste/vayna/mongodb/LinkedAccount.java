@@ -84,12 +84,4 @@ public class LinkedAccount {
         }
     }
 
-    public static void insert(long discordUserId, String riotPuuid, boolean visibleToPublic) {
-        Document newLinkedAccountDocument = new Document();
-        newLinkedAccountDocument.put("discordUserId", discordUserId);
-        newLinkedAccountDocument.put("riotPuuid", riotPuuid);
-        newLinkedAccountDocument.put("public", visibleToPublic);
-        linkedAccountCollection.insertOne(newLinkedAccountDocument);
-    }
-
 }

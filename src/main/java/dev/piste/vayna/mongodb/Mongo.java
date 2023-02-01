@@ -7,33 +7,33 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.tokens.MongoDbConfig;
 import dev.piste.vayna.util.FontColor;
 import org.bson.Document;
 
+import java.util.Collections;
+
 public class Mongo {
 
-    private static MongoClient mongoClient;
+    private static MongoDatabase mongoDatabase;
 
     public static void connect() {
 
-        ConnectionString uri = new ConnectionString(Configs.getTokens().getMongodb());
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(uri)
-                .serverApi(ServerApi.builder()
-                        .version(ServerApiVersion.V1)
-                        .build())
-                .build();
+        MongoDbConfig mongoDbConfig = Configs.getTokens().getMongodb();
 
-        try {
-            mongoClient = MongoClients.create(settings);
-            System.out.println(Bot.getConsolePrefix("MongoDB") + FontColor.GREEN + "Connected" + FontColor.RESET);
-        } catch (MongoException e) {
-            e.printStackTrace();
-        }
+        MongoCredential credential = MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getAuthDb(), mongoDbConfig.getPassword().toCharArray());
+        MongoClientSettings settings =
+                MongoClientSettings.builder().credential(credential).applyToClusterSettings(builder ->
+                        builder.hosts(Collections.singletonList(new ServerAddress(mongoDbConfig.getHost(), mongoDbConfig.getPort())))).build();
+
+        MongoClient mongoClient = MongoClients.create(settings);
+        mongoDatabase = mongoClient.getDatabase("VAYNA");
+
+        System.out.println(Bot.getConsolePrefix("MongoDB") + FontColor.GREEN + "Connected" + FontColor.RESET);
     }
 
     public static MongoDatabase getMongoDatabase() {
-        return mongoClient.getDatabase("VAYNA");
+        return mongoDatabase;
     }
 
     public static MongoCollection<Document> getLinkedAccountCollection() {
