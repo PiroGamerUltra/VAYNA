@@ -35,7 +35,7 @@ public class GuildSetting {
 
     public String getLanguage() {
         if (!isExisting) {
-            language = "en";
+            language = "en-US";
             insert(guildId, language);
         }
         return language;

@@ -1,8 +1,5 @@
 package dev.piste.vayna;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.tokens.TokensConfig;
 import dev.piste.vayna.listener.ButtonInteractionListener;
@@ -14,6 +11,7 @@ import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.manager.ModalManager;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.FontColor;
+import dev.piste.vayna.util.TranslationManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -22,17 +20,13 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Bot {
 
     private static JDA jda;
-
-    public static JDA getJDA() {
-        return jda;
-    }
 
     public static boolean isDebug() {
         return System.getProperty("os.name").startsWith("Windows");
@@ -69,7 +63,9 @@ public class Bot {
         new Bot().listenShutdown();
     }
 
-
+    public static JDA getJDA() {
+        return jda;
+    }
 
     private void listenShutdown() {
         new Thread(() -> {

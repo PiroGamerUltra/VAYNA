@@ -7,6 +7,8 @@ import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Button;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.util.buttons.Buttons;
+import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public class VisibilityButton implements Button {
@@ -14,13 +16,11 @@ public class VisibilityButton implements Button {
     public void perform(ButtonInteractionEvent event, String arg) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
-        Language language = Language.getLanguage(event.getGuild());
-
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
-            event.getHook().editOriginalEmbeds(language.getCommands().getConnection().getNone().getMessageEmbed(event.getUser())).setActionRow(
-                language.getCommands().getConnection().getConnectButton(new AuthKey(event.getUser().getIdLong()).getAuthKey())
+            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionNone(event.getGuild(), event.getUser())).setActionRow(
+                    Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
@@ -29,9 +29,9 @@ public class VisibilityButton implements Button {
 
             linkedAccount.update(visibleToPublic);
 
-            event.getHook().editOriginalEmbeds(language.getCommands().getConnection().getPresent().getMessageEmbed(event.getUser(), riotAccount.getRiotId(), visibleToPublic)).setActionRow(
-                    language.getCommands().getConnection().getDisconnectButton(),
-                    language.getCommands().getConnection().getVisibilityButton(visibleToPublic)
+            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), riotAccount.getRiotId(), visibleToPublic)).setActionRow(
+                    Buttons.getDisconnectButton(event.getGuild()),
+                    Buttons.getVisibilityButton(event.getGuild(), visibleToPublic)
             ).queue();
 
         }

@@ -16,6 +16,7 @@ import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -39,7 +40,7 @@ public class LeaderboardCommand implements Command {
 
         if(event.getChannelType() == ChannelType.PRIVATE) {
             event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getPrivateChannel().getMessageEmbed(event.getUser())).setActionRow(
-                    language.getErrors().getSupportButton()
+                    Buttons.getSupportButton(event.getGuild())
             ).queue();
             return;
         }
@@ -62,7 +63,7 @@ public class LeaderboardCommand implements Command {
 
         if(eloMap.size() == 0) {
             event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getNoPlayersDisplayable().getMessageEmbed(event.getUser())).setActionRow(
-                    language.getErrors().getSupportButton()
+                    Buttons.getSupportButton(event.getGuild())
             ).queue();
             return;
         }

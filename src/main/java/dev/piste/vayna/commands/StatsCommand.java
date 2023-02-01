@@ -14,6 +14,7 @@ import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.riotgames.InvalidRiotIdException;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -54,7 +55,7 @@ public class StatsCommand implements Command {
                     linkedAccount = new LinkedAccount(riotAccount.getPuuid());
                 } catch (InvalidRiotIdException e) {
                     event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getRiotId().getMessageEmbed(event.getUser(), gameName + "#" + tagLine)).setActionRow(
-                            language.getErrors().getSupportButton()
+                            Buttons.getSupportButton(event.getGuild())
                     ).queue();
                     return;
                 }
@@ -64,7 +65,7 @@ public class StatsCommand implements Command {
         if (linkedAccount.isExisting()) {
             if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
                 event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getPrivateAccount().getMessageEmbed(event.getUser())).setActionRow(
-                        language.getErrors().getSupportButton()
+                        Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 return;
             }
@@ -72,11 +73,11 @@ public class StatsCommand implements Command {
             if(discordUserId != 0) {
                 if (discordUserId == event.getUser().getIdLong()) {
                     event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getNoConnectionSelf().getMessageEmbed(event.getUser())).setActionRow(
-                            language.getErrors().getSupportButton()
+                            Buttons.getSupportButton(event.getGuild())
                     ).queue();
                 } else {
                     event.getHook().editOriginalEmbeds(language.getCommands().getStats().getErrors().getNoConnection().getMessageEmbed(event.getUser(), event.getJDA().getUserById(discordUserId))).setActionRow(
-                            language.getErrors().getSupportButton()
+                            Buttons.getSupportButton(event.getGuild())
                     ).queue();
                 }
                 return;

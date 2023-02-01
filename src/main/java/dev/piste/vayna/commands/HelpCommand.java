@@ -7,6 +7,7 @@ import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -19,7 +20,7 @@ public class HelpCommand implements Command {
         Language language = Language.getLanguage(event.getGuild());
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(language.getCommands().getHelp().getMessageEmbed(event.getUser())).setActionRow(
-                language.getErrors().getSupportButton(),
+                Buttons.getSupportButton(event.getGuild()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
         ).queue();

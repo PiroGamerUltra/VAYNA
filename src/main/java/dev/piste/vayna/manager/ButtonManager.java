@@ -10,6 +10,8 @@ import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
+import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
@@ -59,15 +61,10 @@ public class ButtonManager {
             try {
                 buttons.get(buttonId[0]).perform(event, (buttonId.length == 1 ? null : buttonId[1]));
             } catch (StatusCodeException e) {
-                Embed embed;
-                if(e.getMessage().split(" ")[0].equalsIgnoreCase("429")) {
-                    embed = language.getErrors().getRateLimit().getEmbed(event.getUser(), e);
-                } else {
-                    embed = language.getErrors().getApi().getEmbed(event.getUser(), e);
-                }
+                Embed embed = ErrorMessages.getStatusCodeErrorEmbed(event.getGuild(), event.getUser(), e);
 
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                        language.getErrors().getSupportButton()
+                        Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
                 TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());

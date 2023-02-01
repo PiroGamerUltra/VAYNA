@@ -15,6 +15,7 @@ import dev.piste.vayna.manager.Button;
 import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public class RankButton implements Button {
@@ -28,7 +29,7 @@ public class RankButton implements Button {
 
         if(oldRiotAccount == null) {
             event.getHook().editOriginalEmbeds(language.getButtons().getRank().getErrors().getButtonTooOld().getMessageEmbed(event.getUser())).setActionRow(
-                    language.getErrors().getSupportButton()
+                    Buttons.getSupportButton(event.getGuild())
             ).queue();
             return;
         }

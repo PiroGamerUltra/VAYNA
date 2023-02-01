@@ -11,6 +11,8 @@ import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.buttons.Buttons;
+import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -20,22 +22,20 @@ public class ConnectionCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
-        Language language = Language.getLanguage(event.getGuild());
-
         StatsCounter.countConnections();
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
-            event.getHook().editOriginalEmbeds(language.getCommands().getConnection().getNone().getMessageEmbed(event.getUser())).setActionRow(
-                    language.getCommands().getConnection().getConnectButton(new AuthKey(event.getUser().getIdLong()).getAuthKey())
+            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionNone(event.getGuild(), event.getUser())).setActionRow(
+                    Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
             RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
-            event.getHook().setEphemeral(true).editOriginalEmbeds(language.getCommands().getConnection().getPresent().getMessageEmbed(event.getUser(), riotAccount.getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
-                    language.getCommands().getConnection().getDisconnectButton(),
-                    language.getCommands().getConnection().getVisibilityButton(linkedAccount.isVisibleToPublic())
+            event.getHook().setEphemeral(true).editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), riotAccount.getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+                    Buttons.getDisconnectButton(event.getGuild()),
+                    Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())
             ).queue();
         }
     }

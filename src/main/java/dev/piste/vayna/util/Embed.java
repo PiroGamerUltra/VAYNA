@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Embed {
 
-    private EmbedBuilder embedBuilder;
+    private final EmbedBuilder embedBuilder;
     private boolean colorModified = false;
     private boolean footerModified = false;
 

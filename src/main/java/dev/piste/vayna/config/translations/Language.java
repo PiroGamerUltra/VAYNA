@@ -10,17 +10,12 @@ import net.dv8tion.jda.api.entities.Guild;
 public class Language {
 
     private String languageCode;
-    private Errors errors;
     private Commands commands;
     private Buttons buttons;
     private Modals modals;
 
     public String getLanguageCode() {
         return languageCode;
-    }
-
-    public Errors getErrors() {
-        return errors;
     }
 
     public Commands getCommands() {
