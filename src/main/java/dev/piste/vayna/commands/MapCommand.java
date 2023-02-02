@@ -3,11 +3,11 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Map;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
+import dev.piste.vayna.util.TranslationManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -18,15 +18,15 @@ public class MapCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        Language language = Language.getLanguage(event.getGuild());
+        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
 
         String uuid = ValorantAPI.getMapByName(event.getOption("name").getAsString(), "en-US").getUuid();
-        Map map = ValorantAPI.getMap(uuid, language.getLanguageCode());
+        Map map = ValorantAPI.getMap(uuid, translation.getLanguageCode());
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle(Configs.getTranslations().getTitlePrefix() + map.getDisplayName());
-        embed.addField(language.getCommands().getMap().getCoordinates(), map.getCoordinates(), true);
+        embed.setTitle(translation.getTranslation("embed-title-prefix") + map.getDisplayName());
+        embed.addField(translation.getTranslation("command-map-embed-field-1-name"), map.getCoordinates(), true);
         embed.setImage(map.getSplash());
         embed.setThumbnail(map.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();

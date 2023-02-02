@@ -4,14 +4,11 @@ import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.commands.*;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,7 +58,6 @@ public class CommandManager {
     }
 
     public static void perform(SlashCommandInteractionEvent event) {
-        Language language = Language.getLanguage(event.getGuild());
 
         Thread thread = new Thread(() -> {
             try {

@@ -11,11 +11,11 @@ import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.TranslationManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -36,10 +36,14 @@ public class LeaderboardCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        Language language = Language.getLanguage(event.getGuild());
+        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
 
         if(event.getChannelType() == ChannelType.PRIVATE) {
-            event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getPrivateChannel().getMessageEmbed(event.getUser())).setActionRow(
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    .setColor(255, 0, 0)
+                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-error-noguild-embed-title"))
+                    .setDescription(translation.getTranslation("command-leaderboard-error-noguild-embed-description"));
+            event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                     Buttons.getSupportButton(event.getGuild())
             ).queue();
             return;
@@ -62,7 +66,11 @@ public class LeaderboardCommand implements Command {
         }
 
         if(eloMap.size() == 0) {
-            event.getHook().editOriginalEmbeds(language.getCommands().getLeaderboard().getErrors().getNoPlayersDisplayable().getMessageEmbed(event.getUser())).setActionRow(
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    .setColor(255, 0, 0)
+                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-error-empty-embed-title"))
+                    .setDescription(translation.getTranslation("command-leaderboard-error-empty-embed-description"));
+            event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                     Buttons.getSupportButton(event.getGuild())
             ).queue();
             return;
@@ -79,7 +87,7 @@ public class LeaderboardCommand implements Command {
         int guildElo = memberElos / eloMap.size();
 
         Embed embed = new Embed().setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
-                .setDescription(language.getCommands().getLeaderboard().getDescription());
+                .setDescription(translation.getTranslation("command-leaderboard-embed-description"));
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i<20; i++) {
@@ -89,7 +97,7 @@ public class LeaderboardCommand implements Command {
                 MMR mmr = entry.getValue();
                 Rank rank = mmr.getRank();
                 Tier tier = null;
-                for(Tier forTier : ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers()) {
+                for(Tier forTier : ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers()) {
                     if(forTier.getTier() == rank.getCurrentTier()) {
                         tier = forTier;
                         break;
@@ -115,20 +123,22 @@ public class LeaderboardCommand implements Command {
         Tier guildTier;
         if(guildElo < 2100) {
             guildRatingInTier = guildElo % 100;
-            guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get((int) ((guildElo / 100.0) + 3.0));
+            guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get((int) ((guildElo / 100.0) + 3.0));
         } else {
             guildRatingInTier = guildElo - 2100;
             if(guildRatingInTier < 90) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(24);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(24);
             } else if(guildRatingInTier < 200) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(25);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(25);
             } else if(guildRatingInTier < 450) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(26);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(26);
             } else {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(language.getLanguageCode()).getTiers().get(27);
+                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(27);
             }
         }
-        embed.setTitle(Configs.getTranslations().getTitlePrefix() + language.getCommands().getLeaderboard().getTitle().replaceAll("%rank:name%", guildTier.getTierName()).replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
+        embed.setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-embed-title")
+                .replaceAll("%rank:name%", guildTier.getTierName())
+                .replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
         embed.setThumbnail(guildTier.getLargeIcon());
 
         event.getHook().editOriginalEmbeds(embed.build()).queue();

@@ -3,11 +3,11 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Gamemode;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
+import dev.piste.vayna.util.TranslationManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -18,15 +18,15 @@ public class GamemodeCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        Language language = Language.getLanguage(event.getGuild());
+        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
 
         String uuid = ValorantAPI.getGamemodeByName(event.getOption("name").getAsString(), "en-US").getUuid();
-        Gamemode gamemode = ValorantAPI.getGamemode(uuid, language.getLanguageCode());
+        Gamemode gamemode = ValorantAPI.getGamemode(uuid, translation.getLanguageCode());
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle(Configs.getTranslations().getTitlePrefix() + gamemode.getDisplayName());
-        embed.addField(language.getCommands().getGamemode().getDuration(), gamemode.getDuration(), true);
+        embed.setTitle(translation.getTranslation("embed-title-prefix") + gamemode.getDisplayName());
+        embed.addField(translation.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true);
         embed.setThumbnail(gamemode.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }

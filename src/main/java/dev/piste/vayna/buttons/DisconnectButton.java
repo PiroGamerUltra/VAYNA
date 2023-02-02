@@ -1,6 +1,5 @@
 package dev.piste.vayna.buttons;
 
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.manager.Button;
 import dev.piste.vayna.mongodb.AuthKey;

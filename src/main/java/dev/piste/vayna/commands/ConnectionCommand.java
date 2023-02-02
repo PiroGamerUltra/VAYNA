@@ -3,18 +3,14 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
-import dev.piste.vayna.config.translations.Language;
-import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
-import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.counter.StatsCounter;
+import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
-import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class ConnectionCommand implements Command {
 

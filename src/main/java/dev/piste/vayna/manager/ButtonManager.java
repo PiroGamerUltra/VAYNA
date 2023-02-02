@@ -7,9 +7,7 @@ import dev.piste.vayna.buttons.DisconnectButton;
 import dev.piste.vayna.buttons.RankButton;
 import dev.piste.vayna.buttons.VisibilityButton;
 import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.translations.Language;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -55,7 +53,6 @@ public class ButtonManager {
     }
 
     public static void perform(ButtonInteractionEvent event) {
-        Language language = Language.getLanguage(event.getGuild());
         String[] buttonId = event.getButton().getId().split(";");
         Thread thread = new Thread(() -> {
             try {

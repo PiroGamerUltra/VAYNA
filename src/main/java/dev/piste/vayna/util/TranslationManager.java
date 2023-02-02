@@ -2,7 +2,6 @@ package dev.piste.vayna.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.mongodb.GuildSetting;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -49,6 +48,10 @@ public class TranslationManager {
             return translations.get(messageKey);
         }
         return "Translation not found";
+    }
+
+    public String getLanguageCode() {
+        return translations.get("language-code");
     }
 
 }
