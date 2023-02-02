@@ -55,6 +55,6 @@ public class SettingsCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Manage the settings of this server";
+        return "Manage the bot settings of this server";
     }
 }

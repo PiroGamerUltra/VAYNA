@@ -48,6 +48,9 @@ public class HelpCommand implements Command {
                 "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new WeaponCommand()).getDescription() + "\n" +
                 "» "  + CommandManager.getAsJdaCommand(new StoreCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new StoreCommand()).getDescription(), false);
 
+        embedBuilder.addField(translation.getTranslation("command-help-embed-field-6-name"), "" +
+                "» " + CommandManager.getAsJdaCommand(new SettingsCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new SettingsCommand()).getDescription(), false);
+
         event.getHook().setEphemeral(true).editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Buttons.getSupportButton(event.getGuild()),
                 Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
