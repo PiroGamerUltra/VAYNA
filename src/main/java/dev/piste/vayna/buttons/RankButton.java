@@ -46,7 +46,7 @@ public class RankButton implements Button {
 
         Embed embed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall())
-                .setTitle(translation.getTranslation("embed-title-prefix"))
+                .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("button-rank-embed-title"))
                 .setColor(209, 54, 57);
 
         if(rank.getCurrentTierPatched() == null) {
@@ -73,6 +73,7 @@ public class RankButton implements Button {
                     embed.addField(translation.getTranslation("button-rank-embed-field-3-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
                             (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
                 }
+                embed.setThumbnail(tier.getLargeIcon());
 
                 event.getHook().editOriginalEmbeds(embed.build()).queue();
                 return;

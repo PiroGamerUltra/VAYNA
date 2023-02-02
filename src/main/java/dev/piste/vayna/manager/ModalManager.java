@@ -13,10 +13,10 @@ public class ModalManager {
     private static final HashMap<String, Modal> modals = new HashMap<>();
 
     public static void registerModals() {
-        addButton(new FeedbackModal());
+        addModal(new FeedbackModal());
     }
 
-    private static void addButton(Modal modal) {
+    private static void addModal(Modal modal) {
         modals.put(modal.getName(), modal);
     }
 

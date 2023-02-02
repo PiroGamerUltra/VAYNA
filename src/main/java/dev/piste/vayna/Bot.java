@@ -2,16 +2,13 @@ package dev.piste.vayna;
 
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.tokens.TokensConfig;
-import dev.piste.vayna.listener.ButtonInteractionListener;
-import dev.piste.vayna.listener.GuildJoinLeaveListener;
-import dev.piste.vayna.listener.ModalInteractionListener;
-import dev.piste.vayna.listener.SlashCommandListener;
+import dev.piste.vayna.listener.*;
 import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.manager.ModalManager;
+import dev.piste.vayna.manager.StringSelectMenuManager;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.FontColor;
-import dev.piste.vayna.util.TranslationManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -46,6 +43,7 @@ public class Bot {
                 .addEventListeners(new GuildJoinLeaveListener())
                 .addEventListeners(new ButtonInteractionListener())
                 .addEventListeners(new ModalInteractionListener())
+                .addEventListeners(new StringSelectInteractionListener())
                 .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)
@@ -57,6 +55,7 @@ public class Bot {
         CommandManager.registerCommands();
         ButtonManager.registerButtons();
         ModalManager.registerModals();
+        StringSelectMenuManager.registerStringSelectMenus();
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 

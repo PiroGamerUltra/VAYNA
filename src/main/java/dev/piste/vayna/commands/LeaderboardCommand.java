@@ -19,7 +19,6 @@ import dev.piste.vayna.util.TranslationManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.ArrayList;
@@ -37,17 +36,6 @@ public class LeaderboardCommand implements Command {
         event.deferReply().queue();
 
         TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
-
-        if(event.getChannelType() == ChannelType.PRIVATE) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
-                    .setColor(255, 0, 0)
-                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-error-noguild-embed-title"))
-                    .setDescription(translation.getTranslation("command-leaderboard-error-noguild-embed-description"));
-            event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    Buttons.getSupportButton(event.getGuild())
-            ).queue();
-            return;
-        }
 
         // Put all linked accounts in this guild in the eloMap
         HashMap<User, MMR> eloMap = new HashMap<>();
@@ -146,7 +134,7 @@ public class LeaderboardCommand implements Command {
 
     @Override
     public void register() {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+        Bot.getJDA().upsertCommand(getName(), getDescription()).setGuildOnly(true).queue();
     }
 
     @Override

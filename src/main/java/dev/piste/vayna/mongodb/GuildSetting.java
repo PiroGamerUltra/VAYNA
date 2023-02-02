@@ -1,9 +1,10 @@
 package dev.piste.vayna.mongodb;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
-
-import java.util.UUID;
+import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -39,6 +40,15 @@ public class GuildSetting {
             insert(guildId, language);
         }
         return language;
+    }
+
+    public void update(String language) {
+        if(isExisting) {
+            this.language = language;
+            Bson updates = Updates.set("language", language);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            guildSettingsCollection.updateOne(guildSettingDocument, updates, options);
+        }
     }
 
     public static void insert(long guildId, String language) {

@@ -49,4 +49,6 @@ public class Buttons {
         return Button.secondary(new RankButton().getName() + uuid, manager.getTranslation("button-rank")).withEmoji(Emoji.getRankByTierName("Unranked"));
     }
 
+
+
 }

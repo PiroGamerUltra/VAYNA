@@ -38,4 +38,15 @@ public class ReplyMessages {
         return embed.build();
     }
 
+    public static MessageEmbed getSettings(Guild guild) {
+        TranslationManager translation = TranslationManager.getTranslation(guild);
+
+        return new Embed()
+                .setAuthor(guild.getName(), Configs.getSettings().getWebsiteUri(), guild.getIconUrl())
+                .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-settings-embed-title"))
+                .addField(translation.getTranslation("command-settings-embed-field-1-name"),
+                        translation.getTranslation("language-emoji") + " " + translation.getTranslation("language-name"), false)
+                .build();
+    }
+
 }
