@@ -38,13 +38,17 @@ public class StatsCommand implements Command {
             case "me" -> {
                 discordUserId = event.getUser().getIdLong();
                 linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-                riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
+                if(linkedAccount.isExisting()) {
+                    riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
+                }
             }
             // /stats user <@user>
             case "user" -> {
-                discordUserId = event.getOption("user").getAsLong();
+                discordUserId = event.getOption("user").getAsUser().getIdLong();
                 linkedAccount = new LinkedAccount(discordUserId);
-                riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
+                if(linkedAccount.isExisting()) {
+                    riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
+                }
             }
             // /stats riot-id <name> <tag>
             case "riot-id" -> {
