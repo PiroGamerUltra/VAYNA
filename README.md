@@ -11,12 +11,14 @@ All commands work with the slash command function in Discord.
 - `/feedback` Share feedback to the developer of VAYNA
 ### Connection Commands
 - `/connection` Manage the connection to your Riot-Games account and its visibility
-### Statistic Commands / Buttons
+### Statistic Commands / Context Commands / Buttons
 #### Commands
 - `/stats me` Get general information about your VALORANT profile
 - `/stats user <@user>` Get general information about a VALORANT profile from a Discord user
 - `/stats riot-id <name> <tag>` Get general information about a VALORANT profile by providing a Riot-ID
 - `/leaderboard` Get a list of the best 20 players in this server.
+#### Context Commands (Right-click user/message)
+- `Stats` Get general information about a VALORANT profile from a Discord user
 #### Buttons
 - `Rank` Get the current rank of the VALORANT profile
 ### Information Commands
