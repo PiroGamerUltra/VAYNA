@@ -98,7 +98,7 @@ public class StatsContextCommand implements UserContextCommand {
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
         Embed embed = new Embed();
-        embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall());
+        embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
         embed.setColor(209, 54, 57);
         embed.setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-embed-title"));
         embed.setDescription(translation.getTranslation("command-stats-embed-description"));
