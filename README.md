@@ -19,21 +19,19 @@ All commands work with the slash command function in Discord.
 - `/leaderboard` Get a list of the best 20 players in this server.
 #### Context Commands (Right-click user/message)
 - `Stats` Get general information about a VALORANT profile from a Discord user
-#### Buttons
-- `Rank` Get the current rank of the VALORANT profile
 ### Information Commands
 - `/map <name>` Get information about a specific VALORANT map
 - `/agent <name>` Get information about a specific VALORANT agent
 - `/gamemode <name>` Get information about a specific VALORANT gamemode
 - `/weapon <name>` Get information about a specific VALORANT weapon
-- `/store <name>` Get information about the current bundle in the VALORANT store
+- `/store` Get information about the current bundle in the VALORANT store
 ### Administrative Commands
 - `/settings` Manage the bot settings of this server
 ## Used APIs
-- [Riot-Games official API](https://developer.riotgames.com/)
+- [Riot API](https://developer.riotgames.com/apis)
 - [HenrikDev's unofficial VALORANT API](https://github.com/Henrik-3/unofficial-valorant-api)
 - [VALORANT-API.com](https://valorant-api.com/)
 ## Contact
 If you have any questions, you can contact me:
-   - **Email:** vayna@piste.dev
-   - **Discord:** [Support server](https://piste.dev/VAYNA/redirect/discord)
+- **Email:** contact@piste.dev
+- **Discord:** [Support server](https://piste.dev/VAYNA/redirect/discord)
