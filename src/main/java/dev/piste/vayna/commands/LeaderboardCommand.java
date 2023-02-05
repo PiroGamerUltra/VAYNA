@@ -17,6 +17,7 @@ import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.TranslationManager;
 import dev.piste.vayna.util.buttons.Buttons;
+import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -48,7 +49,8 @@ public class LeaderboardCommand implements Command {
                     RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
                     HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
                     eloMap.put(member.getUser(), henrikAccount.getMmr());
-                } catch (StatusCodeException ignored) {
+                } catch (StatusCodeException e) {
+                    if(e.getMessage().startsWith("429")) throw new StatusCodeException(e.getMessage());
                 }
             }
         }
