@@ -120,15 +120,10 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Spray.class);
     }
 
-    public static CompetitiveTier getLatestCompetitiveTier(String languageCode) throws StatusCodeException {
-        ArrayList<CompetitiveTier> competitiveTiers = getCompetitiveTiers(languageCode);
-        return competitiveTiers.get(competitiveTiers.size()-1);
-    }
-
-    public static ArrayList<CompetitiveTier> getCompetitiveTiers(String languageCode) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/competitivetiers?language=" + languageCode);
-        JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<CompetitiveTier>>(){}.getType());
+    public static CompetitiveTier getCompetitiveTier(String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04?language=" + languageCode);
+        JsonObject dataObject = jsonObject.getAsJsonObject("data");
+        return new Gson().fromJson(dataObject, CompetitiveTier.class);
     }
 
     public static Skin getSkin(String uuid, String languageCode) throws StatusCodeException {

@@ -41,8 +41,8 @@ public class RankButton implements Button {
         RiotAccount riotAccount = RiotAPI.getAccountByPuuid(oldRiotAccount.getPuuid());
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
         Rank rank = henrikAccount.getMmr().getRank();
-        CompetitiveTier competitiveTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode());
-        CompetitiveTier enUsCompetitiveTier = ValorantAPI.getLatestCompetitiveTier("en-US");
+        CompetitiveTier competitiveTier = ValorantAPI.getCompetitiveTier(translation.getLanguageCode());
+        CompetitiveTier enUsCompetitiveTier = ValorantAPI.getCompetitiveTier("en-US");
 
         Embed embed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard().getSmall())

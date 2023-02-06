@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -79,6 +80,8 @@ public class LeaderboardCommand implements Command {
         Embed embed = new Embed().setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
                 .setDescription(translation.getTranslation("command-leaderboard-embed-description"));
 
+        ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(translation.getLanguageCode()).getTiers();
+
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i<20; i++) {
             if(eloList.size() == i) break;
@@ -87,7 +90,7 @@ public class LeaderboardCommand implements Command {
                 MMR mmr = entry.getValue();
                 Rank rank = mmr.getRank();
                 Tier tier = null;
-                for(Tier forTier : ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers()) {
+                for(Tier forTier : tierList) {
                     if(forTier.getTier() == rank.getCurrentTier()) {
                         tier = forTier;
                         break;
@@ -111,19 +114,20 @@ public class LeaderboardCommand implements Command {
         // Put the average guild elo in the embed
         int guildRatingInTier;
         Tier guildTier;
+
         if(guildElo < 2100) {
             guildRatingInTier = guildElo % 100;
-            guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get((int) ((guildElo / 100.0) + 3.0));
+            guildTier = tierList.get((int) ((guildElo / 100.0) + 3.0));
         } else {
             guildRatingInTier = guildElo - 2100;
             if(guildRatingInTier < 90) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(24);
+                guildTier = tierList.get(24);
             } else if(guildRatingInTier < 200) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(25);
+                guildTier = tierList.get(25);
             } else if(guildRatingInTier < 450) {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(26);
+                guildTier = tierList.get(26);
             } else {
-                guildTier = ValorantAPI.getLatestCompetitiveTier(translation.getLanguageCode()).getTiers().get(27);
+                guildTier = tierList.get(27);
             }
         }
         embed.setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-embed-title")
