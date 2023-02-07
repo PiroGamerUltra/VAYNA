@@ -17,21 +17,20 @@ public class ValorantAPI {
 
     // Agents
     public static Agent getAgent(String uuid, String languageCode) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents/" + uuid + "?language=" + languageCode);
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents/" + uuid + "?isPlayableCharacter=true&language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Agent.class);
     }
 
     public static Agent getAgentByName(String name, String languageCode) throws StatusCodeException {
         for(Agent foundAgent : getAgents(languageCode)) {
-            if(!foundAgent.isPlayableCharacter()) continue;
             if(foundAgent.getDisplayName().equalsIgnoreCase(name)) return foundAgent;
         }
         return new Agent();
     }
 
     public static ArrayList<Agent> getAgents(String languageCode) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents?language=" + languageCode);
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents?isPlayableCharacter=true&language=" + languageCode);
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
         return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Agent>>(){}.getType());
     }
