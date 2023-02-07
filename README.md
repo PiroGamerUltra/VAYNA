@@ -34,4 +34,4 @@ All commands work with the slash command function in Discord.
 ## Contact
 If you have any questions, you can contact me:
 - **Email:** contact@piste.dev
-- **Discord:** [Support server](https://piste.dev/VAYNA/redirect/discord)
+- **Discord:** [Support](https://piste.dev/VAYNA/redirect/discord)
