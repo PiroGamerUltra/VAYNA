@@ -31,18 +31,8 @@ public class Embed {
         return this;
     }
 
-    public Embed addBlankField(boolean inline) {
-        embedBuilder.addField("\u200e", "\u200e", inline);
-        return this;
-    }
-
     public Embed setColor(int red, int green, int blue) {
         embedBuilder.setColor(new Color(red, green, blue).getRGB());
-        colorModified = true;
-        return this;
-    }
-
-    public Embed removeColor() {
         colorModified = true;
         return this;
     }
@@ -77,12 +67,6 @@ public class Embed {
         return this;
     }
 
-    public Embed setFooter(String text, String iconUrl) {
-        embedBuilder.setFooter(text, iconUrl);
-        footerModified = true;
-        return this;
-    }
-
     public Embed removeFooter() {
         footerModified = true;
         return this;
@@ -92,7 +76,6 @@ public class Embed {
         if(!colorModified) embedBuilder.setColor(new Color(157, 57, 191).getRGB());
         if(!footerModified) embedBuilder.setFooter("VAYNA • VALORANT BOT", Bot.getJDA().getSelfUser().getAvatarUrl());
         return embedBuilder.build();
-
     }
 
 }

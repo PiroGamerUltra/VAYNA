@@ -15,9 +15,9 @@ import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
-import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -37,7 +36,7 @@ public class LeaderboardCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Put all linked accounts in this guild in the eloMap
         HashMap<User, MMR> eloMap = new HashMap<>();
@@ -59,8 +58,8 @@ public class LeaderboardCommand implements Command {
         if(eloMap.size() == 0) {
             Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
-                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-error-empty-embed-title"))
-                    .setDescription(translation.getTranslation("command-leaderboard-error-empty-embed-description"));
+                    .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
+                    .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                     Buttons.getSupportButton(event.getGuild())
             ).queue();
@@ -78,9 +77,9 @@ public class LeaderboardCommand implements Command {
         int guildElo = memberElos / eloMap.size();
 
         Embed embed = new Embed().setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
-                .setDescription(translation.getTranslation("command-leaderboard-embed-description"));
+                .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
-        ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(translation.getLanguageCode()).getTiers();
+        ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i<20; i++) {
@@ -130,7 +129,7 @@ public class LeaderboardCommand implements Command {
                 guildTier = tierList.get(27);
             }
         }
-        embed.setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-leaderboard-embed-title")
+        embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-embed-title")
                 .replaceAll("%rank:name%", guildTier.getTierName())
                 .replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
         embed.setThumbnail(guildTier.getLargeIcon());

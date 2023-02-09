@@ -7,7 +7,8 @@ import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Gamemode;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -18,15 +19,15 @@ public class GamemodeCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         String uuid = ValorantAPI.getGamemodeByName(event.getOption("name").getAsString(), "en-US").getUuid();
-        Gamemode gamemode = ValorantAPI.getGamemode(uuid, translation.getLanguageCode());
+        Gamemode gamemode = ValorantAPI.getGamemode(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
         embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
-        embed.setTitle(translation.getTranslation("embed-title-prefix") + gamemode.getDisplayName());
-        embed.addField(translation.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true);
+        embed.setTitle(language.getEmbedTitlePrefix() + gamemode.getDisplayName());
+        embed.addField(language.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true);
         embed.setThumbnail(gamemode.getDisplayIcon());
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }

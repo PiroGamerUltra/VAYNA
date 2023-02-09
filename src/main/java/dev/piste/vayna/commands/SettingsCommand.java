@@ -5,7 +5,8 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import dev.piste.vayna.util.selectmenus.SelectMenus;
@@ -24,12 +25,12 @@ public class SettingsCommand implements Command {
         event.deferReply(true).queue();
 
         if(!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-            TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+            Language language = LanguageManager.getLanguage(event.getGuild());
 
             Embed embed = new Embed()
                     .setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
-                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-settings-error-perms-embed-title"))
-                    .setDescription(translation.getTranslation("command-settings-error-perms-embed-description"))
+                    .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-settings-error-perms-embed-title"))
+                    .setDescription(language.getTranslation("command-settings-error-perms-embed-description"))
                     .setColor(255, 0, 0);
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                     Buttons.getSupportButton(event.getGuild())

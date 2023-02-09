@@ -2,7 +2,8 @@ package dev.piste.vayna.stringselectmenus;
 
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -16,23 +17,22 @@ public class SettingsSelectMenu implements dev.piste.vayna.manager.StringSelectM
     @Override
     public void perform(StringSelectInteractionEvent event) {
         event.deferReply(true).queue();
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         if (event.getInteraction().getSelectedOptions().get(0).getValue().equals("language")) {
             Embed embed = new Embed()
                     .setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
-                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("stringselect-settings-language-embed-title"))
-                    .setDescription(translation.getTranslation("stringselect-settings-language-embed-description"));
-            StringSelectMenu stringSelectMenu = StringSelectMenu.create("language")
-                    .setPlaceholder(translation.getTranslation("stringselect-settings-language-selectmenu-placeholder"))
+                    .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("stringselect-settings-language-embed-title"))
+                    .setDescription(language.getTranslation("stringselect-settings-language-embed-description"));
+            StringSelectMenu.Builder stringSelectMenuBuilder = StringSelectMenu.create("language")
+                    .setPlaceholder(language.getTranslation("stringselect-settings-language-selectmenu-placeholder"))
                     .setMinValues(1)
-                    .setMaxValues(1)
-                    .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-1"), "en-US", Emoji.fromUnicode("\uD83C\uDDFA\uD83C\uDDF8"))
-                    .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-2"), "de-DE", Emoji.fromUnicode("\uD83C\uDDE9\uD83C\uDDEA"))
-                    .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-3"), "ru-RU", Emoji.fromUnicode("\uD83C\uDDF7\uD83C\uDDFA"))
-                    .build();
+                    .setMaxValues(1);
+            for(Language foundLanguage : LanguageManager.getLanguageList().values()) {
+                stringSelectMenuBuilder.addOption(foundLanguage.getTranslation("language-name"), foundLanguage.getLanguageCode(), Emoji.fromUnicode(foundLanguage.getTranslation("language-emoji")));
+            }
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    stringSelectMenu
+                    stringSelectMenuBuilder.build()
             ).queue();
         }
     }

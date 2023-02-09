@@ -11,7 +11,8 @@ import dev.piste.vayna.apis.henrik.gson.store.Item;
 import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -26,18 +27,18 @@ public class StoreCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         List<MessageEmbed> embedList = new ArrayList<>();
 
         for(CurrentBundle currentBundle : HenrikAPI.getCurrentBundles()) {
-            Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), translation.getLanguageCode());
+            Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
 
             Embed bundleEmbed = new Embed()
                     .setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
-                    .setTitle(translation.getTranslation("embed-title-prefix") + bundle.getDisplayName())
-                    .addField(translation.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
-                    .addField(translation.getTranslation("command-store-embed-bundle-field-2-name"), translation.getTranslation("command-store-embed-bundle-field-2-text")
+                    .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
+                    .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
+                    .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")
                             .replaceAll("%timestamp%", "<t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>"), true)
                     .setImage(bundle.getDisplayIcon());
 
@@ -45,31 +46,31 @@ public class StoreCommand implements Command {
 
             for(Item item : currentBundle.getItems()) {
                 if(item.getType().equalsIgnoreCase("buddy")) {
-                    Buddy buddy = ValorantAPI.getBuddy(item.getUuid(), translation.getLanguageCode());
+                    Buddy buddy = ValorantAPI.getBuddy(item.getUuid(), language.getLanguageCode());
                     Embed embed = new Embed()
                             .removeFooter()
-                            .setTitle(translation.getTranslation("embed-title-prefix") + buddy.getDisplayName())
-                            .addField(translation.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(translation.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                            .setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
+                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
                             .setThumbnail(buddy.getDisplayIcon());
                     embedList.add(embed.build());
                 } else if(item.getType().equalsIgnoreCase("player_card")) {
-                    Playercard playercard = ValorantAPI.getPlayercard(item.getUuid(), translation.getLanguageCode());
+                    Playercard playercard = ValorantAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
                     Embed embed = new Embed()
                             .removeFooter()
-                            .setTitle(translation.getTranslation("embed-title-prefix") + playercard.getDisplayName())
-                            .addField(translation.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(translation.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                            .setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
+                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
                             .setThumbnail(playercard.getLargeArt())
                             .setImage(playercard.getWideArt());
                     embedList.add(embed.build());
                 } else if(item.getType().equalsIgnoreCase("spray")) {
-                    Spray spray = ValorantAPI.getSpray(item.getUuid(), translation.getLanguageCode());
+                    Spray spray = ValorantAPI.getSpray(item.getUuid(), language.getLanguageCode());
                     Embed embed = new Embed()
                             .removeFooter()
-                            .setTitle(translation.getTranslation("embed-title-prefix") + spray.getDisplayName())
-                            .addField(translation.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(translation.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true);
+                            .setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
+                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true);
                     if(spray.getAnimationGif() != null) {
                         embed.setThumbnail(spray.getAnimationGif());
                     } else {
@@ -77,20 +78,20 @@ public class StoreCommand implements Command {
                     }
                     embedList.add(embed.build());
                 } else if(item.getType().equalsIgnoreCase("skin_level")) {
-                    Skin skin = ValorantAPI.getSkin(item.getUuid(), translation.getLanguageCode());
+                    Skin skin = ValorantAPI.getSkin(item.getUuid(), language.getLanguageCode());
                     Embed embed = new Embed()
                             .removeFooter()
-                            .setTitle(translation.getTranslation("embed-title-prefix") + skin.getDisplayName())
-                            .addField(translation.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(translation.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                            .setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
+                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
                             .setImage(skin.getDisplayIcon());
                     embedList.add(embed.build());
                 } else {
                     Embed embed = new Embed()
                             .removeFooter()
-                            .setTitle(translation.getTranslation("embed-title-prefix") + item.getName())
-                            .addField(translation.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(translation.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                            .setTitle(language.getEmbedTitlePrefix() + item.getName())
+                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
                             .setImage(item.getImage());
                     embedList.add(embed.build());
                 }

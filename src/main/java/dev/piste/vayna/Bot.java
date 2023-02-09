@@ -6,13 +6,11 @@ import dev.piste.vayna.listener.*;
 import dev.piste.vayna.manager.*;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.FontColor;
+import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -58,6 +56,8 @@ public class Bot {
         ModalManager.registerModals();
         StringSelectMenuManager.registerStringSelectMenus();
         UserContextCommandManager.registerStringSelectMenus();
+
+        LanguageManager.loadLanguages();
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 

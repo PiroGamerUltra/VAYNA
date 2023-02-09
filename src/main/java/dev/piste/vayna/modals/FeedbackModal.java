@@ -5,7 +5,8 @@ import dev.piste.vayna.config.Configs;
 import dev.piste.vayna.config.settings.SettingsConfig;
 import dev.piste.vayna.manager.Modal;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
@@ -19,12 +20,12 @@ public class FeedbackModal implements Modal {
     public void perform(ModalInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
 
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                 .setColor(0, 255, 0)
-                .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("modal-feedback-embed-title"))
-                .setDescription(translation.getTranslation("modal-feedback-embed-description"));
+                .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("modal-feedback-embed-title"))
+                .setDescription(language.getTranslation("modal-feedback-embed-description"));
         event.getHook().editOriginalEmbeds(embed.build()).queue();
 
         if(Bot.isDebug()) return;

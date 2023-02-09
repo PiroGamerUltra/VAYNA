@@ -15,7 +15,8 @@ import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.TranslationManager;
+import dev.piste.vayna.util.Language;
+import dev.piste.vayna.util.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -27,7 +28,7 @@ public class StatsCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
 
-        TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
+        Language language = LanguageManager.getLanguage(event.getGuild());
 
         LinkedAccount linkedAccount = null;
         RiotAccount riotAccount = null;
@@ -61,8 +62,8 @@ public class StatsCommand implements Command {
                 } catch (InvalidRiotIdException e) {
                     Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                             .setColor(255, 0, 0)
-                            .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-error-riotid-embed-title"))
-                            .setDescription(translation.getTranslation("command-stats-error-riotid-embed-description")
+                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-riotid-embed-title"))
+                            .setDescription(language.getTranslation("command-stats-error-riotid-embed-description")
                                     .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
                                     .replaceAll("%riotid%", gameName + "#" + tagLine));
                     event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
@@ -77,8 +78,8 @@ public class StatsCommand implements Command {
             if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
                 Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                         .setColor(255, 0, 0)
-                        .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-error-private-embed-title"))
-                        .setDescription(translation.getTranslation("command-stats-error-private-embed-description"));
+                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-private-embed-title"))
+                        .setDescription(language.getTranslation("command-stats-error-private-embed-description"));
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
@@ -89,8 +90,8 @@ public class StatsCommand implements Command {
                 if (discordUserId == event.getUser().getIdLong()) {
                     Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                             .setColor(255, 0, 0)
-                            .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-error-noconnectionself-embed-title"))
-                            .setDescription(translation.getTranslation("command-stats-error-noconnectionself-embed-description")
+                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-noconnectionself-embed-title"))
+                            .setDescription(language.getTranslation("command-stats-error-noconnectionself-embed-description")
                                     .replaceAll("%command:connection%", CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention()));
                     event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                             Buttons.getSupportButton(event.getGuild())
@@ -98,8 +99,8 @@ public class StatsCommand implements Command {
                 } else {
                         Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                                 .setColor(255, 0, 0)
-                                .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-error-noconnection-embed-title"))
-                                .setDescription(translation.getTranslation("command-stats-error-noconnection-embed-description")
+                                .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-noconnection-embed-title"))
+                                .setDescription(language.getTranslation("command-stats-error-noconnection-embed-description")
                                         .replaceAll("%user:target%", event.getJDA().getUserById(discordUserId).getAsMention()));
                     event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                             Buttons.getSupportButton(event.getGuild())
@@ -115,8 +116,8 @@ public class StatsCommand implements Command {
         } catch (InvalidRegionException e) {
             Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
-                    .setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-error-region-embed-title"))
-                    .setDescription(translation.getTranslation("command-stats-error-region-embed-description")
+                    .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-region-embed-title"))
+                    .setDescription(language.getTranslation("command-stats-error-region-embed-description")
                             .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
                             .replaceAll("%riotid%", riotAccount.getRiotId()));
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
@@ -140,12 +141,12 @@ public class StatsCommand implements Command {
             Embed embed = new Embed();
             embed.setAuthor(riotAccount.getRiotId(), Configs.getSettings().getWebsiteUri(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
             embed.setColor(209, 54, 57);
-            embed.setTitle(translation.getTranslation("embed-title-prefix") + translation.getTranslation("command-stats-embed-title"));
-            embed.setDescription(translation.getTranslation("command-stats-embed-description"));
-            embed.addField(translation.getTranslation("command-stats-embed-field-1-name"), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
-            embed.addField(translation.getTranslation("command-stats-embed-field-2-name"), regionEmoji + " " + regionName, true);
+            embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"));
+            embed.setDescription(language.getTranslation("command-stats-embed-description"));
+            embed.addField(language.getTranslation("command-stats-embed-field-1-name"), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
+            embed.addField(language.getTranslation("command-stats-embed-field-2-name"), regionEmoji + " " + regionName, true);
             if(linkedAccount.isExisting()) {
-                embed.addField(translation.getTranslation("command-stats-embed-field-3-name"),
+                embed.addField(language.getTranslation("command-stats-embed-field-3-name"),
                         Emoji.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
             }
         event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
