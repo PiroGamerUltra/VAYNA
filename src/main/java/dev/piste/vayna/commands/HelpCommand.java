@@ -2,7 +2,7 @@ package dev.piste.vayna.commands;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -21,10 +21,10 @@ public class HelpCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         Embed embedBuilder = new Embed();
-        embedBuilder.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embedBuilder.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
         embedBuilder.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"));
         embedBuilder.addField(language.getTranslation("command-help-embed-field-1-name"), language.getTranslation("command-help-embed-field-1-text")
-                .replaceAll("%version%", Configs.getSettings().getVersion()), true);
+                .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);
         // General
         embedBuilder.addField(language.getTranslation("command-help-embed-field-2-name"),  "" +
                 "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + CommandManager.getAsJdaCommand(new HelpCommand()).getDescription() + "\n" +
@@ -54,8 +54,8 @@ public class HelpCommand implements Command {
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embedBuilder.build()).setActionRow(
                 Buttons.getSupportButton(event.getGuild()),
-                Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
-                Button.link(Configs.getSettings().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
         ).queue();
     }
 

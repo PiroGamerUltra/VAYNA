@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Map;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -25,7 +25,7 @@ public class MapCommand implements Command {
         Map map = ValorantAPI.getMap(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embed.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + map.getDisplayName());
         embed.addField(language.getTranslation("command-map-embed-field-1-name"), map.getCoordinates(), true);
         embed.setImage(map.getSplash());

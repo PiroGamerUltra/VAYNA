@@ -1,7 +1,7 @@
 package dev.piste.vayna.util.messages;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -23,7 +23,7 @@ public class ErrorMessages {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-api-embed-title"))
                 .setDescription(language.getTranslation("error-api-embed-description"))
-                .setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
+                .setAuthor(user.getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), user.getAvatarUrl());
         switch (statusCode) {
             case 400 -> embed.addField(language.getTranslation("error-api-embed-field-1-name"), "`400: Bad request`", false);
             case 401 -> embed.addField(language.getTranslation("error-api-embed-field-1-name"), "`401: Unauthorized`", false);

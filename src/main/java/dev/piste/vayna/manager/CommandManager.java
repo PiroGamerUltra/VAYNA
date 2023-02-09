@@ -3,18 +3,20 @@ package dev.piste.vayna.manager;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.commands.*;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class CommandManager {
 
     private static final Map<String, Command> commands = new HashMap<>();
@@ -40,7 +42,7 @@ public class CommandManager {
     }
 
     private static void addCommand(Command command) {
-        commands.put(command.getName().toLowerCase(), command);
+        commands.put(command.getName(), command);
         try {
             command.register();
         } catch (StatusCodeException e) {
@@ -48,7 +50,7 @@ public class CommandManager {
                 System.out.println("Error registering command: " + e.getMessage());
                 return;
             }
-            TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());
+            TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
             Embed embed = new Embed().setTitle("Register command HTTP error")
                     .setDescription(e.getMessage());
             logChannel.sendMessageEmbeds(embed.build()).queue();
@@ -70,9 +72,9 @@ public class CommandManager {
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
-                        .setAuthor(event.getUser().getAsTag(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                        .setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();
             }

@@ -7,7 +7,7 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
 import dev.piste.vayna.apis.riotgames.gson.PlatformData;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -61,7 +61,7 @@ public class RiotAPI {
                 .uri(URI.create(uri))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("X-Riot-Token", Configs.getTokens().getApi().getRiot())
+                .header("X-Riot-Token", ConfigManager.getTokensConfig().getApi().getRiot())
                 .GET()
                 .build();
         return new ApiHttpRequest().performHttpRequest(request);

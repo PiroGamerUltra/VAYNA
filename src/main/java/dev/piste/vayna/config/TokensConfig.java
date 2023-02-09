@@ -1,4 +1,8 @@
-package dev.piste.vayna.config.tokens;
+package dev.piste.vayna.config;
+
+import dev.piste.vayna.config.tokens.Api;
+import dev.piste.vayna.config.tokens.Bot;
+import dev.piste.vayna.config.tokens.MongoDbConfig;
 
 // GSON CLASS
 @SuppressWarnings("ALL")

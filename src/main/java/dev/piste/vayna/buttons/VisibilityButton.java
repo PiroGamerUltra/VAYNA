@@ -2,7 +2,6 @@ package dev.piste.vayna.buttons;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
-import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.manager.Button;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
@@ -16,25 +15,17 @@ public class VisibilityButton implements Button {
         event.deferReply().setEphemeral(true).queue();
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-
         if(!linkedAccount.isExisting()) {
             event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionNone(event.getGuild(), event.getUser())).setActionRow(
                     Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
-            RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
-
-            boolean visibleToPublic = arg.equalsIgnoreCase("public");
-
-            linkedAccount.update(visibleToPublic);
-
-            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), riotAccount.getRiotId(), visibleToPublic)).setActionRow(
+            linkedAccount.update(arg.equalsIgnoreCase("public"));
+            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Buttons.getDisconnectButton(event.getGuild()),
-                    Buttons.getVisibilityButton(event.getGuild(), visibleToPublic)
+                    Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())
             ).queue();
-
         }
-
     }
 
     @Override

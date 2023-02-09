@@ -9,7 +9,7 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.MMR;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -43,7 +43,7 @@ public class HenrikAPI {
                 .uri(URI.create(uri))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("Authorization", Configs.getTokens().getApi().getHenrik())
+                .header("Authorization", ConfigManager.getTokensConfig().getApi().getHenrik())
                 .GET()
                 .build();
         return new ApiHttpRequest().performHttpRequest(request);

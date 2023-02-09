@@ -8,7 +8,7 @@ import dev.piste.vayna.apis.valorantapi.gson.*;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.store.Item;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.Language;
@@ -35,7 +35,7 @@ public class StoreCommand implements Command {
             Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
 
             Embed bundleEmbed = new Embed()
-                    .setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    .setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
                     .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
                     .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")

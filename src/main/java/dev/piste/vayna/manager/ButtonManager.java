@@ -6,7 +6,7 @@ import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.buttons.DisconnectButton;
 import dev.piste.vayna.buttons.RankButton;
 import dev.piste.vayna.buttons.VisibilityButton;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ErrorMessages;
@@ -64,9 +64,9 @@ public class ButtonManager {
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
-                        .setAuthor(event.getUser().getAsTag(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                        .setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();
             }

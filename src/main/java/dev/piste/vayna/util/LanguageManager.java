@@ -3,6 +3,7 @@ package dev.piste.vayna.util;
 import dev.piste.vayna.mongodb.GuildSetting;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -34,8 +35,8 @@ public class LanguageManager {
         return languageList.get("en-US");
     }
 
-    public static HashMap<String, Language> getLanguageList() {
-        return languageList;
+    public static Collection<Language> getLanguages() {
+        return languageList.values();
     }
 
 }

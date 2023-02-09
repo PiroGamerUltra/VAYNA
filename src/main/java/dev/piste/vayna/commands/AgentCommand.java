@@ -6,7 +6,7 @@ import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Agent;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -16,35 +16,32 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AgentCommand implements Command {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
-
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        String websiteUri = Configs.getSettings().getWebsiteUri();
+        String websiteUri = ConfigManager.getSettingsConfig().getWebsiteUri();
         String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
-        List<MessageEmbed> embedList = new ArrayList<>();
+        ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
         Embed agentEmbed = new Embed().setAuthor(event.getUser().getName(), websiteUri, event.getUser().getAvatarUrl())
                 .setTitle(language.getEmbedTitlePrefix() + agent.getDisplayName())
                 .setDescription(agent.getDescription())
                 .setThumbnail(agent.getDisplayIcon())
                 .setImage(agent.getFullPortrait());
+        embedList.add(agentEmbed.build());
 
         Embed roleEmbed = new Embed().setAuthor(language.getTranslation("command-agent-embed-role-author"), websiteUri, agent.getDisplayIcon())
-                .setTitle(language.getTranslation("embed-title-prefix") + agent.getRole().getDisplayName())
+                .setTitle(language.getEmbedTitlePrefix() + agent.getRole().getDisplayName())
                 .setDescription(agent.getRole().getDescription())
                 .setThumbnail(agent.getRole().getDisplayIcon())
                 .removeFooter();
-
-        embedList.add(agentEmbed.build());
         embedList.add(roleEmbed.build());
 
         for(Ability ability : agent.getAbilities()) {

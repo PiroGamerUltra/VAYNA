@@ -10,7 +10,7 @@ import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
@@ -56,7 +56,7 @@ public class LeaderboardCommand implements Command {
         }
 
         if(eloMap.size() == 0) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
                     .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
@@ -76,7 +76,7 @@ public class LeaderboardCommand implements Command {
         eloList.sort(Collections.reverseOrder());
         int guildElo = memberElos / eloMap.size();
 
-        Embed embed = new Embed().setAuthor(event.getGuild().getName(), Configs.getSettings().getWebsiteUri(), event.getGuild().getIconUrl())
+        Embed embed = new Embed().setAuthor(event.getGuild().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
         ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();

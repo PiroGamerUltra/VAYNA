@@ -1,8 +1,7 @@
 package dev.piste.vayna.modals;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.settings.SettingsConfig;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Modal;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
@@ -22,16 +21,15 @@ public class FeedbackModal implements Modal {
 
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        Embed embed = new Embed().setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+        Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                 .setColor(0, 255, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("modal-feedback-embed-title"))
                 .setDescription(language.getTranslation("modal-feedback-embed-description"));
         event.getHook().editOriginalEmbeds(embed.build()).queue();
 
         if(Bot.isDebug()) return;
-        SettingsConfig settingsConfig = Configs.getSettings();
-        TextChannel feedbackChannel = Bot.getJDA().getGuildById(settingsConfig.getSupportGuild().getId()).getTextChannelById(settingsConfig.getLogChannels().getFeedback());
-        Embed feedbackEmbed = new Embed().setAuthor(event.getUser().getAsTag(), settingsConfig.getWebsiteUri(), event.getUser().getAvatarUrl())
+        TextChannel feedbackChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getFeedback());
+        Embed feedbackEmbed = new Embed().setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                 .setTitle("» Feedback")
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setDescription(event.getValues().get(0).getAsString());

@@ -1,4 +1,8 @@
-package dev.piste.vayna.config.settings;
+package dev.piste.vayna.config;
+
+import dev.piste.vayna.config.settings.BotStatsChannels;
+import dev.piste.vayna.config.settings.LogChannels;
+import dev.piste.vayna.config.settings.SupportGuild;
 
 // GSON CLASS
 @SuppressWarnings("ALL")

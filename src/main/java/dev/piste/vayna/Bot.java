@@ -1,7 +1,6 @@
 package dev.piste.vayna;
 
-import dev.piste.vayna.config.Configs;
-import dev.piste.vayna.config.tokens.TokensConfig;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.listener.*;
 import dev.piste.vayna.manager.*;
 import dev.piste.vayna.mongodb.Mongo;
@@ -32,11 +31,10 @@ public class Bot {
     }
 
     public static void main(String[] args) {
+        ConfigManager.loadConfigs();
         Mongo.connect();
 
-        TokensConfig tokensConfig = Configs.getTokens();
-
-        jda = JDABuilder.createDefault(isDebug() ? tokensConfig.getBot().getDevelopment() : tokensConfig.getBot().getVayna())
+        jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
                 .addEventListeners(new SlashCommandListener())
                 .addEventListeners(new GuildJoinLeaveListener())
                 .addEventListeners(new ButtonInteractionListener())

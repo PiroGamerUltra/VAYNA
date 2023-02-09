@@ -1,6 +1,6 @@
 package dev.piste.vayna.util.messages;
 
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.Language;
@@ -18,7 +18,7 @@ public class ReplyMessages {
         Language language = LanguageManager.getLanguage(guild);
         Embed embed = new Embed();
         embed.setColor(209, 54, 57);
-        embed.setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
+        embed.setAuthor(user.getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), user.getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-connection-none-embed-title"));
         embed.setDescription(language.getTranslation("command-connection-none-embed-description"));
         return embed.build();
@@ -27,7 +27,7 @@ public class ReplyMessages {
     public static MessageEmbed getConnectionPresent(Guild guild, User user, String riotId, boolean visibleToPublic) {
         Language language = LanguageManager.getLanguage(guild);
         Embed embed = new Embed();
-        embed.setAuthor(user.getName(), Configs.getSettings().getWebsiteUri(), user.getAvatarUrl());
+        embed.setAuthor(user.getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), user.getAvatarUrl());
         embed.setColor(209, 54, 57);
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-connection-present-embed-title"));
         embed.setDescription(language.getTranslation("command-connection-present-embed-description"));
@@ -43,7 +43,7 @@ public class ReplyMessages {
         Language language = LanguageManager.getLanguage(guild);
 
         return new Embed()
-                .setAuthor(guild.getName(), Configs.getSettings().getWebsiteUri(), guild.getIconUrl())
+                .setAuthor(guild.getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), guild.getIconUrl())
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-settings-embed-title"))
                 .addField(language.getTranslation("command-settings-embed-field-1-name"),
                         language.getTranslation("language-emoji") + " " + language.getTranslation("language-name"), false)

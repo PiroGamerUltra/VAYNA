@@ -3,7 +3,6 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
-import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.AuthKey;
@@ -18,8 +17,6 @@ public class ConnectionCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
 
-        StatsCounter.countConnections();
-
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
 
         if(!linkedAccount.isExisting()) {
@@ -27,13 +24,13 @@ public class ConnectionCommand implements Command {
                     Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
-            RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
-
-            event.getHook().setEphemeral(true).editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), riotAccount.getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+            event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Buttons.getDisconnectButton(event.getGuild()),
                     Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())
             ).queue();
         }
+
+        StatsCounter.countConnections();
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.config.tokens.MongoDbConfig;
 import dev.piste.vayna.util.FontColor;
 import org.bson.Document;
@@ -19,7 +19,7 @@ public class Mongo {
 
     public static void connect() {
 
-        MongoDbConfig mongoDbConfig = Configs.getTokens().getMongodb();
+        MongoDbConfig mongoDbConfig = ConfigManager.getTokensConfig().getMongodb();
 
         MongoCredential credential = MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getAuthDb(), mongoDbConfig.getPassword().toCharArray());
         MongoClientSettings settings =

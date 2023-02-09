@@ -6,7 +6,7 @@ import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Weapon;
 import dev.piste.vayna.apis.valorantapi.gson.weapon.DamageRanges;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -26,7 +26,7 @@ public class WeaponCommand implements Command {
         Weapon weapon = ValorantAPI.getWeapon(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embed.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + weapon.getDisplayName());
         embed.addField(language.getTranslation("command-weapon-embed-field-1-name"),
                 "**" + weapon.getShopData().getCost() + "**", false);

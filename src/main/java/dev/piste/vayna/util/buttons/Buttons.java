@@ -4,7 +4,7 @@ import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.buttons.DisconnectButton;
 import dev.piste.vayna.buttons.RankButton;
 import dev.piste.vayna.buttons.VisibilityButton;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.LanguageManager;
@@ -19,11 +19,11 @@ import java.util.UUID;
 public class Buttons {
 
     public static Button getSupportButton(Guild guild) {
-        return Button.link(Configs.getSettings().getSupportGuild().getInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
+        return Button.link(ConfigManager.getSettingsConfig().getSupportGuild().getInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
     }
 
     public static Button getConnectButton(Guild guild, String authKey) {
-        return Button.link(Configs.getSettings().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, LanguageManager.getLanguage(guild).getTranslation("button-connect")).withEmoji(Emoji.getRiotGames());
+        return Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/RSO/redirect/?authKey=" + authKey, LanguageManager.getLanguage(guild).getTranslation("button-connect")).withEmoji(Emoji.getRiotGames());
     }
 
     public static Button getDisconnectButton(Guild guild) {

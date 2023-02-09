@@ -2,16 +2,13 @@ package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.config.Configs;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.contextcommands.StatsContextCommand;
-import dev.piste.vayna.stringselectmenus.LanguageSelectMenu;
-import dev.piste.vayna.stringselectmenus.SettingsSelectMenu;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.util.HashMap;
 
@@ -41,9 +38,9 @@ public class UserContextCommandManager {
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(Configs.getSettings().getSupportGuild().getId()).getTextChannelById(Configs.getSettings().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
-                        .setAuthor(event.getUser().getAsTag(), Configs.getSettings().getWebsiteUri(), event.getUser().getAvatarUrl())
+                        .setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();
             }
