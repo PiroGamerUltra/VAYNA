@@ -16,7 +16,6 @@ public class SettingsSelectMenu implements dev.piste.vayna.manager.StringSelectM
     @Override
     public void perform(StringSelectInteractionEvent event) {
         event.deferReply(true).queue();
-
         TranslationManager translation = TranslationManager.getTranslation(event.getGuild());
 
         if (event.getInteraction().getSelectedOptions().get(0).getValue().equals("language")) {
@@ -30,6 +29,7 @@ public class SettingsSelectMenu implements dev.piste.vayna.manager.StringSelectM
                     .setMaxValues(1)
                     .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-1"), "en-US", Emoji.fromUnicode("\uD83C\uDDFA\uD83C\uDDF8"))
                     .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-2"), "de-DE", Emoji.fromUnicode("\uD83C\uDDE9\uD83C\uDDEA"))
+                    .addOption(translation.getTranslation("stringselect-settings-language-selectmenu-option-3"), "ru-RU", Emoji.fromUnicode("\uD83C\uDDF7\uD83C\uDDFA"))
                     .build();
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                     stringSelectMenu
