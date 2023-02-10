@@ -37,7 +37,7 @@ public class AgentCommand implements Command {
         embedList.add(agentEmbed.build());
 
         Embed roleEmbed = new Embed().setAuthor(agent.getRole().getDisplayName(), agent.getRole().getDisplayIcon())
-                .setDescription("> " + agent.getRole().getDescription())
+                .setDescription(">>> " + agent.getRole().getDescription())
                 .removeFooter();
         embedList.add(roleEmbed.build());
 
@@ -52,7 +52,7 @@ public class AgentCommand implements Command {
                 default -> abilityKey = "Error";
             }
             Embed abilityEmbed = new Embed().setAuthor(ability.getDisplayName() + " (" + abilityKey + ")", ability.getDisplayIcon())
-                    .setDescription("> " + ability.getDescription())
+                    .setDescription(">>> " + ability.getDescription())
                     .removeFooter();
             embedList.add(abilityEmbed.build());
         }
