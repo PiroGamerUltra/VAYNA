@@ -35,6 +35,8 @@ public class AgentCommand implements Command {
                 .removeFooter();
         embedList.add(agentEmbed.build());
 
+        //test
+
         Embed roleEmbed = new Embed().setAuthor(agent.getRole().getDisplayName(), agent.getRole().getDisplayIcon())
                 .setDescription("> " + agent.getRole().getDescription())
                 .removeFooter();
