@@ -47,18 +47,8 @@ public class Embed {
         return this;
     }
 
-    public Embed setAuthor(String name, String url, String iconUrl) {
-        embedBuilder.setAuthor(name, url, iconUrl);
-        return this;
-    }
-
-    public Embed setAuthor(String name, String url) {
-        embedBuilder.setAuthor(name, url);
-        return this;
-    }
-
-    public Embed setAuthor(String name) {
-        embedBuilder.setAuthor(name);
+    public Embed setAuthor(String name, String iconUrl) {
+        embedBuilder.setAuthor(name, null, iconUrl);
         return this;
     }
 

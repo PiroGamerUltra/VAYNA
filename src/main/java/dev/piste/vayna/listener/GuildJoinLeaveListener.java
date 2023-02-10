@@ -19,7 +19,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
         Embed embed = new Embed();
         embed.setColor(0, 255, 0);
-        embed.setAuthor(event.getGuild().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getGuild().getIconUrl());
+        embed.setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl());
         if(event.getGuild().getBannerUrl() != null) embed.setImage(event.getGuild().getBannerUrl());
         embed.addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag(), true);
         embed.addField("Member count", event.getGuild().getMemberCount() + " members", true);
@@ -36,7 +36,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
         Embed embed = new Embed();
         embed.setColor(255, 0, 0);
-        embed.setAuthor(event.getGuild().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getGuild().getIconUrl());
+        embed.setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl());
         if(event.getGuild().getBannerUrl() != null) embed.setImage(event.getGuild().getBannerUrl());
         embed.addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag(), true);
         embed.addField("Member count", event.getGuild().getMemberCount() + " members", true);

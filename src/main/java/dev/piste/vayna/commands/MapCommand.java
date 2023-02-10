@@ -25,7 +25,7 @@ public class MapCommand implements Command {
         Map map = ValorantAPI.getMap(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embed.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + map.getDisplayName());
         embed.addField(language.getTranslation("command-map-embed-field-1-name"), map.getCoordinates(), true);
         embed.setImage(map.getSplash());

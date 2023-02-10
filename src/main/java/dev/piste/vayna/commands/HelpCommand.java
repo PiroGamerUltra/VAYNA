@@ -21,7 +21,7 @@ public class HelpCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         Embed embedBuilder = new Embed();
-        embedBuilder.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embedBuilder.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
         embedBuilder.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"));
         embedBuilder.addField(language.getTranslation("command-help-embed-field-1-name"), language.getTranslation("command-help-embed-field-1-text")
                 .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);

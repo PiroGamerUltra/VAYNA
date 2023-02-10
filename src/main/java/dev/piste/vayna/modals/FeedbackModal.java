@@ -21,7 +21,7 @@ public class FeedbackModal implements Modal {
 
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+        Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                 .setColor(0, 255, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("modal-feedback-embed-title"))
                 .setDescription(language.getTranslation("modal-feedback-embed-description"));
@@ -29,7 +29,7 @@ public class FeedbackModal implements Modal {
 
         if(Bot.isDebug()) return;
         TextChannel feedbackChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getFeedback());
-        Embed feedbackEmbed = new Embed().setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+        Embed feedbackEmbed = new Embed().setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                 .setTitle("» Feedback")
                 .setThumbnail(event.getUser().getAvatarUrl())
                 .setDescription(event.getValues().get(0).getAsString());

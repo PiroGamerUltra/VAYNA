@@ -35,7 +35,7 @@ public class StoreCommand implements Command {
             Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
 
             Embed bundleEmbed = new Embed()
-                    .setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
                     .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
                     .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")

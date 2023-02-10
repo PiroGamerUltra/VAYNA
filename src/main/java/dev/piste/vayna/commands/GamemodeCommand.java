@@ -5,7 +5,6 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Gamemode;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -25,7 +24,7 @@ public class GamemodeCommand implements Command {
         Gamemode gamemode = ValorantAPI.getGamemode(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embed.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + gamemode.getDisplayName());
         embed.addField(language.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true);
         embed.setThumbnail(gamemode.getDisplayIcon());

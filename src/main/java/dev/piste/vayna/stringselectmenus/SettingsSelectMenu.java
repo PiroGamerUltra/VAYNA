@@ -21,7 +21,7 @@ public class SettingsSelectMenu implements dev.piste.vayna.manager.StringSelectM
 
         if (event.getInteraction().getSelectedOptions().get(0).getValue().equals("language")) {
             Embed embed = new Embed()
-                    .setAuthor(event.getGuild().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getGuild().getIconUrl())
+                    .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("stringselect-settings-language-embed-title"))
                     .setDescription(language.getTranslation("stringselect-settings-language-embed-description"));
             StringSelectMenu.Builder stringSelectMenuBuilder = StringSelectMenu.create("language")

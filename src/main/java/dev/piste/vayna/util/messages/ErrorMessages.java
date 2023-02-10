@@ -23,7 +23,7 @@ public class ErrorMessages {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-api-embed-title"))
                 .setDescription(language.getTranslation("error-api-embed-description"))
-                .setAuthor(user.getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), user.getAvatarUrl());
+                .setAuthor(user.getName(), user.getAvatarUrl());
         switch (statusCode) {
             case 400 -> embed.addField(language.getTranslation("error-api-embed-field-1-name"), "`400: Bad request`", false);
             case 401 -> embed.addField(language.getTranslation("error-api-embed-field-1-name"), "`401: Unauthorized`", false);

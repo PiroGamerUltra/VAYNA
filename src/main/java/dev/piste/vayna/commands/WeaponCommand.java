@@ -26,7 +26,7 @@ public class WeaponCommand implements Command {
         Weapon weapon = ValorantAPI.getWeapon(uuid, language.getLanguageCode());
 
         Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl());
+        embed.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
         embed.setTitle(language.getEmbedTitlePrefix() + weapon.getDisplayName());
         embed.addField(language.getTranslation("command-weapon-embed-field-1-name"),
                 "**" + weapon.getShopData().getCost() + "**", false);

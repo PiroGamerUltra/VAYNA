@@ -60,7 +60,7 @@ public class StatsCommand implements Command {
 
                     linkedAccount = new LinkedAccount(riotAccount.getPuuid());
                 } catch (InvalidRiotIdException e) {
-                    Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                             .setColor(255, 0, 0)
                             .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-riotid-embed-title"))
                             .setDescription(language.getTranslation("command-stats-error-riotid-embed-description")
@@ -76,7 +76,7 @@ public class StatsCommand implements Command {
 
         if (linkedAccount.isExisting()) {
             if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
-                Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                         .setColor(255, 0, 0)
                         .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-private-embed-title"))
                         .setDescription(language.getTranslation("command-stats-error-private-embed-description"));
@@ -88,7 +88,7 @@ public class StatsCommand implements Command {
         } else {
             if(discordUserId != 0) {
                 if (discordUserId == event.getUser().getIdLong()) {
-                    Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                             .setColor(255, 0, 0)
                             .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-noconnectionself-embed-title"))
                             .setDescription(language.getTranslation("command-stats-error-noconnectionself-embed-description")
@@ -97,7 +97,7 @@ public class StatsCommand implements Command {
                             Buttons.getSupportButton(event.getGuild())
                     ).queue();
                 } else {
-                        Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                        Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                                 .setColor(255, 0, 0)
                                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-noconnection-embed-title"))
                                 .setDescription(language.getTranslation("command-stats-error-noconnection-embed-description")
@@ -114,7 +114,7 @@ public class StatsCommand implements Command {
         try {
             activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
         } catch (InvalidRegionException e) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-region-embed-title"))
                     .setDescription(language.getTranslation("command-stats-error-region-embed-description")
@@ -139,7 +139,7 @@ public class StatsCommand implements Command {
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
 
             Embed embed = new Embed();
-            embed.setAuthor(riotAccount.getRiotId(), ConfigManager.getSettingsConfig().getWebsiteUri(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
+            embed.setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
             embed.setColor(209, 54, 57);
             embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"));
             embed.setDescription(language.getTranslation("command-stats-embed-description"));

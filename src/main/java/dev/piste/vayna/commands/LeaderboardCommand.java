@@ -56,7 +56,7 @@ public class LeaderboardCommand implements Command {
         }
 
         if(eloMap.size() == 0) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
                     .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
@@ -76,7 +76,7 @@ public class LeaderboardCommand implements Command {
         eloList.sort(Collections.reverseOrder());
         int guildElo = memberElos / eloMap.size();
 
-        Embed embed = new Embed().setAuthor(event.getGuild().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getGuild().getIconUrl())
+        Embed embed = new Embed().setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
         ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();

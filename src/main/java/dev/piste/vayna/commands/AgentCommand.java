@@ -3,10 +3,9 @@ package dev.piste.vayna.commands;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Agent;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
-import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
@@ -21,23 +20,22 @@ public class AgentCommand implements Command {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
-        event.deferReply().queue();
+        event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        String websiteUri = ConfigManager.getSettingsConfig().getWebsiteUri();
         String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
-        Embed agentEmbed = new Embed().setAuthor(event.getUser().getName(), websiteUri, event.getUser().getAvatarUrl())
+        Embed agentEmbed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                 .setTitle(language.getEmbedTitlePrefix() + agent.getDisplayName())
                 .setDescription(agent.getDescription())
                 .setThumbnail(agent.getDisplayIcon())
                 .setImage(agent.getFullPortrait());
         embedList.add(agentEmbed.build());
 
-        Embed roleEmbed = new Embed().setAuthor(language.getTranslation("command-agent-embed-role-author"), websiteUri, agent.getDisplayIcon())
+        Embed roleEmbed = new Embed().setAuthor(language.getTranslation("command-agent-embed-role-author"), agent.getDisplayIcon())
                 .setTitle(language.getEmbedTitlePrefix() + agent.getRole().getDisplayName())
                 .setDescription(agent.getRole().getDescription())
                 .setThumbnail(agent.getRole().getDisplayIcon())
@@ -55,7 +53,7 @@ public class AgentCommand implements Command {
                 default -> abilityKey = "Error";
             }
             Embed abilityEmbed = new Embed().setTitle(language.getEmbedTitlePrefix() + ability.getDisplayName() + " (" + abilityKey + ")")
-                    .setAuthor(language.getTranslation("command-agent-embed-ability-author"), websiteUri, agent.getDisplayIcon())
+                    .setAuthor(language.getTranslation("command-agent-embed-ability-author"), agent.getDisplayIcon())
                     .setDescription(ability.getDescription())
                     .setThumbnail(ability.getDisplayIcon())
                     .removeFooter();

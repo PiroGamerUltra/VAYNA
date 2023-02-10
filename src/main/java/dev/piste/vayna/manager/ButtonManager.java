@@ -66,7 +66,7 @@ public class ButtonManager {
                 if(Bot.isDebug()) return;
                 TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
-                        .setAuthor(event.getUser().getAsTag(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                        .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();
             }

@@ -29,7 +29,7 @@ public class RankButton implements Button {
         RiotAccount oldRiotAccount = ButtonManager.getRiotAccountFromStatsButtonMap(arg);
 
         if(oldRiotAccount == null) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+            Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("button-rank-error-old-embed-title"))
                     .setDescription(language.getTranslation("button-rank-error-old-embed-description"));
@@ -46,7 +46,7 @@ public class RankButton implements Button {
         CompetitiveTier enUsCompetitiveTier = ValorantAPI.getCompetitiveTier("en-US");
 
         Embed embed = new Embed()
-                .setAuthor(riotAccount.getRiotId(), ConfigManager.getSettingsConfig().getWebsiteUri(), henrikAccount.getCard().getSmall())
+                .setAuthor(riotAccount.getRiotId(), henrikAccount.getCard().getSmall())
                 .setTitle(language.getTranslation("embed-title-prefix") + language.getTranslation("button-rank-embed-title"))
                 .setColor(209, 54, 57);
 

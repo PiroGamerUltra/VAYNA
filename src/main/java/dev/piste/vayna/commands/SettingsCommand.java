@@ -28,7 +28,7 @@ public class SettingsCommand implements Command {
             Language language = LanguageManager.getLanguage(event.getGuild());
 
             Embed embed = new Embed()
-                    .setAuthor(event.getUser().getName(), ConfigManager.getSettingsConfig().getWebsiteUri(), event.getUser().getAvatarUrl())
+                    .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-settings-error-perms-embed-title"))
                     .setDescription(language.getTranslation("command-settings-error-perms-embed-description"))
                     .setColor(255, 0, 0);
