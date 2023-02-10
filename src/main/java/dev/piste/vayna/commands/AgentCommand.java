@@ -22,23 +22,19 @@ public class AgentCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
-        // test123
         String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
-        Embed agentEmbed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
-                .setTitle(language.getEmbedTitlePrefix() + agent.getDisplayName())
+        Embed agentEmbed = new Embed().setAuthor(agent.getDisplayName(), agent.getDisplayIcon())
                 .setDescription(agent.getDescription())
-                .setThumbnail(agent.getDisplayIcon())
-                .setImage(agent.getFullPortrait());
+                .setThumbnail(agent.getFullPortrait())
+                .removeFooter();
         embedList.add(agentEmbed.build());
 
-        Embed roleEmbed = new Embed().setAuthor(language.getTranslation("command-agent-embed-role-author"), agent.getDisplayIcon())
-                .setTitle(language.getEmbedTitlePrefix() + agent.getRole().getDisplayName())
-                .setDescription(agent.getRole().getDescription())
-                .setThumbnail(agent.getRole().getDisplayIcon())
+        Embed roleEmbed = new Embed().setAuthor(agent.getRole().getDisplayName(), agent.getRole().getDisplayIcon())
+                .setDescription("> " + agent.getRole().getDescription())
                 .removeFooter();
         embedList.add(roleEmbed.build());
 
@@ -52,10 +48,8 @@ public class AgentCommand implements Command {
                 case "Ultimate" -> abilityKey = "X";
                 default -> abilityKey = "Error";
             }
-            Embed abilityEmbed = new Embed().setTitle(language.getEmbedTitlePrefix() + ability.getDisplayName() + " (" + abilityKey + ")")
-                    .setAuthor(language.getTranslation("command-agent-embed-ability-author"), agent.getDisplayIcon())
-                    .setDescription(ability.getDescription())
-                    .setThumbnail(ability.getDisplayIcon())
+            Embed abilityEmbed = new Embed().setAuthor(ability.getDisplayName() + " (" + abilityKey + ")", ability.getDisplayIcon())
+                    .setDescription("> " + ability.getDescription())
                     .removeFooter();
             embedList.add(abilityEmbed.build());
         }
