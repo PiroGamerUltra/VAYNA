@@ -1,6 +1,5 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
@@ -10,6 +9,8 @@ import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class GamemodeCommand implements Command {
@@ -17,28 +18,28 @@ public class GamemodeCommand implements Command {
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
-
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        String uuid = ValorantAPI.getGamemodeByName(event.getOption("name").getAsString(), "en-US").getUuid();
-        Gamemode gamemode = ValorantAPI.getGamemode(uuid, language.getLanguageCode());
+        // Searching the gamemode by the provided UUID
+        Gamemode gamemode = ValorantAPI.getGamemode(event.getOption("name").getAsString(), language.getLanguageCode());
 
-        Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
-        embed.setTitle(language.getEmbedTitlePrefix() + gamemode.getDisplayName());
-        embed.addField(language.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true);
-        embed.setThumbnail(gamemode.getDisplayIcon());
+        // Creating the reply embed
+        Embed embed = new Embed().setAuthor(gamemode.getDisplayName(), gamemode.getDisplayIcon())
+                .addField(language.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true)
+                .removeFooter();
+
+        // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 
     @Override
-    public void register() throws StatusCodeException {
-        OptionData optionData = new OptionData(OptionType.STRING, "name", "Name of the gamemode", true);
+    public CommandData getCommandData() throws StatusCodeException {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "Gamemode name", true);
         for(Gamemode gamemode : ValorantAPI.getGamemodes("en-US")) {
             if(gamemode.getDisplayName().equalsIgnoreCase("Onboarding") || gamemode.getDisplayName().equalsIgnoreCase("PRACTICE")) continue;
-            optionData.addChoice(gamemode.getDisplayName(), gamemode.getDisplayName());
+            optionData.addChoice(gamemode.getDisplayName(), gamemode.getUuid());
         }
-        Bot.getJDA().upsertCommand(getName(), getDescription()).addOptions(optionData).queue();
+        return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class GamemodeCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a specific VALORANT gamemode";
+        return "Get information about a gamemode";
     }
 
 }
