@@ -62,6 +62,6 @@ public class WeaponCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a specific VALORANT weapon";
+        return "Get information about a weapon";
     }
 }

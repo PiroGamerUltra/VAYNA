@@ -24,7 +24,8 @@ public class GamemodeCommand implements Command {
         Gamemode gamemode = ValorantAPI.getGamemode(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the reply embed
-        Embed embed = new Embed().setAuthor(gamemode.getDisplayName(), gamemode.getDisplayIcon())
+        Embed embed = new Embed()
+                .setAuthor(gamemode.getDisplayName(), gamemode.getDisplayIcon())
                 .addField(language.getTranslation("command-gamemode-embed-field-1-name"), gamemode.getDuration(), true)
                 .removeFooter();
 

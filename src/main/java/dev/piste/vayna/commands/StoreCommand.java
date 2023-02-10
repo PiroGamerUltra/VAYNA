@@ -95,6 +95,6 @@ public class StoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about the current bundle in the VALORANT store";
+        return "Get information about the currently available bundle in the store";
     }
 }

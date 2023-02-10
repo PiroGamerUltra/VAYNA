@@ -24,7 +24,8 @@ public class MapCommand implements Command {
         Map map = ValorantAPI.getMap(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the reply embed
-        Embed embed = new Embed().setAuthor(map.getDisplayName(), map.getSplash())
+        Embed embed = new Embed()
+                .setAuthor(map.getDisplayName(), map.getSplash())
                 .addField(language.getTranslation("command-map-embed-field-1-name"), map.getCoordinates(), true)
                 .setImage(map.getSplash())
                 .setThumbnail(map.getDisplayIcon());
@@ -50,7 +51,7 @@ public class MapCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a specific VALORANT map";
+        return "Get information about a map";
     }
 
 }

@@ -31,14 +31,16 @@ public class AgentCommand implements Command {
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
         // Adding the agent embed (general information)
-        Embed agentEmbed = new Embed().setAuthor(agent.getDisplayName(), agent.getDisplayIcon())
+        Embed agentEmbed = new Embed()
+                .setAuthor(agent.getDisplayName(), agent.getDisplayIcon())
                 .setDescription(">>> " + agent.getDescription())
                 .setThumbnail(agent.getFullPortrait())
                 .removeFooter();
         embedList.add(agentEmbed.build());
 
         // Adding the role embed
-        Embed roleEmbed = new Embed().setAuthor(agent.getRole().getDisplayName(), agent.getRole().getDisplayIcon())
+        Embed roleEmbed = new Embed()
+                .setAuthor(agent.getRole().getDisplayName(), agent.getRole().getDisplayIcon())
                 .setDescription(">>> " + agent.getRole().getDescription())
                 .removeFooter();
         embedList.add(roleEmbed.build());
@@ -56,7 +58,8 @@ public class AgentCommand implements Command {
                 default -> abilityKey = "Error";
             }
             // Adding the ability embed
-            Embed abilityEmbed = new Embed().setAuthor(ability.getDisplayName() + " (" + abilityKey + ")", ability.getDisplayIcon())
+            Embed abilityEmbed = new Embed()
+                    .setAuthor(ability.getDisplayName() + " (" + abilityKey + ")", ability.getDisplayIcon())
                     .setDescription(">>> " + ability.getDescription())
                     .removeFooter();
             embedList.add(abilityEmbed.build());

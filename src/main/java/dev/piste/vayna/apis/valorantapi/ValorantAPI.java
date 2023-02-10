@@ -17,16 +17,9 @@ public class ValorantAPI {
 
     // Agents
     public static Agent getAgent(String uuid, String languageCode) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents/" + uuid + "?isPlayableCharacter=true&language=" + languageCode);
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/agents/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Agent.class);
-    }
-
-    public static Agent getAgentByName(String name, String languageCode) throws StatusCodeException {
-        for(Agent foundAgent : getAgents(languageCode)) {
-            if(foundAgent.getDisplayName().equalsIgnoreCase(name)) return foundAgent;
-        }
-        return new Agent();
     }
 
     public static ArrayList<Agent> getAgents(String languageCode) throws StatusCodeException {
@@ -42,13 +35,6 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Gamemode.class);
     }
 
-    public static Gamemode getGamemodeByName(String name, String languageCode) throws StatusCodeException {
-        for(Gamemode foundGamemode : getGamemodes(languageCode)) {
-            if(foundGamemode.getDisplayName().equalsIgnoreCase(name)) return foundGamemode;
-        }
-        return new Gamemode();
-    }
-
     public static ArrayList<Gamemode> getGamemodes(String languageCode) throws StatusCodeException {
         JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/gamemodes?language=" + languageCode);
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
@@ -62,13 +48,6 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Map.class);
     }
 
-    public static Map getMapByName(String name, String languageCode) throws StatusCodeException {
-        for(Map foundMap : getMaps(languageCode)) {
-            if(foundMap.getDisplayName().equalsIgnoreCase(name)) return foundMap;
-        }
-        return new Map();
-    }
-
     public static ArrayList<Map> getMaps(String languageCode) throws StatusCodeException {
         JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/maps?language=" + languageCode);
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
@@ -80,13 +59,6 @@ public class ValorantAPI {
         JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/weapons/" + uuid + "?language=" + languageCode);
         JsonObject dataObject = jsonObject.getAsJsonObject("data");
         return new Gson().fromJson(dataObject, Weapon.class);
-    }
-
-    public static Weapon getWeaponByName(String name, String languageCode) throws StatusCodeException {
-        for(Weapon foundWeapon : getWeapons(languageCode)) {
-            if(foundWeapon.getDisplayName().equalsIgnoreCase(name)) return foundWeapon;
-        }
-        return new Weapon();
     }
 
     public static ArrayList<Weapon> getWeapons(String languageCode) throws StatusCodeException {

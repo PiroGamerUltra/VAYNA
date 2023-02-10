@@ -1,6 +1,5 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.counter.StatsCounter;
@@ -10,6 +9,8 @@ import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 public class ConnectionCommand implements Command {
 
@@ -34,8 +35,8 @@ public class ConnectionCommand implements Command {
     }
 
     @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription());
     }
 
     @Override
@@ -45,6 +46,6 @@ public class ConnectionCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Manage the connection to your Riot-Games account and its visibility";
+        return "Manage the connection to your Riot Games account and its visibility";
     }
 }
