@@ -31,7 +31,7 @@ public class AgentCommand implements Command {
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
         Embed agentEmbed = new Embed().setAuthor(agent.getDisplayName(), agent.getDisplayIcon())
-                .setDescription(agent.getDescription())
+                .setDescription(">>> " + agent.getDescription())
                 .setThumbnail(agent.getFullPortrait())
                 .removeFooter();
         embedList.add(agentEmbed.build());
