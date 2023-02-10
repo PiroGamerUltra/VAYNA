@@ -26,6 +26,8 @@ public class AgentCommand implements Command {
         String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
+
+
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
         Embed agentEmbed = new Embed().setAuthor(agent.getDisplayName(), agent.getDisplayIcon())
