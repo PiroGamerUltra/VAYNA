@@ -17,7 +17,7 @@ public class GamemodeCommand implements Command {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
-        event.deferReply().queue();
+        event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the gamemode by the provided UUID

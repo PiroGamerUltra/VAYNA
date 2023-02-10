@@ -24,7 +24,7 @@ public class AgentCommand implements Command {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        // Searching the agent (first on english, then in the guild language)
+        // Searching the agent by the provided UUID
         Agent agent = ValorantAPI.getAgent(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the list of embeds to be sent
