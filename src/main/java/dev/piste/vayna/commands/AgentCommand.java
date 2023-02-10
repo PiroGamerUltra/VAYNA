@@ -22,6 +22,7 @@ public class AgentCommand implements Command {
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
+        
         String uuid = ValorantAPI.getAgentByName(event.getOption("name").getAsString(), "en-US").getUuid();
         Agent agent = ValorantAPI.getAgent(uuid, language.getLanguageCode());
 
