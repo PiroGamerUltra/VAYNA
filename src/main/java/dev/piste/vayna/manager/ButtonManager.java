@@ -2,14 +2,14 @@ package dev.piste.vayna.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
-import dev.piste.vayna.buttons.DisconnectButton;
-import dev.piste.vayna.buttons.RankButton;
-import dev.piste.vayna.buttons.VisibilityButton;
+import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.commands.button.DisconnectButton;
+import dev.piste.vayna.commands.button.RankButton;
+import dev.piste.vayna.commands.button.VisibilityButton;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.buttons.Buttons;
-import dev.piste.vayna.util.messages.ErrorMessages;
+import dev.piste.vayna.util.templates.Buttons;
+import dev.piste.vayna.util.templates.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 

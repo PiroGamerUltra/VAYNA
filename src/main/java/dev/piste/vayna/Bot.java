@@ -10,9 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,17 +34,11 @@ public class Bot {
         LanguageManager.loadLanguages();
 
         jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
-                .addEventListeners(new SlashCommandListener())
+                .addEventListeners(new CommandInteractionListeners())
                 .addEventListeners(new GuildJoinLeaveListener())
-                .addEventListeners(new ButtonInteractionListener())
-                .addEventListeners(new ModalInteractionListener())
-                .addEventListeners(new StringSelectInteractionListener())
-                .addEventListeners(new UserContextInteractionListener())
                 .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .build();
 
         CommandManager.registerCommands();
@@ -57,6 +49,11 @@ public class Bot {
 
         new Bot().listenShutdown();
 
+        try {
+            jda.awaitReady();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(getConsolePrefix("Discord") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
     }
 

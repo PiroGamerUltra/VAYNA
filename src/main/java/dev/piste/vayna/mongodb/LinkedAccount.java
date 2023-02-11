@@ -24,8 +24,8 @@ public class LinkedAccount {
             isExisting = false;
         } else {
             isExisting = true;
-            this.riotPuuid = (String) linkedAccount.get("riotPuuid");
-            this.visibleToPublic = (boolean) linkedAccount.get("public");
+            riotPuuid = (String) linkedAccount.get("riotPuuid");
+            visibleToPublic = (boolean) linkedAccount.get("public");
         }
     }
 
@@ -36,8 +36,8 @@ public class LinkedAccount {
             isExisting = false;
         } else {
             isExisting = true;
-            this.discordUserId = (long) linkedAccount.get("discordUserId");
-            this.visibleToPublic = (boolean) linkedAccount.get("public");
+            discordUserId = (long) linkedAccount.get("discordUserId");
+            visibleToPublic = (boolean) linkedAccount.get("public");
         }
     }
 
@@ -52,43 +52,29 @@ public class LinkedAccount {
                     Updates.set("discordUserId", discordUserId),
                     Updates.set("riotPuuid", riotPuuid)
             );
-            UpdateOptions options = new UpdateOptions().upsert(true);
-            linkedAccountCollection.updateOne(linkedAccount, updates, options);
+            linkedAccountCollection.updateOne(linkedAccount, updates, new UpdateOptions().upsert(true));
         }
     }
 
     public long getDiscordUserId() {
-        if(isExisting) {
-            return discordUserId;
-        } else {
-            return 0;
-        }
+        return discordUserId;
     }
 
     public String getRiotPuuid() {
-        if(isExisting) {
-            return riotPuuid;
-        } else {
-            return null;
-        }
+        return riotPuuid;
     }
 
     public boolean isVisibleToPublic() {
-        if(isExisting) {
-            return visibleToPublic;
-        } else {
-            return true;
-        }
+        return visibleToPublic;
     }
 
-    public void setVisibleToPublic(boolean visibleToPublic) {
+    public LinkedAccount setVisibleToPublic(boolean visibleToPublic) {
         this.visibleToPublic = visibleToPublic;
+        return this;
     }
 
     public void delete() {
-        if(isExisting) {
-            linkedAccountCollection.deleteOne(linkedAccount);
-        }
+        linkedAccountCollection.deleteOne(linkedAccount);
     }
 
 }

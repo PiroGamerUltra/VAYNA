@@ -1,7 +1,7 @@
 package dev.piste.vayna.manager;
 
-import dev.piste.vayna.stringselectmenus.LanguageSelectMenu;
-import dev.piste.vayna.stringselectmenus.SettingsSelectMenu;
+import dev.piste.vayna.commands.selectmenu.LanguageSelectMenu;
+import dev.piste.vayna.commands.selectmenu.SettingsSelectMenu;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.util.HashMap;

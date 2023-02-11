@@ -17,51 +17,39 @@ public class GuildSetting {
     private final Document guildSettingDocument;
     private final long guildId;
     private String language;
-    private final boolean isExisting;
 
     public GuildSetting(long guildId) {
         this.guildId = guildId;
         guildSettingDocument = guildSettingsCollection.find(eq("guildId", guildId)).first();
         if(guildSettingDocument == null) {
-            isExisting = false;
+            language = "en-US";
+            insert();
         } else {
-            isExisting = true;
-            this.language = (String) guildSettingDocument.get("language");
+            language = (String) guildSettingDocument.get("language");
         }
-    }
-
-    public boolean isExisting() {
-        return isExisting;
     }
 
     public String getLanguage() {
-        if (!isExisting) {
-            language = "en-US";
-            insert(guildId, language);
-        }
         return language;
     }
 
-    public void update(String language) {
-        if(isExisting) {
-            this.language = language;
-            Bson updates = Updates.set("language", language);
-            UpdateOptions options = new UpdateOptions().upsert(true);
-            guildSettingsCollection.updateOne(guildSettingDocument, updates, options);
-        }
+    public GuildSetting setLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
-    public static void insert(long guildId, String language) {
+    public void update() {
+        Bson updates = Updates.combine(
+                Updates.set("language", language)
+        );
+        guildSettingsCollection.updateOne(guildSettingDocument, updates, new UpdateOptions().upsert(true));
+    }
+
+    private void insert() {
         Document newAuthKeyDocument = new Document();
         newAuthKeyDocument.put("guildId", guildId);
         newAuthKeyDocument.put("language", language);
         guildSettingsCollection.insertOne(newAuthKeyDocument);
-    }
-
-    public void delete() {
-        if(isExisting) {
-            guildSettingsCollection.deleteOne(guildSettingDocument);
-        }
     }
 
 }

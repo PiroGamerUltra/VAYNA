@@ -1,6 +1,6 @@
 package dev.piste.vayna.manager;
 
-import dev.piste.vayna.modals.FeedbackModal;
+import dev.piste.vayna.commands.modal.FeedbackModal;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
 import java.util.HashMap;
