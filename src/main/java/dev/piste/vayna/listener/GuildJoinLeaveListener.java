@@ -2,7 +2,7 @@ package dev.piste.vayna.listener;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.counter.StatsCounter;
+import dev.piste.vayna.util.StatsCounter;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -11,6 +11,9 @@ import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class GuildJoinLeaveListener extends ListenerAdapter {
 
     @Override

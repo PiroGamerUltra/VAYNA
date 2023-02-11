@@ -3,6 +3,7 @@ package dev.piste.vayna.util;
 import dev.piste.vayna.Bot;
 import net.dv8tion.jda.api.entities.Guild;
 
+@SuppressWarnings("ALL")
 public class Emoji {
 
     private static final Guild emojiGuild1 = Bot.getJDA().getGuildById(1067157722967052402L);
@@ -44,35 +45,35 @@ public class Emoji {
         return emojiGuild1.getEmojiById(1068279053292941453L);
     }
 
-    public static net.dv8tion.jda.api.entities.emoji.Emoji getRankByTierName(String tierName) {
+    public static net.dv8tion.jda.api.entities.emoji.Emoji getRankByTierName(int tier) {
         net.dv8tion.jda.api.entities.emoji.Emoji emoji = null;
-        switch (tierName) {
-            case "Unranked" -> emoji = emojiGuild2.getEmojiById(1068966345468817459L);
-            case "Iron 1" -> emoji = emojiGuild2.getEmojiById(1068965683179827210L);
-            case "Iron 2" -> emoji = emojiGuild2.getEmojiById(1068965679736295524L);
-            case "Iron 3" -> emoji = emojiGuild2.getEmojiById(1068965675336482927L);
-            case "Bronze 1" -> emoji = emojiGuild2.getEmojiById(1068965669439291402L);
-            case "Bronze 2" -> emoji = emojiGuild2.getEmojiById(1068965664783609897L);
-            case "Bronze 3" -> emoji = emojiGuild2.getEmojiById(1068965659955970068L);
-            case "Silver 1" -> emoji = emojiGuild2.getEmojiById(1068965656189480960L);
-            case "Silver 2" -> emoji = emojiGuild2.getEmojiById(1068965651735117824L);
-            case "Silver 3" -> emoji = emojiGuild2.getEmojiById(1068965647058468917L);
-            case "Gold 1" -> emoji = emojiGuild2.getEmojiById(1068965641991749723L);
-            case "Gold 2" -> emoji = emojiGuild2.getEmojiById(1068965637277364274L);
-            case "Gold 3" -> emoji = emojiGuild2.getEmojiById(1068965632160309411L);
-            case "Platinum 1" -> emoji = emojiGuild2.getEmojiById(1068965626468642828L);
-            case "Platinum 2" -> emoji = emojiGuild2.getEmojiById(1068965622702149782L);
-            case "Platinum 3" -> emoji = emojiGuild2.getEmojiById(1068965619531268146L);
-            case "Diamond 1" -> emoji = emojiGuild2.getEmojiById(1068965614829457428L);
-            case "Diamond 2" -> emoji = emojiGuild2.getEmojiById(1068965610161197168L);
-            case "Diamond 3" -> emoji = emojiGuild2.getEmojiById(1068965606025597092L);
-            case "Ascendant 1" -> emoji = emojiGuild2.getEmojiById(1068965601910984744L);
-            case "Ascendant 2" -> emoji = emojiGuild2.getEmojiById(1068965598870118470L);
-            case "Ascendant 3" -> emoji = emojiGuild2.getEmojiById(1068965596223508542L);
-            case "Immortal 1" -> emoji = emojiGuild2.getEmojiById(1068965592205373461L);
-            case "Immortal 2" -> emoji = emojiGuild2.getEmojiById(1068965586316558367L);
-            case "Immortal 3" -> emoji = emojiGuild2.getEmojiById(1068965581614755951L);
-            case "Radiant" -> emoji = emojiGuild2.getEmojiById(1068965576061505579L);
+        switch (tier) {
+            case 0 -> emoji = emojiGuild2.getEmojiById(1068966345468817459L);
+            case 3 -> emoji = emojiGuild2.getEmojiById(1068965683179827210L);
+            case 4 -> emoji = emojiGuild2.getEmojiById(1068965679736295524L);
+            case 5 -> emoji = emojiGuild2.getEmojiById(1068965675336482927L);
+            case 6 -> emoji = emojiGuild2.getEmojiById(1068965669439291402L);
+            case 7 -> emoji = emojiGuild2.getEmojiById(1068965664783609897L);
+            case 8 -> emoji = emojiGuild2.getEmojiById(1068965659955970068L);
+            case 9 -> emoji = emojiGuild2.getEmojiById(1068965656189480960L);
+            case 10 -> emoji = emojiGuild2.getEmojiById(1068965651735117824L);
+            case 11 -> emoji = emojiGuild2.getEmojiById(1068965647058468917L);
+            case 12 -> emoji = emojiGuild2.getEmojiById(1068965641991749723L);
+            case 13 -> emoji = emojiGuild2.getEmojiById(1068965637277364274L);
+            case 14 -> emoji = emojiGuild2.getEmojiById(1068965632160309411L);
+            case 15 -> emoji = emojiGuild2.getEmojiById(1068965626468642828L);
+            case 16 -> emoji = emojiGuild2.getEmojiById(1068965622702149782L);
+            case 17 -> emoji = emojiGuild2.getEmojiById(1068965619531268146L);
+            case 18 -> emoji = emojiGuild2.getEmojiById(1068965614829457428L);
+            case 19 -> emoji = emojiGuild2.getEmojiById(1068965610161197168L);
+            case 20 -> emoji = emojiGuild2.getEmojiById(1068965606025597092L);
+            case 21 -> emoji = emojiGuild2.getEmojiById(1068965601910984744L);
+            case 22 -> emoji = emojiGuild2.getEmojiById(1068965598870118470L);
+            case 23 -> emoji = emojiGuild2.getEmojiById(1068965596223508542L);
+            case 24 -> emoji = emojiGuild2.getEmojiById(1068965592205373461L);
+            case 25 -> emoji = emojiGuild2.getEmojiById(1068965586316558367L);
+            case 26 -> emoji = emojiGuild2.getEmojiById(1068965581614755951L);
+            case 27 -> emoji = emojiGuild2.getEmojiById(1068965576061505579L);
         }
         return emoji;
     }

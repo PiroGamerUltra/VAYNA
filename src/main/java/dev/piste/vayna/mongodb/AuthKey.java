@@ -9,32 +9,26 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class AuthKey {
 
-    private final long discordUserId;
-    private String authKey;
     private static final MongoCollection<Document> authKeyCollection = Mongo.getAuthKeyCollection();
-    private final boolean isExisting;
-
+    private final long discordUserId;
+    private final String authKey;
 
     public AuthKey(long discordUserId) {
         this.discordUserId = discordUserId;
         Document authKeyDocument = authKeyCollection.find(eq("discordUserId", discordUserId)).first();
         if(authKeyDocument == null) {
-            isExisting = false;
+            authKey = UUID.randomUUID().toString();
+            insert();
         } else {
-            isExisting = true;
-            this.authKey = (String) authKeyDocument.get("authKey");
+            authKey = (String) authKeyDocument.get("authKey");
         }
     }
 
     public String getAuthKey() {
-        if (!isExisting) {
-            authKey = UUID.randomUUID().toString();
-            insert(discordUserId, authKey);
-        }
         return authKey;
     }
 
-    public static void insert(long discordUserId, String authKey) {
+    private void insert() {
         Document newAuthKeyDocument = new Document();
         newAuthKeyDocument.put("discordUserId", discordUserId);
         newAuthKeyDocument.put("authKey", authKey);

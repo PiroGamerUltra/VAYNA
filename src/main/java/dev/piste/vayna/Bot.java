@@ -4,8 +4,8 @@ import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.listener.*;
 import dev.piste.vayna.manager.*;
 import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.util.FontColor;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.ConsoleColor;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -27,7 +27,7 @@ public class Bot {
     }
 
     public static String getConsolePrefix(String name) {
-        return FontColor.WHITE + "[" + FontColor.PURPLE + name + FontColor.WHITE + "]" + FontColor.RESET + " ";
+        return ConsoleColor.WHITE + "[" + ConsoleColor.PURPLE + name + ConsoleColor.WHITE + "]" + ConsoleColor.RESET + " ";
     }
 
     public static void main(String[] args) {
@@ -36,18 +36,13 @@ public class Bot {
         LanguageManager.loadLanguages();
 
         jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
-                .addEventListeners(new SlashCommandListener())
+                .addEventListeners(new CommandInteractionListeners())
                 .addEventListeners(new GuildJoinLeaveListener())
-                .addEventListeners(new ButtonInteractionListener())
-                .addEventListeners(new ModalInteractionListener())
-                .addEventListeners(new StringSelectInteractionListener())
-                .addEventListeners(new UserContextInteractionListener())
                 .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .build();
 
         CommandManager.registerCommands();
@@ -56,9 +51,14 @@ public class Bot {
         StringSelectMenuManager.registerStringSelectMenus();
         UserContextCommandManager.registerStringSelectMenus();
 
-        System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
-
         new Bot().listenShutdown();
+
+        try {
+            jda.awaitReady();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(getConsolePrefix("Discord") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
     }
 
     public static JDA getJDA() {
@@ -73,11 +73,11 @@ public class Bot {
                     if (reader.readLine().equalsIgnoreCase("exit")) {
                         if (jda != null) {
                             jda.shutdown();
-                            System.out.println(getConsolePrefix("VAYNA") + FontColor.GREEN + "Stopped" + FontColor.RESET);
+                            System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.GREEN + "Stopped" + ConsoleColor.RESET);
                         }
                         reader.close();
                     } else {
-                        System.out.println(getConsolePrefix("VAYNA") + FontColor.YELLOW + "Type 'exit' to stop the bot." + FontColor.RESET);
+                        System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.YELLOW + "Type 'exit' to stop the bot." + ConsoleColor.RESET);
                     }
                 }
             } catch (IOException ignored) {

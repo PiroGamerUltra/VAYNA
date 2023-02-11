@@ -11,7 +11,7 @@ All commands work with the slash command function in Discord.
 - `/feedback` Share feedback with the developer of VAYNA
 ### Connection Commands
 - `/connection` Manage the connection to your Riot Games account and its visibility
-### Statistic Commands / Context Commands / Buttons
+### Statistic Commands
 #### Commands
 - `/stats user <@user>` Get the stats of a Discord user
 - `/stats riot-id <name> <tag>` Get the stats of a Riot-ID

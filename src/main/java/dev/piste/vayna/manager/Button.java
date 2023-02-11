@@ -1,7 +1,6 @@
 package dev.piste.vayna.manager;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**

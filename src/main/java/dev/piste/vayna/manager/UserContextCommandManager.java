@@ -3,10 +3,10 @@ package dev.piste.vayna.manager;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.contextcommands.StatsContextCommand;
+import dev.piste.vayna.commands.context.StatsContextCommand;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.buttons.Buttons;
-import dev.piste.vayna.util.messages.ErrorMessages;
+import dev.piste.vayna.util.templates.Buttons;
+import dev.piste.vayna.util.templates.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 

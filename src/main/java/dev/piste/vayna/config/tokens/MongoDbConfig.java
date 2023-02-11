@@ -3,6 +3,8 @@ package dev.piste.vayna.config.tokens;
 /**
  * @author Piste | https://github.com/zPiste
  */
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class MongoDbConfig {
 
     private String host;
