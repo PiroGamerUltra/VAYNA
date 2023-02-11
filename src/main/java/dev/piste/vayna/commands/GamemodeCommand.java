@@ -50,7 +50,7 @@ public class GamemodeCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a gamemode";
+        return LanguageManager.getLanguage().getTranslation("command-gamemode-description");
     }
 
 }

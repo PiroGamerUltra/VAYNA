@@ -6,6 +6,7 @@ import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.util.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -46,6 +47,6 @@ public class ConnectionCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Manage the connection to your Riot Games account and its visibility";
+        return LanguageManager.getLanguage().getTranslation("command-connection-description");
     }
 }

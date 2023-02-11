@@ -149,6 +149,6 @@ public class LeaderboardCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get a list of the top 20 players on this server";
+        return LanguageManager.getLanguage().getTranslation("command-leaderboard-description");
     }
 }

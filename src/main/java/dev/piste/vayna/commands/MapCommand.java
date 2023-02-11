@@ -51,7 +51,7 @@ public class MapCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a map";
+        return LanguageManager.getLanguage().getTranslation("command-map-description");
     }
 
 }

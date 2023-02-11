@@ -42,6 +42,6 @@ public class FeedbackCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Share feedback with the developer of VAYNA";
+        return LanguageManager.getLanguage().getTranslation("command-feedback-description");
     }
 }

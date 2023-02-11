@@ -62,6 +62,6 @@ public class WeaponCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about a weapon";
+        return LanguageManager.getLanguage().getTranslation("command-weapon-description");
     }
 }

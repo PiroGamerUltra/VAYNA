@@ -56,6 +56,6 @@ public class SettingsCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Manage the settings of the bot for this server";
+        return LanguageManager.getLanguage().getTranslation("command-settings-description");
     }
 }

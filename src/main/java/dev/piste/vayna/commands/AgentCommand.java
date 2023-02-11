@@ -76,7 +76,7 @@ public class AgentCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get general information about an agent";
+        return LanguageManager.getLanguage().getTranslation("command-agent-description");
     }
 
     @Override

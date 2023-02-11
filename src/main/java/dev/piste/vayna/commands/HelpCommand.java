@@ -28,30 +28,30 @@ public class HelpCommand implements Command {
                 .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);
         // General
         embed.addField(language.getTranslation("command-help-embed-field-2-name"),  "" +
-                "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + new HelpCommand().getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new FeedbackCommand()).getAsMention() + " " + new FeedbackCommand().getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + language.getTranslation("command-help-description") + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new FeedbackCommand()).getAsMention() + " " + language.getTranslation("command-feedback-description"), false);
         // /connection
         embed.addField(language.getTranslation("command-help-embed-field-3-name"),  "" +
-                "» " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + " " + new ConnectionCommand().getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention() + " " + language.getTranslation("command-connection-description"), false);
         // /stats & /leaderboard
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand1 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(0);
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand2 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(1);
         net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand3 = CommandManager.getAsJdaCommand(new StatsCommand()).getSubcommands().get(2);
         embed.addField(language.getTranslation("command-help-embed-field-4-name"), "" +
-                "» " + subcommand1.getAsMention() + " " + subcommand1.getDescription() + "\n" +
-                "» " + subcommand2.getAsMention() + " " + subcommand2.getDescription() + "\n" +
-                "» " + subcommand3.getAsMention() + " " + subcommand3.getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new LeaderboardCommand()).getAsMention() + " " + new LeaderboardCommand().getDescription(), false);
+                "» " + subcommand1.getAsMention() + " " + language.getTranslation("command-stats-user-description") + "\n" +
+                "» " + subcommand2.getAsMention() + " " + language.getTranslation("command-stats-riotid-description") + "\n" +
+                "» " + subcommand3.getAsMention() + " " + language.getTranslation("command-stats-me-description") + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new LeaderboardCommand()).getAsMention() + " " + language.getTranslation("command-leaderboard-description"), false);
         // Info Commands
         embed.addField(language.getTranslation("command-help-embed-field-5-name"), "" +
-                "» " + CommandManager.getAsJdaCommand(new MapCommand()).getAsMention() + " " + new MapCommand().getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new AgentCommand()).getAsMention() + " " + new AgentCommand().getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getAsMention() + " " + new GamemodeCommand().getDescription() + "\n" +
-                "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + new WeaponCommand().getDescription() + "\n" +
-                "» "  + CommandManager.getAsJdaCommand(new StoreCommand()).getAsMention() + " " + new StoreCommand().getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new MapCommand()).getAsMention() + " " + language.getTranslation("command-map-description") + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new AgentCommand()).getAsMention() + " " + language.getTranslation("command-agent-description") + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new GamemodeCommand()).getAsMention() + " " + language.getTranslation("command-gamemode-description") + "\n" +
+                "» " + CommandManager.getAsJdaCommand(new WeaponCommand()).getAsMention() + " " + language.getTranslation("command-weapon-description") + "\n" +
+                "» "  + CommandManager.getAsJdaCommand(new StoreCommand()).getAsMention() + " " + language.getTranslation("command-store-description"), false);
 
         embed.addField(language.getTranslation("command-help-embed-field-6-name"), "" +
-                "» " + CommandManager.getAsJdaCommand(new SettingsCommand()).getAsMention() + " " + new SettingsCommand().getDescription(), false);
+                "» " + CommandManager.getAsJdaCommand(new SettingsCommand()).getAsMention() + " " + language.getTranslation("command-settings-description"), false);
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embed.build()).setActionRow(
                 Buttons.getSupportButton(event.getGuild()),
@@ -72,6 +72,6 @@ public class HelpCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get general information about the bot and a list of all available commands";
+        return LanguageManager.getLanguage().getTranslation("command-help-description");
     }
 }

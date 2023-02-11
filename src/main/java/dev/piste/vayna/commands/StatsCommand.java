@@ -157,12 +157,12 @@ public class StatsCommand implements Command {
 
     @Override
     public CommandData getCommandData() {
-        SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
-                .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
-        SubcommandData riotIdSub = new SubcommandData("riot-id", "Get general information about a VALORANT profile by providing a Riot-ID")
+        SubcommandData userSub = new SubcommandData("user", LanguageManager.getLanguage().getTranslation("command-stats-user-description"))
+                .addOption(OptionType.USER, "user", "Discord user", true);
+        SubcommandData riotIdSub = new SubcommandData("riot-id", LanguageManager.getLanguage().getTranslation("command-stats-riotid-description"))
                 .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
                 .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
-        SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
+        SubcommandData meSub = new SubcommandData("me", LanguageManager.getLanguage().getTranslation("command-stats-me-description"));
         return Commands.slash(getName(), getDescription()).addSubcommands(userSub, riotIdSub, meSub);
     }
 

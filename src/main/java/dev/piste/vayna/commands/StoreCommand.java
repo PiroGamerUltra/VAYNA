@@ -95,6 +95,6 @@ public class StoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about the currently available bundle in the store";
+        return LanguageManager.getLanguage().getTranslation("command-store-description");
     }
 }
