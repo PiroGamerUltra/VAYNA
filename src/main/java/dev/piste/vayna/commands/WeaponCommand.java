@@ -53,6 +53,7 @@ public class WeaponCommand implements Command {
     public CommandData getCommandData() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Weapon name", true);
         for(Weapon weapon : ValorantAPI.getWeapons("en-US")) {
+            if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;
             optionData.addChoice(weapon.getDisplayName(), weapon.getUuid());
         }
         return Commands.slash(getName(), getDescription()).addOptions(optionData);
