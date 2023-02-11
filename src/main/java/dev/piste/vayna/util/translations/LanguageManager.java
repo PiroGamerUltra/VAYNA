@@ -1,4 +1,4 @@
-package dev.piste.vayna.util;
+package dev.piste.vayna.util.translations;
 
 import dev.piste.vayna.mongodb.GuildSetting;
 import net.dv8tion.jda.api.entities.Guild;

@@ -1,4 +1,4 @@
-package dev.piste.vayna.util;
+package dev.piste.vayna.util.translations;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

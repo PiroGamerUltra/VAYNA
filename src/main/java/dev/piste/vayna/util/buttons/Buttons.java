@@ -7,7 +7,7 @@ import dev.piste.vayna.buttons.VisibilityButton;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -41,7 +41,7 @@ public class Buttons {
     public static Button getRankButton(Guild guild, RiotAccount riotAccount) {
         String uuid = UUID.randomUUID().toString();
         ButtonManager.putInStatsButtonMap(uuid, riotAccount);
-        return Button.secondary(new RankButton().getName() + uuid, LanguageManager.getLanguage(guild).getTranslation("button-rank")).withEmoji(Emoji.getRankByTierName("Unranked"));
+        return Button.secondary(new RankButton().getName() + uuid, LanguageManager.getLanguage(guild).getTranslation("button-rank")).withEmoji(Emoji.getRankByTierName(0));
     }
 
 

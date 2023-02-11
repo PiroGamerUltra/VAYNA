@@ -8,7 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.config.tokens.MongoDbConfig;
-import dev.piste.vayna.util.FontColor;
+import dev.piste.vayna.util.ConsoleColor;
 import org.bson.Document;
 
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class Mongo {
         MongoClient mongoClient = MongoClients.create(settings);
         mongoDatabase = mongoClient.getDatabase("VAYNA");
 
-        System.out.println(Bot.getConsolePrefix("MongoDB") + FontColor.GREEN + "Connected" + FontColor.RESET);
+        System.out.println(Bot.getConsolePrefix("MongoDB") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
     }
 
     public static MongoDatabase getMongoDatabase() {

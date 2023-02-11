@@ -3,6 +3,8 @@ package dev.piste.vayna.apis.valorantapi.gson;
 /**
  * @author Piste | https://github.com/zPiste
  */
+// GSON CLASS
+@SuppressWarnings("ALL")
 public class Skin {
 
     private String displayName;

@@ -13,14 +13,14 @@ public class DisconnectButton implements Button {
     public void perform(ButtonInteractionEvent event, String arg) {
         event.deferReply().setEphemeral(true).queue();
 
-        StatsCounter.countConnections();
-
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
         if(linkedAccount.isExisting()) linkedAccount.delete();
 
         event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionNone(event.getGuild(), event.getUser())).setActionRow(
                 Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
         ).queue();
+
+        StatsCounter.countConnections();
     }
 
     @Override

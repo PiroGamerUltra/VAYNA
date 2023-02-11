@@ -4,8 +4,8 @@ import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.listener.*;
 import dev.piste.vayna.manager.*;
 import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.util.FontColor;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.ConsoleColor;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -27,7 +27,7 @@ public class Bot {
     }
 
     public static String getConsolePrefix(String name) {
-        return FontColor.WHITE + "[" + FontColor.PURPLE + name + FontColor.WHITE + "]" + FontColor.RESET + " ";
+        return ConsoleColor.WHITE + "[" + ConsoleColor.PURPLE + name + ConsoleColor.WHITE + "]" + ConsoleColor.RESET + " ";
     }
 
     public static void main(String[] args) {
@@ -56,9 +56,9 @@ public class Bot {
         StringSelectMenuManager.registerStringSelectMenus();
         UserContextCommandManager.registerStringSelectMenus();
 
-        System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
-
         new Bot().listenShutdown();
+
+        System.out.println(getConsolePrefix("Discord") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
     }
 
     public static JDA getJDA() {
@@ -73,11 +73,11 @@ public class Bot {
                     if (reader.readLine().equalsIgnoreCase("exit")) {
                         if (jda != null) {
                             jda.shutdown();
-                            System.out.println(getConsolePrefix("VAYNA") + FontColor.GREEN + "Stopped" + FontColor.RESET);
+                            System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.GREEN + "Stopped" + ConsoleColor.RESET);
                         }
                         reader.close();
                     } else {
-                        System.out.println(getConsolePrefix("VAYNA") + FontColor.YELLOW + "Type 'exit' to stop the bot." + FontColor.RESET);
+                        System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.YELLOW + "Type 'exit' to stop the bot." + ConsoleColor.RESET);
                     }
                 }
             } catch (IOException ignored) {

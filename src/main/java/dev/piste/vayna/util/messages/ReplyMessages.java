@@ -1,10 +1,9 @@
 package dev.piste.vayna.util.messages;
 
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;

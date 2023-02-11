@@ -1,10 +1,9 @@
 package dev.piste.vayna.util.messages;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
@@ -15,9 +14,8 @@ public class ErrorMessages {
 
     public static Embed getStatusCodeErrorEmbed(Guild guild, User user, StatusCodeException exception) {
         String[] message = exception.getMessage().split(" ");
-        int statusCode = Integer.parseInt(message[0]);
-
         Language language = LanguageManager.getLanguage(guild);
+        int statusCode = Integer.parseInt(message[0]);
 
         Embed embed = new Embed()
                 .setColor(255, 0, 0)

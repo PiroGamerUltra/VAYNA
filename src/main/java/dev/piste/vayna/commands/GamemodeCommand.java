@@ -5,14 +5,17 @@ import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.valorantapi.gson.Gamemode;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class GamemodeCommand implements Command {
 
     @Override

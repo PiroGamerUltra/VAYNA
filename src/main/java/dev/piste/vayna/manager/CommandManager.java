@@ -51,7 +51,8 @@ public class CommandManager {
                 return;
             }
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
-            Embed embed = new Embed().setTitle("Register command HTTP error")
+            Embed embed = new Embed()
+                    .setTitle("Register command HTTP error")
                     .setDescription(e.getMessage());
             logChannel.sendMessageEmbeds(embed.build()).queue();
         }

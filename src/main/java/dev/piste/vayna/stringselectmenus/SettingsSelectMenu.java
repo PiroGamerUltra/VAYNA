@@ -1,9 +1,8 @@
 package dev.piste.vayna.stringselectmenus;
 
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;

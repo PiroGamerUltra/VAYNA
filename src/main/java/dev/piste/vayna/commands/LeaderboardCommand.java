@@ -13,8 +13,8 @@ import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -31,19 +31,17 @@ import java.util.HashMap;
  */
 public class LeaderboardCommand implements Command {
 
-
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
-
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Put all linked accounts in this guild in the eloMap
         HashMap<User, MMR> eloMap = new HashMap<>();
 
+        // Collecting every connected Riot Games account in this server
         for(Member member : event.getGuild().getMembers()) {
             LinkedAccount linkedAccount = new LinkedAccount(member.getUser().getIdLong());
-
             if(linkedAccount.isExisting() && linkedAccount.isVisibleToPublic()) {
                 try {
                     RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
@@ -55,7 +53,8 @@ public class LeaderboardCommand implements Command {
             }
         }
 
-        if(eloMap.size() == 0) {
+        // If no one has connected his Riot Games account yet
+        if(eloMap.isEmpty()) {
             Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
@@ -76,7 +75,8 @@ public class LeaderboardCommand implements Command {
         eloList.sort(Collections.reverseOrder());
         int guildElo = memberElos / eloMap.size();
 
-        Embed embed = new Embed().setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
+        Embed embed = new Embed()
+                .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
         ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
@@ -98,11 +98,11 @@ public class LeaderboardCommand implements Command {
                 if(entry.getValue().getRank().getElo() == eloList.get(i)) {
                     if(rank.getElo() >= 2100) {
                         embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + tier.getTierName() +
+                                Emoji.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "RR**)", false);
                     } else {
                         embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTierPatched()).getFormatted() + " " + tier.getTierName() +
+                                Emoji.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "**/**100**)", false);
                     }
 
@@ -134,6 +134,7 @@ public class LeaderboardCommand implements Command {
                 .replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
         embed.setThumbnail(guildTier.getLargeIcon());
 
+        // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 

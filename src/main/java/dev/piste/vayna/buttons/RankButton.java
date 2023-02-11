@@ -7,29 +7,30 @@ import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.CompetitiveTier;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Button;
 import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+
+import java.util.ArrayList;
 
 public class RankButton implements Button {
 
     public void perform(ButtonInteractionEvent event, String arg) throws StatusCodeException {
         event.deferReply().queue();
-
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         RiotAccount oldRiotAccount = ButtonManager.getRiotAccountFromStatsButtonMap(arg);
 
+        // If the button is too old
         if(oldRiotAccount == null) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
+            Embed embed = new Embed()
+                    .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("button-rank-error-old-embed-title"))
                     .setDescription(language.getTranslation("button-rank-error-old-embed-description"));
@@ -42,8 +43,7 @@ public class RankButton implements Button {
         RiotAccount riotAccount = RiotAPI.getAccountByPuuid(oldRiotAccount.getPuuid());
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
         Rank rank = henrikAccount.getMmr().getRank();
-        CompetitiveTier competitiveTier = ValorantAPI.getCompetitiveTier(language.getLanguageCode());
-        CompetitiveTier enUsCompetitiveTier = ValorantAPI.getCompetitiveTier("en-US");
+        ArrayList<Tier> tiers = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
         Embed embed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), henrikAccount.getCard().getSmall())
@@ -51,35 +51,28 @@ public class RankButton implements Button {
                 .setColor(209, 54, 57);
 
         if(rank.getCurrentTierPatched() == null) {
-            Tier tier = competitiveTier.getTiers().get(0);
-            Tier enUsTier = enUsCompetitiveTier.getTiers().get(0);
-
-            embed.addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(enUsTier.getTierName()).getFormatted()  + " " + tier.getTierName(), true);
-            embed.addField(language.getTranslation("button-rank-embed-field-2-name"),
+            Tier tier = tiers.get(0);
+            embed.setThumbnail(tier.getLargeIcon())
+                    .addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), true)
+                    .addField(language.getTranslation("button-rank-embed-field-2-name"),
                     "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("button-rank-embed-field-2-text-1") : language.getTranslation("button-rank-embed-field-2-text-2")), true);
-            embed.setThumbnail(tier.getLargeIcon());
-            event.getHook().editOriginalEmbeds(embed.build()).queue();
-            return;
-        }
-        for(int i = 0; i < competitiveTier.getTiers().size(); i++) {
-            Tier tier = competitiveTier.getTiers().get(i);
-            if(tier.getTier() == rank.getCurrentTier()) {
-                Tier enUsTier = enUsCompetitiveTier.getTiers().get(i);
-
-                embed.addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(enUsTier.getTierName()).getFormatted()  + " " + tier.getTierName(), true);
-                if(rank.getCurrentTier() > 23) {
-                    embed.addField(language.getTranslation("button-rank-embed-field-3-name"), "**" + rank.getRankingInTier() + "**RR » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
-                } else {
-                    embed.addField(language.getTranslation("button-rank-embed-field-3-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
-                            (rank.getMmrChangeToLastGame()>=0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+        } else {
+            for (Tier tier : tiers) {
+                if (tier.getTier() == rank.getCurrentTier()) {
+                    embed.addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), true)
+                            .setThumbnail(tier.getLargeIcon());
+                    if (rank.getCurrentTier() > 23) {
+                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), "**" + rank.getRankingInTier() + "**RR » " +
+                                (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+                    } else {
+                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
+                                (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+                    }
                 }
-                embed.setThumbnail(tier.getLargeIcon());
-
-                event.getHook().editOriginalEmbeds(embed.build()).queue();
-                return;
             }
         }
+        // Reply
+        event.getHook().editOriginalEmbeds(embed.build()).queue();
     }
 
     @Override

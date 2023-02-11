@@ -9,6 +9,9 @@ import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class VisibilityButton implements Button {
 
     public void perform(ButtonInteractionEvent event, String arg) throws StatusCodeException {
@@ -20,7 +23,8 @@ public class VisibilityButton implements Button {
                     Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
-            linkedAccount.update(arg.equalsIgnoreCase("public"));
+            linkedAccount.setVisibleToPublic(arg.equalsIgnoreCase("public"));
+            linkedAccount.update();
             event.getHook().editOriginalEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Buttons.getDisconnectButton(event.getGuild()),
                     Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())

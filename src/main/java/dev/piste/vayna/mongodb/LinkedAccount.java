@@ -45,10 +45,13 @@ public class LinkedAccount {
         return isExisting;
     }
 
-    public void update(boolean visibleToPublic) {
+    public void update() {
         if(isExisting) {
-            this.visibleToPublic = visibleToPublic;
-            Bson updates = Updates.set("public", visibleToPublic);
+            Bson updates = Updates.combine(
+                    Updates.set("public", visibleToPublic),
+                    Updates.set("discordUserId", discordUserId),
+                    Updates.set("riotPuuid", riotPuuid)
+            );
             UpdateOptions options = new UpdateOptions().upsert(true);
             linkedAccountCollection.updateOne(linkedAccount, updates, options);
         }
@@ -76,6 +79,10 @@ public class LinkedAccount {
         } else {
             return true;
         }
+    }
+
+    public void setVisibleToPublic(boolean visibleToPublic) {
+        this.visibleToPublic = visibleToPublic;
     }
 
     public void delete() {

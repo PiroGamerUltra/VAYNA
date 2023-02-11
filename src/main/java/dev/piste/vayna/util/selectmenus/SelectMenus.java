@@ -1,7 +1,7 @@
 package dev.piste.vayna.util.selectmenus;
 
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 public class SelectMenus {
 
     public static StringSelectMenu getSettingsSelectMenu(Guild guild) {
-
         Language language = LanguageManager.getLanguage(guild);
 
         return StringSelectMenu.create("settings")

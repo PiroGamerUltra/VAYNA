@@ -9,8 +9,8 @@ import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.store.Item;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -20,6 +20,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class StoreCommand implements Command {
 
 
@@ -41,7 +44,8 @@ public class StoreCommand implements Command {
                     .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
                     .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")
                             .replaceAll("%timestamp%", "<t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>"), true)
-                    .setImage(bundle.getDisplayIcon());
+                    .setImage(bundle.getDisplayIcon())
+                    .removeFooter();
             embedList.add(bundleEmbed.build());
 
             for(Item item : currentBundle.getItems()) {

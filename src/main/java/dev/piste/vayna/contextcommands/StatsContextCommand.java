@@ -9,14 +9,13 @@ import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.commands.ConnectionCommand;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.CommandManager;
 import dev.piste.vayna.manager.UserContextCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -30,7 +29,6 @@ public class StatsContextCommand implements UserContextCommand {
     @Override
     public void perform(UserContextInteractionEvent event) throws StatusCodeException {
         event.deferReply().queue();
-
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getTarget().getIdLong());

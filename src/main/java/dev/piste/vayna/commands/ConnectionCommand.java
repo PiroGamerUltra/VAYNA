@@ -6,13 +6,16 @@ import dev.piste.vayna.counter.StatsCounter;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import dev.piste.vayna.util.messages.ReplyMessages;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class ConnectionCommand implements Command {
 
     @Override

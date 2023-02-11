@@ -6,8 +6,8 @@ import dev.piste.vayna.apis.valorantapi.gson.Agent;
 import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Language;
-import dev.piste.vayna.util.LanguageManager;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,6 +17,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.ArrayList;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 public class AgentCommand implements Command {
 
     @Override
