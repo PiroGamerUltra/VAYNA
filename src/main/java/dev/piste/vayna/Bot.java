@@ -47,7 +47,6 @@ public class Bot {
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                .enableIntents(GatewayIntent.GUILD_PRESENCES)
                 .build();
 
         CommandManager.registerCommands();
