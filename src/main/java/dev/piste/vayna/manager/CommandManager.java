@@ -44,7 +44,7 @@ public class CommandManager {
     private static void addCommand(Command command) {
         commands.put(command.getName(), command);
         try {
-            command.register();
+            Bot.getJDA().upsertCommand(command.getCommandData()).queue();
         } catch (StatusCodeException e) {
             if(Bot.isDebug()) {
                 System.out.println("Error registering command: " + e.getMessage());

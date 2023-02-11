@@ -1,8 +1,6 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Language;
@@ -13,6 +11,8 @@ import dev.piste.vayna.util.selectmenus.SelectMenus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -45,8 +45,8 @@ public class SettingsCommand implements Command {
     }
 
     @Override
-    public void register() throws StatusCodeException {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).setGuildOnly(true).setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER)).queue();
+    public CommandData getCommandData() throws StatusCodeException {
+        return Commands.slash(getName(), getDescription()).setGuildOnly(true).setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_SERVER));
     }
 
     @Override
@@ -56,6 +56,6 @@ public class SettingsCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Manage the bot settings of this server";
+        return LanguageManager.getLanguage().getTranslation("command-settings-description");
     }
 }

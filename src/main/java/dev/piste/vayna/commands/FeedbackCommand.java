@@ -1,11 +1,12 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.modals.FeedbackModal;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
@@ -30,8 +31,8 @@ public class FeedbackCommand implements Command {
     }
 
     @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription());
     }
 
     @Override
@@ -41,6 +42,6 @@ public class FeedbackCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Share feedback to the developer of VAYNA";
+        return LanguageManager.getLanguage().getTranslation("command-feedback-description");
     }
 }

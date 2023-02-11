@@ -1,6 +1,5 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
@@ -8,13 +7,14 @@ import dev.piste.vayna.apis.valorantapi.gson.*;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.store.Item;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.Language;
 import dev.piste.vayna.util.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -25,88 +25,67 @@ public class StoreCommand implements Command {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
-        event.deferReply().queue();
-
+        event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
+        // Creating the list of embeds to be sent
         List<MessageEmbed> embedList = new ArrayList<>();
 
         for(CurrentBundle currentBundle : HenrikAPI.getCurrentBundles()) {
+            // Searching the bundle by the UUID of the Henrik CurrentBundle
             Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
 
+            // Adding the bundle embed (general information)
             Embed bundleEmbed = new Embed()
-                    .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
                     .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
                     .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")
                             .replaceAll("%timestamp%", "<t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>"), true)
                     .setImage(bundle.getDisplayIcon());
-
             embedList.add(bundleEmbed.build());
 
             for(Item item : currentBundle.getItems()) {
-                if(item.getType().equalsIgnoreCase("buddy")) {
-                    Buddy buddy = ValorantAPI.getBuddy(item.getUuid(), language.getLanguageCode());
-                    Embed embed = new Embed()
-                            .removeFooter()
-                            .setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
-                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
-                            .setThumbnail(buddy.getDisplayIcon());
-                    embedList.add(embed.build());
-                } else if(item.getType().equalsIgnoreCase("player_card")) {
-                    Playercard playercard = ValorantAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
-                    Embed embed = new Embed()
-                            .removeFooter()
-                            .setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
-                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
-                            .setThumbnail(playercard.getLargeArt())
-                            .setImage(playercard.getWideArt());
-                    embedList.add(embed.build());
-                } else if(item.getType().equalsIgnoreCase("spray")) {
-                    Spray spray = ValorantAPI.getSpray(item.getUuid(), language.getLanguageCode());
-                    Embed embed = new Embed()
-                            .removeFooter()
-                            .setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
-                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true);
-                    if(spray.getAnimationGif() != null) {
-                        embed.setThumbnail(spray.getAnimationGif());
-                    } else {
-                        embed.setThumbnail(spray.getFullTransparentIcon());
+                Embed itemEmbed = new Embed()
+                        .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                        .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                        .removeFooter();
+                switch (item.getType()) {
+                    case "buddy" -> {
+                        Buddy buddy = ValorantAPI.getBuddy(item.getUuid(), language.getLanguageCode());
+                        itemEmbed.setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
+                                .setThumbnail(buddy.getDisplayIcon());
                     }
-                    embedList.add(embed.build());
-                } else if(item.getType().equalsIgnoreCase("skin_level")) {
-                    Skin skin = ValorantAPI.getSkin(item.getUuid(), language.getLanguageCode());
-                    Embed embed = new Embed()
-                            .removeFooter()
-                            .setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
-                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
-                            .setImage(skin.getDisplayIcon());
-                    embedList.add(embed.build());
-                } else {
-                    Embed embed = new Embed()
-                            .removeFooter()
-                            .setTitle(language.getEmbedTitlePrefix() + item.getName())
-                            .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                            .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                    case "player_card" -> {
+                        Playercard playercard = ValorantAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
+                        itemEmbed.setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
+                                .setThumbnail(playercard.getLargeArt())
+                                .setImage(playercard.getWideArt());
+                    }
+                    case "spray" -> {
+                        Spray spray = ValorantAPI.getSpray(item.getUuid(), language.getLanguageCode());
+                        itemEmbed.setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
+                                .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
+                    }
+                    case "skin_level" -> {
+                        Skin skin = ValorantAPI.getSkin(item.getUuid(), language.getLanguageCode());
+                        itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
+                                .setImage(skin.getDisplayIcon());
+                    }
+                    default -> itemEmbed.setTitle(language.getEmbedTitlePrefix() + item.getName())
                             .setImage(item.getImage());
-                    embedList.add(embed.build());
                 }
-
+                // Adding the item embed
+                embedList.add(itemEmbed.build());
             }
 
         }
-
+        // Reply
         event.getHook().editOriginalEmbeds(embedList).queue();
-
     }
 
     @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).queue();
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription());
     }
 
     @Override
@@ -116,6 +95,6 @@ public class StoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get information about the current bundle in the VALORANT store";
+        return LanguageManager.getLanguage().getTranslation("command-store-description");
     }
 }

@@ -10,6 +10,7 @@ public class Weapon {
     private String uuid;
     private String displayName;
     private String displayIcon;
+    private String killStreamIcon;
     private WeaponStats weaponStats;
     private ShopData shopData;
 
@@ -23,6 +24,10 @@ public class Weapon {
 
     public String getDisplayIcon() {
         return displayIcon;
+    }
+
+    public String getKillStreamIcon() {
+        return killStreamIcon;
     }
 
     public WeaponStats getWeaponStats() {

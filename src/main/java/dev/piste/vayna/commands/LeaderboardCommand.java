@@ -1,6 +1,5 @@
 package dev.piste.vayna.commands;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
@@ -10,7 +9,6 @@ import dev.piste.vayna.apis.riotgames.RiotAPI;
 import dev.piste.vayna.apis.riotgames.gson.RiotAccount;
 import dev.piste.vayna.apis.valorantapi.ValorantAPI;
 import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
@@ -21,6 +19,8 @@ import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,8 +138,8 @@ public class LeaderboardCommand implements Command {
     }
 
     @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(getName(), getDescription()).setGuildOnly(true).queue();
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription()).setGuildOnly(true);
     }
 
     @Override
@@ -149,6 +149,6 @@ public class LeaderboardCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "Get a list of the best 20 players in this server";
+        return LanguageManager.getLanguage().getTranslation("command-leaderboard-description");
     }
 }

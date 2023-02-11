@@ -5,7 +5,6 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.riotgames.InvalidRegionException;
 import dev.piste.vayna.apis.riotgames.RiotAPI;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.manager.Command;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.riotgames.gson.ActiveShard;
@@ -20,6 +19,8 @@ import dev.piste.vayna.util.LanguageManager;
 import dev.piste.vayna.util.buttons.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 public class StatsCommand implements Command {
@@ -155,14 +156,14 @@ public class StatsCommand implements Command {
     }
 
     @Override
-    public void register() {
-        SubcommandData userSub = new SubcommandData("user", "Get general information about a VALORANT profile from a Discord user")
-                .addOption(OptionType.USER, "user", "The discord user to get the stats from", true);
-        SubcommandData riotIdSub = new SubcommandData("riot-id", "Get general information about a VALORANT profile by providing a Riot-ID")
+    public CommandData getCommandData() {
+        SubcommandData userSub = new SubcommandData("user", LanguageManager.getLanguage().getTranslation("command-stats-user-description"))
+                .addOption(OptionType.USER, "user", "Discord user", true);
+        SubcommandData riotIdSub = new SubcommandData("riot-id", LanguageManager.getLanguage().getTranslation("command-stats-riotid-description"))
                 .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
                 .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
-        SubcommandData meSub = new SubcommandData("me", "Get general information about your VALORANT profile");
-        Bot.getJDA().upsertCommand(getName(), getDescription()).addSubcommands(userSub, riotIdSub, meSub).queue();
+        SubcommandData meSub = new SubcommandData("me", LanguageManager.getLanguage().getTranslation("command-stats-me-description"));
+        return Commands.slash(getName(), getDescription()).addSubcommands(userSub, riotIdSub, meSub);
     }
 
     @Override

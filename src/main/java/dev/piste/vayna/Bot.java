@@ -33,6 +33,7 @@ public class Bot {
     public static void main(String[] args) {
         ConfigManager.loadConfigs();
         Mongo.connect();
+        LanguageManager.loadLanguages();
 
         jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
                 .addEventListeners(new SlashCommandListener())
@@ -54,8 +55,6 @@ public class Bot {
         ModalManager.registerModals();
         StringSelectMenuManager.registerStringSelectMenus();
         UserContextCommandManager.registerStringSelectMenus();
-
-        LanguageManager.loadLanguages();
 
         System.out.println(getConsolePrefix("Discord") + FontColor.GREEN + "Connected" + FontColor.RESET);
 
