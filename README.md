@@ -18,7 +18,7 @@ All commands work with the slash command function in Discord.
 - `/stats me` Get your stats
 - `/leaderboard` Get a list of the top 20 players on this server
 #### Context Commands (Right-click user/message)
-- `Stats` Get general information about a VALORANT profile from a Discord user
+- `Stats` Get the stats of a Discord user
 ### Information Commands
 - `/map <name>` Get information about a map
 - `/agent <name>` Get information about an agent
