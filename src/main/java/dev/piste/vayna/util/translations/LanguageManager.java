@@ -15,7 +15,6 @@ public class LanguageManager {
 
     public static void loadLanguages() {
         loadLanguage("en-US");
-        loadLanguage("en-GB");
         loadLanguage("de-DE");
     }
 

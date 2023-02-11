@@ -23,11 +23,10 @@ public class HelpCommand implements Command {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        Embed embed = new Embed();
-        embed.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
-        embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"));
-        embed.addField(language.getTranslation("command-help-embed-field-1-name"), language.getTranslation("command-help-embed-field-1-text")
-                .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);
+        Embed embed = new Embed()
+                .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"))
+                .addField(language.getTranslation("command-help-embed-field-1-name"), language.getTranslation("command-help-embed-field-1-text")
+                        .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);
         // General
         embed.addField(language.getTranslation("command-help-embed-field-2-name"),  "" +
                 "» " + CommandManager.getAsJdaCommand(new HelpCommand()).getAsMention() + " " + language.getTranslation("command-help-description") + "\n" +
