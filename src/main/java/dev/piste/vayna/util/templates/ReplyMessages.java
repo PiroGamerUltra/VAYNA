@@ -83,7 +83,7 @@ public class ReplyMessages {
 
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
-        embed.setColor(209, 54, 57);
+        embed.setColor(255, 70, 85);
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"));
         embed.setDescription(language.getTranslation("command-stats-embed-description"));
         embed.addField(language.getTranslation("command-stats-embed-field-1-name"), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
