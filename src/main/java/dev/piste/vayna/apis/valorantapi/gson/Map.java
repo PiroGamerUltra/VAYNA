@@ -10,6 +10,7 @@ public class Map {
     private String displayIcon;
     private String listViewIcon;
     private String splash;
+    private String mapUrl;
 
     public String getUuid() {
         return uuid;
@@ -33,5 +34,9 @@ public class Map {
 
     public String getListViewIcon() {
         return listViewIcon;
+    }
+
+    public String getMapUrl() {
+        return mapUrl;
     }
 }

@@ -8,6 +8,7 @@ package dev.piste.vayna.apis.riot.gson.match;
 public class MatchInfo {
 
     private String matchId;
+    private String mapId;
     private long gameLengthMillis;
     private long gameStartMillis;
     private boolean isCompleted;
@@ -17,6 +18,10 @@ public class MatchInfo {
 
     public String getMatchId() {
         return matchId;
+    }
+
+    public String getMapId() {
+        return mapId;
     }
 
     public long getGameLengthMillis() {

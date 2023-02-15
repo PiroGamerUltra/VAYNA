@@ -46,7 +46,9 @@ public class StatsContextCommand implements UserContextCommand {
         RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
         try {
-            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).queue();
+            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).setActionRow(
+                    Buttons.getHistoryButton(event.getGuild(), riotAccount)
+            ).queue();
         } catch (InvalidRegionException e) {
             event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
                     Buttons.getSupportButton(event.getGuild())

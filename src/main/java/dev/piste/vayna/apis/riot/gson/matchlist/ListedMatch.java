@@ -5,7 +5,7 @@ package dev.piste.vayna.apis.riot.gson.matchlist;
  */
 // GSON CLASS
 @SuppressWarnings("ALL")
-public class Match {
+public class ListedMatch {
 
     private String matchId;
     private long gameStartTimeMillis;

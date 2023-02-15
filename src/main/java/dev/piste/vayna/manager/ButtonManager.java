@@ -4,6 +4,7 @@ import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.commands.button.DisconnectButton;
+import dev.piste.vayna.commands.button.HistoryButton;
 import dev.piste.vayna.commands.button.VisibilityButton;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
@@ -26,6 +27,7 @@ public class ButtonManager {
     public static void registerButtons() {
         addButton(new DisconnectButton());
         addButton(new VisibilityButton());
+        addButton(new HistoryButton());
     }
 
     private static void addButton(Button button) {

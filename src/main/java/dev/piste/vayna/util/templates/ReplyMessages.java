@@ -96,19 +96,19 @@ public class ReplyMessages {
         if(rank.getCurrentTierPatched() == null) {
             Tier tier = tiers.get(0);
             embed.setThumbnail(tier.getLargeIcon())
-                    .addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), false)
-                    .addField(language.getTranslation("button-rank-embed-field-2-name"),
-                            "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("button-rank-embed-field-2-text-1") : language.getTranslation("button-rank-embed-field-2-text-2")), true);
+                    .addField(language.getTranslation("command-stats-embed-field-4-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), false)
+                    .addField(language.getTranslation("command-stats-embed-field-5-name"),
+                            "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("command-stats-embed-field-5-text-1") : language.getTranslation("command-stats-embed-field-5-text-2")), true);
         } else {
             for (Tier tier : tiers) {
                 if (tier.getTier() == rank.getCurrentTier()) {
-                    embed.addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), false)
+                    embed.addField(language.getTranslation("command-stats-embed-field-4-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), false)
                             .setThumbnail(tier.getLargeIcon());
                     if (rank.getCurrentTier() > 23) {
-                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), "**" + rank.getRankingInTier() + "**RR » " +
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), "**" + rank.getRankingInTier() + "**RR » " +
                                 (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
                     } else {
-                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
                                 (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
                     }
                 }

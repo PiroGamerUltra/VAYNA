@@ -35,10 +35,17 @@ public class ValorantAPI {
         return new Gson().fromJson(dataObject, Gamemode.class);
     }
 
-    public static ArrayList<Gamemode> getGamemodes(String languageCode) throws StatusCodeException {
-        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/gamemodes?language=" + languageCode);
+    // Queues
+    public static Queue getQueue(String uuid, String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/gamemodes/queues/" + uuid + "?language=" + languageCode);
+        JsonObject dataObject = jsonObject.getAsJsonObject("data");
+        return new Gson().fromJson(dataObject, Queue.class);
+    }
+
+    public static ArrayList<Queue> getQueues(String languageCode) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://valorant-api.com/v1/gamemodes/queues?language=" + languageCode);
         JsonArray dataArray = jsonObject.getAsJsonArray("data");
-        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Gamemode>>(){}.getType());
+        return new Gson().fromJson(dataArray, new TypeToken<ArrayList<Queue>>(){}.getType());
     }
 
     // Maps

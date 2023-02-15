@@ -1,6 +1,6 @@
 package dev.piste.vayna.apis.riot.gson;
 
-import dev.piste.vayna.apis.riot.gson.matchlist.Match;
+import dev.piste.vayna.apis.riot.gson.matchlist.ListedMatch;
 
 import java.util.ArrayList;
 
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 public class Matchlist {
 
     private String puuid;
-    private ArrayList<Match> history;
+    private ArrayList<ListedMatch> history;
 
     public String getPuuid() {
         return puuid;
     }
 
-    public ArrayList<Match> getHistory() {
+    public ArrayList<ListedMatch> getHistory() {
         return history;
     }
 }
