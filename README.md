@@ -30,7 +30,7 @@ All commands work with the slash command function in Discord.
 ## Used APIs
 - [Riot API](https://developer.riotgames.com/apis)
 - [HenrikDev API](https://github.com/Henrik-3/unofficial-valorant-api)
-- [VALORANT-API.com](https://valorant-api.com/)
+- [Officer API](https://valorant-api.com/)
 ## Contact
 If you have any questions, you can contact me:
 - **Email:** contact@piste.dev
