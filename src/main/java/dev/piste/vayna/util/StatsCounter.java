@@ -5,6 +5,7 @@ import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.mongodb.Mongo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import org.discordbots.api.client.DiscordBotListAPI;
 
 public class StatsCounter {
 
@@ -25,6 +26,11 @@ public class StatsCounter {
 
     public static void countGuilds() {
         if(Bot.isDebug()) return;
+        new DiscordBotListAPI.Builder()
+                .botId(Bot.getJDA().getSelfUser().getId())
+                .token(ConfigManager.getTokensConfig().getApi().getTopGg())
+                .build()
+                .setStats(Bot.getJDA().getGuilds().size());
         if(guildsCounterRateLimitTimestampMillis == 0 || guildsCounterRateLimitTimestampMillis<=System.currentTimeMillis()) {
             Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
             String guildCountChannelName = ConfigManager.getSettingsConfig().getBotStatsChannels().getGuildChannelName().replace("%count%", Bot.getJDA().getGuilds().size() + "");

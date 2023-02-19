@@ -6,6 +6,7 @@ public class Api {
 
     private String riot;
     private String henrik;
+    private String topGg;
 
     public String getRiot() {
         return riot;
@@ -15,4 +16,7 @@ public class Api {
         return henrik;
     }
 
+    public String getTopGg() {
+        return topGg;
+    }
 }
