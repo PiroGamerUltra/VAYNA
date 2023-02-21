@@ -28,7 +28,7 @@ All commands work with the slash command function in Discord.
 - `/settings` Manage the settings of the bot for this server
 ## Used APIs
 - [Riot Games](https://developer.riotgames.com/apis)
-- [HenrikDev](https://github.com/Henrik-3/unofficial-valorant-api)
+- [Henrik](https://github.com/Henrik-3/unofficial-valorant-api)
 - [Officer](https://valorant-api.com/)
 ## Contact
 If you have any questions, you can contact me:
