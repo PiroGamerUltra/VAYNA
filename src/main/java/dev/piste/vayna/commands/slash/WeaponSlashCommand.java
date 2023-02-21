@@ -1,10 +1,10 @@
 package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.apis.valorantapi.gson.Weapon;
-import dev.piste.vayna.apis.valorantapi.gson.weapon.DamageRanges;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.commands.manager.SlashCommand;
+import dev.piste.vayna.apis.officer.gson.Weapon;
+import dev.piste.vayna.apis.officer.gson.weapon.DamageRanges;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class WeaponCommand implements Command {
+public class WeaponSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -25,7 +25,7 @@ public class WeaponCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the weapon by the provided UUID
-        Weapon weapon = ValorantAPI.getWeapon(event.getOption("name").getAsString(), language.getLanguageCode());
+        Weapon weapon = OfficerAPI.getWeapon(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the reply embed
         Embed embed = new Embed()
@@ -52,7 +52,7 @@ public class WeaponCommand implements Command {
     @Override
     public CommandData getCommandData() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Weapon name", true);
-        for(Weapon weapon : ValorantAPI.getWeapons("en-US")) {
+        for(Weapon weapon : OfficerAPI.getWeapons("en-US")) {
             if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;
             optionData.addChoice(weapon.getDisplayName(), weapon.getUuid());
         }

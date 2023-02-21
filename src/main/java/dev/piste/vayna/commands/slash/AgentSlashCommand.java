@@ -1,10 +1,10 @@
 package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.Agent;
-import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.Agent;
+import dev.piste.vayna.apis.officer.gson.agent.Ability;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class AgentCommand implements Command {
+public class AgentSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -28,7 +28,7 @@ public class AgentCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the agent by the provided UUID
-        Agent agent = ValorantAPI.getAgent(event.getOption("name").getAsString(), language.getLanguageCode());
+        Agent agent = OfficerAPI.getAgent(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the list of embeds to be sent
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
@@ -85,7 +85,7 @@ public class AgentCommand implements Command {
     @Override
     public CommandData getCommandData() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Agent name", true);
-        for(Agent agent : ValorantAPI.getAgents("en-US")) {
+        for(Agent agent : OfficerAPI.getAgents("en-US")) {
             optionData.addChoice(agent.getDisplayName(), agent.getUuid());
         }
         return Commands.slash(getName(), getDescription()).addOptions(optionData);

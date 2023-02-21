@@ -1,6 +1,6 @@
 package dev.piste.vayna.commands.slash;
 
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.commands.modal.FeedbackModal;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class FeedbackCommand implements Command {
+public class FeedbackSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) {
@@ -27,7 +27,7 @@ public class FeedbackCommand implements Command {
                 .setMaxLength(4000)
                 .build();
         Modal modal = Modal.create(new FeedbackModal().getName(), language.getTranslation("command-feedback-modal-title"))
-                .addActionRows(ActionRow.of(feedbackInput))
+                .addActionRow(feedbackInput)
                 .build();
         // Reply
         event.replyModal(modal).queue();

@@ -1,10 +1,10 @@
 package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.Queue;
-import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.apis.valorantapi.gson.Gamemode;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.Queue;
+import dev.piste.vayna.commands.manager.SlashCommand;
+import dev.piste.vayna.apis.officer.gson.Gamemode;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class GamemodeCommand implements Command {
+public class GamemodeSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -25,7 +25,7 @@ public class GamemodeCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the gamemode by the provided UUID
-        Queue queue = ValorantAPI.getQueue(event.getOption("name").getAsString(), language.getLanguageCode());
+        Queue queue = OfficerAPI.getQueue(event.getOption("name").getAsString(), language.getLanguageCode());
         Gamemode gamemode = getGamemode(queue.getUuid(), language.getLanguageCode());
 
         // Creating the reply embed
@@ -42,7 +42,7 @@ public class GamemodeCommand implements Command {
     @Override
     public CommandData getCommandData() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Gamemode name", true);
-        for(Queue queue : ValorantAPI.getQueues("en-US")) {
+        for(Queue queue : OfficerAPI.getQueues("en-US")) {
             if(queue.getQueueId().equals("custom") ||queue.getQueueId().equals("newmap")) continue;
             optionData.addChoice(queue.getDropdownText(), queue.getUuid());
         }
@@ -70,7 +70,7 @@ public class GamemodeCommand implements Command {
             case "2d257217-464c-7c4b-efc6-51a55365d44a" -> "5d0f264b-4ebe-cc63-c147-809e1374484b";
             default -> null;
         };
-        return ValorantAPI.getGamemode(gamemodeUuid, languageCode);
+        return OfficerAPI.getGamemode(gamemodeUuid, languageCode);
     }
 
 }

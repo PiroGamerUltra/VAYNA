@@ -3,7 +3,7 @@ package dev.piste.vayna.commands.slash;
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.util.StatsCounter;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class ConnectionCommand implements Command {
+public class ConnectionSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class SettingsSelectMenu implements dev.piste.vayna.manager.StringSelectMenu {
+public class SettingsSelectMenu implements dev.piste.vayna.commands.manager.StringSelectMenu {
 
     @Override
     public void perform(StringSelectInteractionEvent event) {

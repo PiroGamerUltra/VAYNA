@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.manager.UserContextCommand;
+import dev.piste.vayna.commands.manager.UserContextCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
@@ -46,9 +46,7 @@ public class StatsContextCommand implements UserContextCommand {
         RiotAccount riotAccount = RiotAPI.getAccountByPuuid(linkedAccount.getRiotPuuid());
 
         try {
-            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).setActionRow(
-                    Buttons.getHistoryButton(event.getGuild(), riotAccount)
-            ).queue();
+            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).queue();
         } catch (InvalidRegionException e) {
             event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
                     Buttons.getSupportButton(event.getGuild())

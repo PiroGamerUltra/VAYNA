@@ -9,8 +9,8 @@ import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.ActiveShard;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -69,7 +69,7 @@ public class ReplyMessages {
         ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
         Rank rank = henrikAccount.getMmr().getRank();
-        ArrayList<Tier> tiers = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
+        ArrayList<Tier> tiers = OfficerAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
         String regionEmoji = switch (activeShard.getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
@@ -83,7 +83,6 @@ public class ReplyMessages {
 
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
-        embed.setColor(255, 70, 85);
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"));
         embed.setDescription(language.getTranslation("command-stats-embed-description"));
         embed.addField(language.getTranslation("command-stats-embed-field-1-name"), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);

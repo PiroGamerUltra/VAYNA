@@ -1,9 +1,9 @@
 package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.manager.Command;
-import dev.piste.vayna.apis.valorantapi.gson.Map;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.commands.manager.SlashCommand;
+import dev.piste.vayna.apis.officer.gson.Map;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class MapCommand implements Command {
+public class MapSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -24,7 +24,7 @@ public class MapCommand implements Command {
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the map by the provided UUID
-        Map map = ValorantAPI.getMap(event.getOption("name").getAsString(), language.getLanguageCode());
+        Map map = OfficerAPI.getMap(event.getOption("name").getAsString(), language.getLanguageCode());
 
         // Creating the reply embed
         Embed embed = new Embed()
@@ -40,7 +40,7 @@ public class MapCommand implements Command {
     @Override
     public CommandData getCommandData() throws StatusCodeException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Map name", true);
-        for(Map map : ValorantAPI.getMaps("en-US")) {
+        for(Map map : OfficerAPI.getMaps("en-US")) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
             optionData.addChoice(map.getDisplayName(), map.getUuid());
         }

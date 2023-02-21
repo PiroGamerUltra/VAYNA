@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.InvalidRiotIdException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class StatsCommand implements Command {
+public class StatsSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -96,9 +96,7 @@ public class StatsCommand implements Command {
         }
 
         try {
-            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).setActionRow(
-                    Buttons.getHistoryButton(event.getGuild(), riotAccount)
-            ).queue();
+            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).queue();
         } catch (InvalidRegionException e) {
             event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
                     Buttons.getSupportButton(event.getGuild())

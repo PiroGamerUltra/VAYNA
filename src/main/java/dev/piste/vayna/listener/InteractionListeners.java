@@ -1,6 +1,6 @@
 package dev.piste.vayna.listener;
 
-import dev.piste.vayna.manager.*;
+import dev.piste.vayna.commands.manager.*;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class CommandInteractionListeners extends ListenerAdapter {
+public class InteractionListeners extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        CommandManager.perform(event);
+        SlashCommandManager.perform(event);
     }
 
     @Override

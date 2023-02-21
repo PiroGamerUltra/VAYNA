@@ -2,9 +2,9 @@ package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.*;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.*;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.store.Item;
 import dev.piste.vayna.util.Embed;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class StoreCommand implements Command {
+public class StoreSlashCommand implements SlashCommand {
 
 
     @Override
@@ -36,7 +36,7 @@ public class StoreCommand implements Command {
 
         for(CurrentBundle currentBundle : HenrikAPI.getCurrentBundles()) {
             // Searching the bundle by the UUID of the Henrik CurrentBundle
-            Bundle bundle = ValorantAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
+            Bundle bundle = OfficerAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
 
             // Adding the bundle embed (general information)
             Embed bundleEmbed = new Embed()
@@ -55,23 +55,23 @@ public class StoreCommand implements Command {
                         .removeFooter();
                 switch (item.getType()) {
                     case "buddy" -> {
-                        Buddy buddy = ValorantAPI.getBuddy(item.getUuid(), language.getLanguageCode());
+                        Buddy buddy = OfficerAPI.getBuddy(item.getUuid(), language.getLanguageCode());
                         itemEmbed.setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
                                 .setThumbnail(buddy.getDisplayIcon());
                     }
                     case "player_card" -> {
-                        Playercard playercard = ValorantAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
+                        Playercard playercard = OfficerAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
                         itemEmbed.setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
                                 .setThumbnail(playercard.getLargeArt())
                                 .setImage(playercard.getWideArt());
                     }
                     case "spray" -> {
-                        Spray spray = ValorantAPI.getSpray(item.getUuid(), language.getLanguageCode());
+                        Spray spray = OfficerAPI.getSpray(item.getUuid(), language.getLanguageCode());
                         itemEmbed.setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
                                 .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
                     }
                     case "skin_level" -> {
-                        Skin skin = ValorantAPI.getSkin(item.getUuid(), language.getLanguageCode());
+                        Skin skin = OfficerAPI.getSkin(item.getUuid(), language.getLanguageCode());
                         itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
                                 .setImage(skin.getDisplayIcon());
                     }

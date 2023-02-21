@@ -5,13 +5,10 @@ import dev.piste.vayna.commands.button.DisconnectButton;
 import dev.piste.vayna.commands.button.HistoryButton;
 import dev.piste.vayna.commands.button.VisibilityButton;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.manager.ButtonManager;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-
-import java.util.UUID;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -19,7 +16,7 @@ import java.util.UUID;
 public class Buttons {
 
     public static Button getSupportButton(Guild guild) {
-        return Button.link(ConfigManager.getSettingsConfig().getSupportGuild().getInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
+        return Button.link(ConfigManager.getSettingsConfig().getSupportGuildInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
     }
 
     public static Button getConnectButton(Guild guild, String authKey) {
@@ -39,9 +36,7 @@ public class Buttons {
     }
 
     public static Button getHistoryButton(Guild guild, RiotAccount riotAccount) {
-        String uuid = UUID.randomUUID().toString();
-        ButtonManager.putInStatsButtonMap(uuid, riotAccount);
-        return Button.secondary(new HistoryButton().getName() + uuid, LanguageManager.getLanguage(guild).getTranslation("button-history"));
+        return Button.secondary(new HistoryButton().getName() + riotAccount.getPuuid(), LanguageManager.getLanguage(guild).getTranslation("button-history"));
     }
 
 

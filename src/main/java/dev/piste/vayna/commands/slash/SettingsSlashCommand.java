@@ -1,7 +1,7 @@
 package dev.piste.vayna.commands.slash;
 
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class SettingsCommand implements Command {
+public class SettingsSlashCommand implements SlashCommand {
 
 
     @Override

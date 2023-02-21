@@ -7,9 +7,9 @@ import dev.piste.vayna.apis.henrik.gson.MMR;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
-import dev.piste.vayna.manager.Command;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
+import dev.piste.vayna.commands.manager.SlashCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class LeaderboardCommand implements Command {
+public class LeaderboardSlashCommand implements SlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event) throws StatusCodeException {
@@ -79,7 +79,7 @@ public class LeaderboardCommand implements Command {
                 .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
-        ArrayList<Tier> tierList = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
+        ArrayList<Tier> tierList = OfficerAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i<20; i++) {

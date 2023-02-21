@@ -9,10 +9,10 @@ import dev.piste.vayna.apis.riot.gson.Matchlist;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.apis.riot.gson.match.Player;
 import dev.piste.vayna.apis.riot.gson.matchlist.ListedMatch;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.Agent;
-import dev.piste.vayna.apis.valorantapi.gson.Map;
-import dev.piste.vayna.apis.valorantapi.gson.Queue;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.Agent;
+import dev.piste.vayna.apis.officer.gson.Map;
+import dev.piste.vayna.apis.officer.gson.Queue;
 import dev.piste.vayna.commands.selectmenu.HistorySelectMenu;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -43,9 +43,9 @@ public class SelectMenus {
         ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
         Matchlist matchlist = RiotAPI.getMatchlist(riotAccount.getPuuid(), activeShard.getActiveShard());
 
-        ArrayList<Map> maps = ValorantAPI.getMaps(language.getLanguageCode());
-        ArrayList<Agent> agents = ValorantAPI.getAgents(language.getLanguageCode());
-        ArrayList<Queue> queues = ValorantAPI.getQueues(language.getLanguageCode());
+        ArrayList<Map> maps = OfficerAPI.getMaps(language.getLanguageCode());
+        ArrayList<Agent> agents = OfficerAPI.getAgents(language.getLanguageCode());
+        ArrayList<Queue> queues = OfficerAPI.getQueues(language.getLanguageCode());
 
         ArrayList<SelectOption> selectOptions = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
