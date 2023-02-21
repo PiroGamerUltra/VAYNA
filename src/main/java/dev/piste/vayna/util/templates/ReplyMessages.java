@@ -9,8 +9,8 @@ import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.ActiveShard;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.apis.valorantapi.ValorantAPI;
-import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
+import dev.piste.vayna.apis.officer.OfficerAPI;
+import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
@@ -69,7 +69,7 @@ public class ReplyMessages {
         ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
         HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
         Rank rank = henrikAccount.getMmr().getRank();
-        ArrayList<Tier> tiers = ValorantAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
+        ArrayList<Tier> tiers = OfficerAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
         String regionEmoji = switch (activeShard.getActiveShard()) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
@@ -83,7 +83,6 @@ public class ReplyMessages {
 
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);
-        embed.setColor(209, 54, 57);
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"));
         embed.setDescription(language.getTranslation("command-stats-embed-description"));
         embed.addField(language.getTranslation("command-stats-embed-field-1-name"), Emoji.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true);
@@ -96,19 +95,19 @@ public class ReplyMessages {
         if(rank.getCurrentTierPatched() == null) {
             Tier tier = tiers.get(0);
             embed.setThumbnail(tier.getLargeIcon())
-                    .addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), false)
-                    .addField(language.getTranslation("button-rank-embed-field-2-name"),
-                            "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("button-rank-embed-field-2-text-1") : language.getTranslation("button-rank-embed-field-2-text-2")), true);
+                    .addField(language.getTranslation("command-stats-embed-field-4-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), false)
+                    .addField(language.getTranslation("command-stats-embed-field-5-name"),
+                            "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("command-stats-embed-field-5-text-1") : language.getTranslation("command-stats-embed-field-5-text-2")), true);
         } else {
             for (Tier tier : tiers) {
                 if (tier.getTier() == rank.getCurrentTier()) {
-                    embed.addField(language.getTranslation("button-rank-embed-field-1-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), false)
+                    embed.addField(language.getTranslation("command-stats-embed-field-4-name"), Emoji.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), false)
                             .setThumbnail(tier.getLargeIcon());
                     if (rank.getCurrentTier() > 23) {
-                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), "**" + rank.getRankingInTier() + "**RR » " +
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), "**" + rank.getRankingInTier() + "**RR » " +
                                 (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
                     } else {
-                        embed.addField(language.getTranslation("button-rank-embed-field-3-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
                                 (rank.getMmrChangeToLastGame() >= 0 ? Emoji.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emoji.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
                     }
                 }

@@ -13,13 +13,20 @@
         <maven.compiler.target>18</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <!-- JDA -->
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.3</version>
+            <version>5.0.0-beta.4</version>
         </dependency>
 
         <!-- MongoDB Driver -->
@@ -34,6 +41,13 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
+        </dependency>
+
+        <!-- Top.GG -->
+        <dependency>
+            <groupId>com.github.top-gg</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>2.1.2</version>
         </dependency>
 
     </dependencies>

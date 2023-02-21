@@ -2,7 +2,7 @@ package dev.piste.vayna.commands.button;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.manager.Button;
+import dev.piste.vayna.commands.manager.Button;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;

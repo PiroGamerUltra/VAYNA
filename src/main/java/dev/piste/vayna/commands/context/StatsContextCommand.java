@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.manager.UserContextCommand;
+import dev.piste.vayna.commands.manager.UserContextCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;

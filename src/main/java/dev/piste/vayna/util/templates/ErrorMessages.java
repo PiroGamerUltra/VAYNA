@@ -2,8 +2,8 @@ package dev.piste.vayna.util.templates;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.commands.slash.ConnectionCommand;
-import dev.piste.vayna.manager.CommandManager;
+import dev.piste.vayna.commands.slash.ConnectionSlashCommand;
+import dev.piste.vayna.commands.manager.SlashCommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.translations.Language;
@@ -85,7 +85,7 @@ public class ErrorMessages {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-noconnectionself-embed-title"))
                 .setDescription(language.getTranslation("command-stats-error-noconnectionself-embed-description")
-                        .replaceAll("%command:connection%", CommandManager.getAsJdaCommand(new ConnectionCommand()).getAsMention()))
+                        .replaceAll("%command:connection%", SlashCommandManager.getAsJdaCommand(new ConnectionSlashCommand()).getAsMention()))
                 .build();
     }
 

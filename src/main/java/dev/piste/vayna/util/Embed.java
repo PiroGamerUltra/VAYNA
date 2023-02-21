@@ -9,8 +9,12 @@ import java.awt.*;
 public class Embed {
 
     private final EmbedBuilder embedBuilder;
+
     private boolean colorModified = false;
     private boolean footerModified = false;
+    private static final int DEFAULT_COLOR_RGB = new Color(157, 57, 191).getRGB();
+    private static final String DEFAULT_FOOTER_TEXT = "VAYNA • VALORANT BOT";
+    private static final String DEFAULT_FOOTER_ICON_URL = Bot.getJDA().getSelfUser().getAvatarUrl();
 
     public Embed() {
         this.embedBuilder = new EmbedBuilder();
@@ -63,8 +67,8 @@ public class Embed {
     }
 
     public MessageEmbed build() {
-        if(!colorModified) embedBuilder.setColor(new Color(157, 57, 191).getRGB());
-        if(!footerModified) embedBuilder.setFooter("VAYNA • VALORANT BOT", Bot.getJDA().getSelfUser().getAvatarUrl());
+        if(!colorModified) embedBuilder.setColor(DEFAULT_COLOR_RGB);
+        if(!footerModified) embedBuilder.setFooter(DEFAULT_FOOTER_TEXT, DEFAULT_FOOTER_ICON_URL);
         return embedBuilder.build();
     }
 

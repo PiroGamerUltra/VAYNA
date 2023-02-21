@@ -2,7 +2,7 @@ package dev.piste.vayna.commands.modal;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.manager.Modal;
+import dev.piste.vayna.commands.manager.Modal;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -27,7 +27,7 @@ public class FeedbackModal implements Modal {
         event.getHook().editOriginalEmbeds(embed.build()).queue();
 
         if(Bot.isDebug()) return;
-        TextChannel feedbackChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getFeedback());
+        TextChannel feedbackChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getFeedback());
         Embed feedbackEmbed = new Embed()
                 .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                 .setTitle("» Feedback")

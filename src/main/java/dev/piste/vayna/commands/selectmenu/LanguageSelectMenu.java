@@ -1,6 +1,6 @@
 package dev.piste.vayna.commands.selectmenu;
 
-import dev.piste.vayna.manager.StringSelectMenu;
+import dev.piste.vayna.commands.manager.StringSelectMenu;
 import dev.piste.vayna.mongodb.GuildSetting;
 import dev.piste.vayna.util.templates.ReplyMessages;
 import dev.piste.vayna.util.templates.SelectMenus;

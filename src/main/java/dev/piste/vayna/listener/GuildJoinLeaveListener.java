@@ -19,7 +19,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         if(Bot.isDebug()) return;
-        Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
+        Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
         Embed embed = new Embed();
         embed.setColor(0, 255, 0);
         embed.setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl());
@@ -27,7 +27,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         embed.addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag(), true);
         embed.addField("Member count", event.getGuild().getMemberCount() + " members", true);
         embed.setThumbnail(event.getGuild().getIconUrl());
-        TextChannel textChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getGuild());
+        TextChannel textChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getGuild());
         textChannel.sendMessageEmbeds(embed.build()).queue();
 
         StatsCounter.countGuilds();
@@ -36,7 +36,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
         if(Bot.isDebug()) return;
-        Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
+        Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
         Embed embed = new Embed();
         embed.setColor(255, 0, 0);
         embed.setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl());
@@ -44,7 +44,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         embed.addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag(), true);
         embed.addField("Member count", event.getGuild().getMemberCount() + " members", true);
         embed.setThumbnail(event.getGuild().getIconUrl());
-        TextChannel textChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getGuild());
+        TextChannel textChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getGuild());
         textChannel.sendMessageEmbeds(embed.build()).queue();
 
         StatsCounter.countGuilds();

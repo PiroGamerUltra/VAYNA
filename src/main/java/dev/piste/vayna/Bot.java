@@ -2,7 +2,7 @@ package dev.piste.vayna;
 
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.listener.*;
-import dev.piste.vayna.manager.*;
+import dev.piste.vayna.commands.manager.*;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.ConsoleColor;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -36,7 +36,7 @@ public class Bot {
         LanguageManager.loadLanguages();
 
         jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
-                .addEventListeners(new CommandInteractionListeners())
+                .addEventListeners(new InteractionListeners())
                 .addEventListeners(new GuildJoinLeaveListener())
                 .setActivity(Activity.competing("VALORANT"))
                 .setStatus(OnlineStatus.ONLINE)
@@ -45,7 +45,9 @@ public class Bot {
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .build();
 
-        CommandManager.registerCommands();
+        // Registering all Managers
+
+        SlashCommandManager.registerCommands();
         ButtonManager.registerButtons();
         ModalManager.registerModals();
         StringSelectMenuManager.registerStringSelectMenus();

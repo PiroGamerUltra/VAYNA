@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dev.piste.vayna.apis.ApiHttpRequest;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.riot.gson.ActiveShard;
-import dev.piste.vayna.apis.riot.gson.PlatformData;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.apis.riot.gson.*;
 import dev.piste.vayna.config.ConfigManager;
 
 import java.net.URI;
@@ -56,12 +54,22 @@ public class RiotAPI {
         }
     }
 
+    public static Matchlist getMatchlist(String puuid, String region) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://" + region + ".api.riotgames.com/val/match/v1/matchlists/by-puuid/" + puuid);
+        return new Gson().fromJson(jsonObject, Matchlist.class);
+    }
+
+    public static Match getMatch(String matchId, String region) throws StatusCodeException {
+        JsonObject jsonObject = performHttpRequest("https://" + region + ".api.riotgames.com/val/match/v1/matches/" + matchId);
+        return new Gson().fromJson(jsonObject, Match.class);
+    }
+
     private static JsonObject performHttpRequest(String uri) throws StatusCodeException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("X-Riot-Token", ConfigManager.getTokensConfig().getApi().getRiot())
+                .header("X-Riot-Token", ConfigManager.getTokensConfig().getApiKeys().getRiot())
                 .GET()
                 .build();
         return new ApiHttpRequest().performHttpRequest(request);

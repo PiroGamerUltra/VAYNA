@@ -5,6 +5,7 @@ import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.mongodb.Mongo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import org.discordbots.api.client.DiscordBotListAPI;
 
 public class StatsCounter {
 
@@ -14,9 +15,9 @@ public class StatsCounter {
     public static void countConnections() {
         if(Bot.isDebug()) return;
         if(connectionsCounterRateLimitTimestampMillis == 0 || connectionsCounterRateLimitTimestampMillis<=System.currentTimeMillis()) {
-            Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
-            String connectionCountChannelName = ConfigManager.getSettingsConfig().getBotStatsChannels().getConnectionChannelName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
-            VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(ConfigManager.getSettingsConfig().getBotStatsChannels().getConnectionChannelId());
+            Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
+            String connectionCountChannelName = ConfigManager.getSettingsConfig().getStatsChannel().getConnections().getName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
+            VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(ConfigManager.getSettingsConfig().getStatsChannel().getConnections().getId());
             if(connectionCountChannel.getName().equals(connectionCountChannelName)) return;
             connectionCountChannel.getManager().setName(connectionCountChannelName).queue();
             connectionsCounterRateLimitTimestampMillis = System.currentTimeMillis()+520000;
@@ -25,10 +26,15 @@ public class StatsCounter {
 
     public static void countGuilds() {
         if(Bot.isDebug()) return;
+        new DiscordBotListAPI.Builder()
+                .botId(Bot.getJDA().getSelfUser().getId())
+                .token(ConfigManager.getTokensConfig().getApiKeys().getTopGG())
+                .build()
+                .setStats(Bot.getJDA().getGuilds().size());
         if(guildsCounterRateLimitTimestampMillis == 0 || guildsCounterRateLimitTimestampMillis<=System.currentTimeMillis()) {
-            Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId());
-            String guildCountChannelName = ConfigManager.getSettingsConfig().getBotStatsChannels().getGuildChannelName().replace("%count%", Bot.getJDA().getGuilds().size() + "");
-            VoiceChannel guildCountChannel = supportGuild.getVoiceChannelById(ConfigManager.getSettingsConfig().getBotStatsChannels().getGuildChannelId());
+            Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
+            String guildCountChannelName = ConfigManager.getSettingsConfig().getStatsChannel().getGuilds().getName().replace("%count%", Bot.getJDA().getGuilds().size() + "");
+            VoiceChannel guildCountChannel = supportGuild.getVoiceChannelById(ConfigManager.getSettingsConfig().getStatsChannel().getGuilds().getId());
             if(guildCountChannel.getName().equals(guildCountChannelName)) return;
             guildCountChannel.getManager().setName(guildCountChannelName).queue();
             guildsCounterRateLimitTimestampMillis = System.currentTimeMillis()+520000;

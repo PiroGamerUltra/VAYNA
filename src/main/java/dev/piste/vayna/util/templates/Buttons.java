@@ -1,6 +1,8 @@
 package dev.piste.vayna.util.templates;
 
+import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.commands.button.DisconnectButton;
+import dev.piste.vayna.commands.button.HistoryButton;
 import dev.piste.vayna.commands.button.VisibilityButton;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Emoji;
@@ -14,7 +16,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 public class Buttons {
 
     public static Button getSupportButton(Guild guild) {
-        return Button.link(ConfigManager.getSettingsConfig().getSupportGuild().getInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
+        return Button.link(ConfigManager.getSettingsConfig().getSupportGuildInviteUri(), LanguageManager.getLanguage(guild).getTranslation("button-support")).withEmoji(Emoji.getDiscord());
     }
 
     public static Button getConnectButton(Guild guild, String authKey) {
@@ -31,6 +33,10 @@ public class Buttons {
         } else {
             return Button.secondary(new VisibilityButton().getName() + "public", LanguageManager.getLanguage(guild).getTranslation("button-visibility")).withEmoji(net.dv8tion.jda.api.entities.emoji.Emoji.fromUnicode("\uD83D\uDD13"));
         }
+    }
+
+    public static Button getHistoryButton(Guild guild, RiotAccount riotAccount) {
+        return Button.secondary(new HistoryButton().getName() + riotAccount.getPuuid(), LanguageManager.getLanguage(guild).getTranslation("button-history"));
     }
 
 
