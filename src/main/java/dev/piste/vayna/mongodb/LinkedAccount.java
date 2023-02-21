@@ -14,14 +14,14 @@ public class LinkedAccount {
 
     private static final String DISCORD_USER_ID_FIELD = "discordUserId";
     private static final String RIOT_PUUID_FIELD = "riotPuuid";
-    private static final String VISIBLE_TO_PUBLIC_FIELD = "visibleToPublic";
+    private static final String PUBLICLY_VISIBLE_FIELD = "publiclyVisible";
     private static final MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountCollection();
 
     private final Document linkedAccountDocument;
     private final boolean isExisting;
     private final long discordUserId;
     private final String riotPuuid;
-    private boolean visibleToPublic;
+    private boolean publiclyVisible;
 
 
     public LinkedAccount(long discordUserId) {
@@ -30,12 +30,12 @@ public class LinkedAccount {
             if (cursor.hasNext()) {
                 linkedAccountDocument = cursor.next();
                 riotPuuid = linkedAccountDocument.getString(RIOT_PUUID_FIELD);
-                visibleToPublic = linkedAccountDocument.getBoolean(VISIBLE_TO_PUBLIC_FIELD);
+                publiclyVisible = linkedAccountDocument.getBoolean(PUBLICLY_VISIBLE_FIELD);
                 isExisting = true;
             } else {
                 linkedAccountDocument = null;
                 riotPuuid = null;
-                visibleToPublic = false;
+                publiclyVisible = false;
                 isExisting = false;
             }
         } catch (MongoException e) {
@@ -49,12 +49,12 @@ public class LinkedAccount {
             if (cursor.hasNext()) {
                 linkedAccountDocument = cursor.next();
                 discordUserId = linkedAccountDocument.getLong(DISCORD_USER_ID_FIELD);
-                visibleToPublic = linkedAccountDocument.getBoolean(VISIBLE_TO_PUBLIC_FIELD);
+                publiclyVisible = linkedAccountDocument.getBoolean(PUBLICLY_VISIBLE_FIELD);
                 isExisting = true;
             } else {
                 linkedAccountDocument = null;
                 discordUserId = 0L;
-                visibleToPublic = false;
+                publiclyVisible = false;
                 isExisting = false;
             }
         } catch (MongoException e) {
@@ -69,7 +69,7 @@ public class LinkedAccount {
     public void update() {
         if(isExisting) {
             Bson updates = Updates.combine(
-                    Updates.set(VISIBLE_TO_PUBLIC_FIELD, visibleToPublic),
+                    Updates.set(PUBLICLY_VISIBLE_FIELD, publiclyVisible),
                     Updates.set(DISCORD_USER_ID_FIELD, discordUserId),
                     Updates.set(RIOT_PUUID_FIELD, riotPuuid)
             );
@@ -86,11 +86,11 @@ public class LinkedAccount {
     }
 
     public boolean isVisibleToPublic() {
-        return visibleToPublic;
+        return publiclyVisible;
     }
 
-    public LinkedAccount setVisibleToPublic(boolean visibleToPublic) {
-        this.visibleToPublic = visibleToPublic;
+    public LinkedAccount setVisibleToPublic(boolean publiclyVisible) {
+        this.publiclyVisible = publiclyVisible;
         return this;
     }
 
