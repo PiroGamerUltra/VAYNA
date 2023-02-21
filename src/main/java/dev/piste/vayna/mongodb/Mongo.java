@@ -7,7 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.config.tokens.MongoDbConfig;
+import dev.piste.vayna.config.TokensConfig;
 import dev.piste.vayna.util.ConsoleColor;
 import org.bson.Document;
 
@@ -19,15 +19,15 @@ public class Mongo {
 
     public static void connect() {
 
-        MongoDbConfig mongoDbConfig = ConfigManager.getTokensConfig().getMongodb();
+        TokensConfig.MongoCredentials mongoCredentials = ConfigManager.getTokensConfig().getMongoCreds();
 
-        MongoCredential credential = MongoCredential.createCredential(mongoDbConfig.getUsername(), mongoDbConfig.getAuthDb(), mongoDbConfig.getPassword().toCharArray());
+        MongoCredential credential = MongoCredential.createCredential(mongoCredentials.getUsername(), mongoCredentials.getAuthDb(), mongoCredentials.getPassword().toCharArray());
         MongoClientSettings settings =
                 MongoClientSettings.builder().credential(credential).applyToClusterSettings(builder ->
-                        builder.hosts(Collections.singletonList(new ServerAddress(mongoDbConfig.getHost(), mongoDbConfig.getPort())))).build();
+                        builder.hosts(Collections.singletonList(new ServerAddress(mongoCredentials.getHost(), mongoCredentials.getPort())))).build();
 
         MongoClient mongoClient = MongoClients.create(settings);
-        mongoDatabase = mongoClient.getDatabase("VAYNA");
+        mongoDatabase = mongoClient.getDatabase("vayna");
 
         System.out.println(Bot.getConsolePrefix("MongoDB") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
     }
@@ -37,15 +37,15 @@ public class Mongo {
     }
 
     public static MongoCollection<Document> getLinkedAccountCollection() {
-        return getMongoDatabase().getCollection("linked-accounts");
+        return getMongoDatabase().getCollection("linkedAccounts");
     }
 
     public static MongoCollection<Document> getAuthKeyCollection() {
-        return getMongoDatabase().getCollection("auth-keys");
+        return getMongoDatabase().getCollection("authKeys");
     }
 
     public static MongoCollection<Document> getGuildSettingsCollection() {
-        return getMongoDatabase().getCollection("guild-settings");
+        return getMongoDatabase().getCollection("guildSettings");
     }
 
 

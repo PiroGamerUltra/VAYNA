@@ -1,12 +1,13 @@
 package dev.piste.vayna.mongodb;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 /**
  * @author Piste | https://github.com/zPiste
@@ -14,18 +15,24 @@ import static com.mongodb.client.model.Filters.eq;
 public class GuildSetting {
 
     private static final MongoCollection<Document> guildSettingsCollection = Mongo.getGuildSettingsCollection();
-    private final Document guildSettingDocument;
+    private static final String GUILD_ID_FIELD = "guildId";
+    private static final String LANGUAGE_FIELD = "language";
+
     private final long guildId;
     private String language;
 
     public GuildSetting(long guildId) {
         this.guildId = guildId;
-        guildSettingDocument = guildSettingsCollection.find(eq("guildId", guildId)).first();
-        if(guildSettingDocument == null) {
-            language = "en-US";
-            insert();
-        } else {
-            language = (String) guildSettingDocument.get("language");
+        try (MongoCursor<Document> cursor = guildSettingsCollection.find(eq(GUILD_ID_FIELD, guildId)).iterator()) {
+            if (cursor.hasNext()) {
+                Document guildSettingsDocument = cursor.next();
+                language = guildSettingsDocument.getString(LANGUAGE_FIELD);
+            } else {
+                language = "en-US";
+                insert();
+            }
+        } catch (MongoException e) {
+            throw new RuntimeException("Error while getting guild settings for guild " + guildId, e);
         }
     }
 
@@ -39,16 +46,13 @@ public class GuildSetting {
     }
 
     public void update() {
-        Bson updates = Updates.combine(
-                Updates.set("language", language)
-        );
-        guildSettingsCollection.updateOne(guildSettingDocument, updates, new UpdateOptions().upsert(true));
+        guildSettingsCollection.updateOne(eq(GUILD_ID_FIELD, guildId), set(LANGUAGE_FIELD, language), new UpdateOptions().upsert(true));
     }
 
     private void insert() {
         Document newAuthKeyDocument = new Document();
-        newAuthKeyDocument.put("guildId", guildId);
-        newAuthKeyDocument.put("language", language);
+        newAuthKeyDocument.put(GUILD_ID_FIELD, guildId);
+        newAuthKeyDocument.put(LANGUAGE_FIELD, language);
         guildSettingsCollection.insertOne(newAuthKeyDocument);
     }
 
