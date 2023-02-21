@@ -69,7 +69,7 @@ public class RiotAPI {
                 .uri(URI.create(uri))
                 .timeout(Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
-                .header("X-Riot-Token", ConfigManager.getTokensConfig().getApi().getRiot())
+                .header("X-Riot-Token", ConfigManager.getTokensConfig().getApiKeys().getRiot())
                 .GET()
                 .build();
         return new ApiHttpRequest().performHttpRequest(request);
