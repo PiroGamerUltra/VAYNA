@@ -1,9 +1,8 @@
 # VAYNA • VALORANT BOT
 VAYNA is a multilingual VALORANT discord bot that provides player statistics, general information about the game, and more. 
 ## Links
-[VAYNA Website](https://piste.dev/VAYNA/)
-
-[Bot invite](https://piste.dev/VAYNA/invite)
+- [🌐 Website](https://piste.dev/VAYNA)
+- [🤖 Invite](https://piste.dev/VAYNA/invite)
 ## Commands
 All commands work with the slash command function in Discord.
 ### General Commands
@@ -17,7 +16,7 @@ All commands work with the slash command function in Discord.
 - `/stats riot-id <name> <tag>` Get the stats of a Riot-ID
 - `/stats me` Get your stats
 - `/leaderboard` Get a list of the top 20 players on this server
-#### Context Commands (Right-click user/message)
+#### Context Commands (Right-click user)
 - `Stats` Get the stats of a Discord user
 ### Information Commands
 - `/map <name>` Get information about a map
@@ -28,10 +27,10 @@ All commands work with the slash command function in Discord.
 ### Administrative Commands
 - `/settings` Manage the settings of the bot for this server
 ## Used APIs
-- [Riot API](https://developer.riotgames.com/apis)
-- [HenrikDev API](https://github.com/Henrik-3/unofficial-valorant-api)
-- [Officer API](https://valorant-api.com/)
+- [Riot Games](https://developer.riotgames.com/apis)
+- [HenrikDev](https://github.com/Henrik-3/unofficial-valorant-api)
+- [Officer](https://valorant-api.com/)
 ## Contact
 If you have any questions, you can contact me:
-- **Email:** contact@piste.dev
-- **Discord:** [Support](https://piste.dev/VAYNA/redirect/discord)
+- 📫 **Email:** contact@piste.dev
+- ❓ **Discord:** [Support](https://piste.dev/VAYNA/redirect/discord)
