@@ -1,18 +1,15 @@
 package dev.piste.vayna.config;
 
-import dev.piste.vayna.config.settings.BotStatsChannels;
-import dev.piste.vayna.config.settings.LogChannels;
-import dev.piste.vayna.config.settings.SupportGuild;
-
 // GSON CLASS
 @SuppressWarnings("ALL")
 public class SettingsConfig {
 
     private String version;
     private String websiteUri;
-    private SupportGuild supportGuild;
-    private LogChannels logChannels;
-    private BotStatsChannels botStatsChannels;
+    private long supportGuildId;
+    private String supportGuildInviteUri;
+    private LogChannelIds logChannelIds;
+    private StatsChannel statsChannel;
 
     public String getVersion() {
         return version;
@@ -22,16 +19,63 @@ public class SettingsConfig {
         return websiteUri;
     }
 
-    public SupportGuild getSupportGuild() {
-        return supportGuild;
+    public long getSupportGuildId() {
+        return supportGuildId;
     }
 
-    public LogChannels getLogChannels() {
-        return logChannels;
+    public String getSupportGuildInviteUri() {
+        return supportGuildInviteUri;
     }
 
-    public BotStatsChannels getBotStatsChannels() {
-        return botStatsChannels;
+    public LogChannelIds getLogChannelIds() {
+        return logChannelIds;
+    }
+
+    public StatsChannel getStatsChannel() {
+        return statsChannel;
+    }
+
+    public static class LogChannelIds {
+        private long guild;
+        private long feedback;
+        private long error;
+
+        public long getGuild() {
+            return guild;
+        }
+
+        public long getFeedback() {
+            return feedback;
+        }
+
+        public long getError() {
+            return error;
+        }
+    }
+    public static class StatsChannel {
+        private Channel guilds;
+        private Channel connections;
+
+        public Channel getGuilds() {
+            return guilds;
+        }
+
+        public Channel getConnections() {
+            return connections;
+        }
+
+        public static class Channel {
+            private long id;
+            private String name;
+
+            public long getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+        }
     }
 
 }
