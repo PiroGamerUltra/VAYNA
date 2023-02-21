@@ -1,4 +1,4 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.commands.modal.FeedbackModal;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;

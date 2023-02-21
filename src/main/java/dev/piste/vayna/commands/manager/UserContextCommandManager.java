@@ -1,4 +1,4 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
@@ -38,7 +38,7 @@ public class UserContextCommandManager {
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
                         .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");

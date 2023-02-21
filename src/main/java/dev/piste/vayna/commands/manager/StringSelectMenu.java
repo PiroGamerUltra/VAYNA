@@ -1,4 +1,4 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;

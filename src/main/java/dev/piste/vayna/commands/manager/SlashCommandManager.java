@@ -1,4 +1,4 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
@@ -17,63 +17,63 @@ import java.util.Map;
 /**
  * @author Piste | https://github.com/zPiste
  */
-public class CommandManager {
+public class SlashCommandManager {
 
-    private static final Map<String, Command> commands = new HashMap<>();
+    private static final Map<String, SlashCommand> slashCommands = new HashMap<>();
 
     public static void registerCommands() {
-        addCommand(new AgentCommand());
-        addCommand(new ConnectionCommand());
-        addCommand(new GamemodeCommand());
-        addCommand(new HelpCommand());
-        addCommand(new MapCommand());
-        addCommand(new StatsCommand());
-        addCommand(new WeaponCommand());
-        addCommand(new StoreCommand());
-        addCommand(new LeaderboardCommand());
-        addCommand(new FeedbackCommand());
-        addCommand(new SettingsCommand());
+        addCommand(new AgentSlashCommand());
+        addCommand(new ConnectionSlashCommand());
+        addCommand(new GamemodeSlashCommand());
+        addCommand(new HelpSlashCommand());
+        addCommand(new MapSlashCommand());
+        addCommand(new StatsSlashCommand());
+        addCommand(new WeaponSlashCommand());
+        addCommand(new StoreSlashCommand());
+        addCommand(new LeaderboardSlashCommand());
+        addCommand(new FeedbackSlashCommand());
+        addCommand(new SettingsSlashCommand());
 
         for(net.dv8tion.jda.api.interactions.commands.Command command : Bot.getJDA().retrieveCommands().complete()) {
-            if(!commands.containsKey(command.getName().toLowerCase())) {
+            if(!slashCommands.containsKey(command.getName().toLowerCase())) {
                 command.delete().queue();
             }
         }
     }
 
-    private static void addCommand(Command command) {
-        commands.put(command.getName(), command);
+    private static void addCommand(SlashCommand slashCommand) {
+        slashCommands.put(slashCommand.getName(), slashCommand);
         try {
-            Bot.getJDA().upsertCommand(command.getCommandData()).queue();
+            Bot.getJDA().upsertCommand(slashCommand.getCommandData()).queue();
         } catch (StatusCodeException e) {
             if(Bot.isDebug()) {
-                System.out.println("Error registering command: " + e.getMessage());
+                System.out.println("Error registering slashCommand: " + e.getMessage());
                 return;
             }
-            TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
+            TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             Embed embed = new Embed()
-                    .setTitle("Register command HTTP error")
+                    .setTitle("Register slashCommand HTTP error")
                     .setDescription(e.getMessage());
             logChannel.sendMessageEmbeds(embed.build()).queue();
         }
     }
 
-    public static Collection<Command> getCommands() {
-        return commands.values();
+    public static Collection<SlashCommand> getCommands() {
+        return slashCommands.values();
     }
 
     public static void perform(SlashCommandInteractionEvent event) {
 
         Thread thread = new Thread(() -> {
             try {
-                commands.get(event.getName().toLowerCase()).perform(event);
+                slashCommands.get(event.getName().toLowerCase()).perform(event);
             } catch (StatusCodeException e) {
                 Embed embed = ErrorMessages.getStatusCodeErrorEmbed(event.getGuild(), event.getUser(), e);
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
                         .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
@@ -83,9 +83,9 @@ public class CommandManager {
         thread.start();
     }
 
-    public static net.dv8tion.jda.api.interactions.commands.Command getAsJdaCommand(Command command) {
+    public static net.dv8tion.jda.api.interactions.commands.Command getAsJdaCommand(SlashCommand slashCommand) {
         for(net.dv8tion.jda.api.interactions.commands.Command jdaCommand : Bot.getJDA().retrieveCommands().complete()) {
-            if(jdaCommand.getName().equalsIgnoreCase(command.getName())) return jdaCommand;
+            if(jdaCommand.getName().equalsIgnoreCase(slashCommand.getName())) return jdaCommand;
         }
         return null;
     }

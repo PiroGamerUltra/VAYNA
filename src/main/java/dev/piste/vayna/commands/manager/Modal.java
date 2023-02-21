@@ -1,4 +1,4 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 

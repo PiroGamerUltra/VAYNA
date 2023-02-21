@@ -1,8 +1,7 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.commands.button.DisconnectButton;
 import dev.piste.vayna.commands.button.HistoryButton;
 import dev.piste.vayna.commands.button.VisibilityButton;
@@ -22,8 +21,6 @@ public class ButtonManager {
 
     private static final HashMap<String, Button> buttons = new HashMap<>();
 
-    private static final HashMap<String, RiotAccount> statsButtonMap = new HashMap<>();
-
     public static void registerButtons() {
         addButton(new DisconnectButton());
         addButton(new VisibilityButton());
@@ -32,24 +29,6 @@ public class ButtonManager {
 
     private static void addButton(Button button) {
         buttons.put(button.getName().substring(0, button.getName().length()-1), button);
-    }
-
-    public static void putInStatsButtonMap(String uuid, RiotAccount riotAccount) {
-        statsButtonMap.put(uuid, riotAccount);
-        Thread thread = new Thread(() -> {
-            try {
-                Thread.sleep(600000);
-                statsButtonMap.remove(uuid);
-            } catch (InterruptedException e) {
-                statsButtonMap.remove(uuid);
-            }
-        });
-        thread.start();
-    }
-
-    public static RiotAccount getRiotAccountFromStatsButtonMap(String uuid) {
-        if(statsButtonMap.get(uuid) == null) return null;
-        return statsButtonMap.get(uuid);
     }
 
     public static void perform(ButtonInteractionEvent event) {
@@ -64,7 +43,7 @@ public class ButtonManager {
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
                 if(Bot.isDebug()) return;
-                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuild().getId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannels().getError());
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
                 embed.addField("URL", e.getMessage().split(" ")[1], false)
                         .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");

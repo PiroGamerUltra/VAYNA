@@ -1,10 +1,10 @@
-package dev.piste.vayna.manager;
+package dev.piste.vayna.commands.manager;
 
 import dev.piste.vayna.apis.StatusCodeException;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-public interface Command {
+public interface SlashCommand {
 
     void perform(SlashCommandInteractionEvent event) throws StatusCodeException;
 
