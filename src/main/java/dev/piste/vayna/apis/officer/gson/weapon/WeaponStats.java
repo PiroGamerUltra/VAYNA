@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.valorantapi.gson.weapon;
+package dev.piste.vayna.apis.officer.gson.weapon;
 
 import java.util.ArrayList;
 

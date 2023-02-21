@@ -1,7 +1,7 @@
-package dev.piste.vayna.apis.valorantapi.gson;
+package dev.piste.vayna.apis.officer.gson;
 
-import dev.piste.vayna.apis.valorantapi.gson.weapon.ShopData;
-import dev.piste.vayna.apis.valorantapi.gson.weapon.WeaponStats;
+import dev.piste.vayna.apis.officer.gson.weapon.ShopData;
+import dev.piste.vayna.apis.officer.gson.weapon.WeaponStats;
 
 // GSON CLASS
 @SuppressWarnings("ALL")

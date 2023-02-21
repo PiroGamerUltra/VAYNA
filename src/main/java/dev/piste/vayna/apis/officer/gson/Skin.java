@@ -1,19 +1,17 @@
-package dev.piste.vayna.apis.valorantapi.gson.agent;
+package dev.piste.vayna.apis.officer.gson;
 
+/**
+ * @author Piste | https://github.com/zPiste
+ */
 // GSON CLASS
 @SuppressWarnings("ALL")
-public class Role {
+public class Skin {
 
     private String displayName;
-    private String description;
     private String displayIcon;
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getDisplayIcon() {

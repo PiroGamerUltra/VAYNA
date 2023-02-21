@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.valorantapi.gson.competitivetier;
+package dev.piste.vayna.apis.officer.gson.competitivetier;
 
 // GSON CLASS
 @SuppressWarnings("ALL")

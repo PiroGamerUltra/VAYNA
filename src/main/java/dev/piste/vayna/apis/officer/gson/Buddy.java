@@ -1,11 +1,8 @@
-package dev.piste.vayna.apis.valorantapi.gson;
+package dev.piste.vayna.apis.officer.gson;
 
-/**
- * @author Piste | https://github.com/zPiste
- */
 // GSON CLASS
 @SuppressWarnings("ALL")
-public class Skin {
+public class Buddy {
 
     private String displayName;
     private String displayIcon;
@@ -17,4 +14,5 @@ public class Skin {
     public String getDisplayIcon() {
         return displayIcon;
     }
+
 }

@@ -1,17 +1,12 @@
-package dev.piste.vayna.apis.valorantapi.gson.agent;
+package dev.piste.vayna.apis.officer.gson.agent;
 
 // GSON CLASS
 @SuppressWarnings("ALL")
-public class Ability {
+public class Role {
 
-    private String slot;
     private String displayName;
     private String description;
     private String displayIcon;
-
-    public String getSlot() {
-        return slot;
-    }
 
     public String getDisplayName() {
         return displayName;
@@ -24,5 +19,4 @@ public class Ability {
     public String getDisplayIcon() {
         return displayIcon;
     }
-
 }

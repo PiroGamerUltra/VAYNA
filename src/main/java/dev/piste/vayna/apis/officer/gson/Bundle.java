@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.valorantapi.gson;
+package dev.piste.vayna.apis.officer.gson;
 
 // GSON CLASS
 @SuppressWarnings("ALL")

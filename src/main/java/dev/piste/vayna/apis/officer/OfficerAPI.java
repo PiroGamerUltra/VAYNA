@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.valorantapi;
+package dev.piste.vayna.apis.officer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -6,14 +6,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.apis.ApiHttpRequest;
 import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.valorantapi.gson.*;
+import dev.piste.vayna.apis.officer.gson.*;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class ValorantAPI {
+public class OfficerAPI {
 
     // Agents
     public static Agent getAgent(String uuid, String languageCode) throws StatusCodeException {

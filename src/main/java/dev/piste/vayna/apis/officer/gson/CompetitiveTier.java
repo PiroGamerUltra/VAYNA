@@ -1,6 +1,6 @@
-package dev.piste.vayna.apis.valorantapi.gson;
+package dev.piste.vayna.apis.officer.gson;
 
-import dev.piste.vayna.apis.valorantapi.gson.competitivetier.Tier;
+import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 
 import java.util.ArrayList;
 

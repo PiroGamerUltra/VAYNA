@@ -1,7 +1,7 @@
-package dev.piste.vayna.apis.valorantapi.gson;
+package dev.piste.vayna.apis.officer.gson;
 
-import dev.piste.vayna.apis.valorantapi.gson.agent.Ability;
-import dev.piste.vayna.apis.valorantapi.gson.agent.Role;
+import dev.piste.vayna.apis.officer.gson.agent.Ability;
+import dev.piste.vayna.apis.officer.gson.agent.Role;
 
 import java.util.ArrayList;
 
