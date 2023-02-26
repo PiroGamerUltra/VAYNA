@@ -1,9 +1,9 @@
 package dev.piste.vayna.util.templates;
 
-import dev.piste.vayna.apis.StatusCodeException;
+import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.commands.slash.ConnectionSlashCommand;
-import dev.piste.vayna.commands.manager.SlashCommandManager;
+import dev.piste.vayna.interactions.commands.slash.ConnectionSlashCommand;
+import dev.piste.vayna.interactions.managers.SlashCommandManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emoji;
 import dev.piste.vayna.util.translations.Language;
@@ -13,11 +13,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class ErrorMessages {
 
-    public static Embed getStatusCodeErrorEmbed(Guild guild, User user, StatusCodeException exception) {
+    public static Embed getStatusCodeErrorEmbed(Guild guild, User user, HttpErrorException exception) {
         String[] message = exception.getMessage().split(" ");
         Language language = LanguageManager.getLanguage(guild);
         int statusCode = Integer.parseInt(message[0]);

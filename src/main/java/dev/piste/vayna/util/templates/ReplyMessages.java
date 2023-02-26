@@ -1,13 +1,11 @@
 package dev.piste.vayna.util.templates;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.apis.StatusCodeException;
+import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
-import dev.piste.vayna.apis.riot.InvalidRegionException;
 import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.ActiveShard;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
@@ -23,7 +21,7 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.ArrayList;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class ReplyMessages {
 
@@ -64,14 +62,18 @@ public class ReplyMessages {
     }
 
 
-    public static MessageEmbed getStats(Guild guild, LinkedAccount linkedAccount, RiotAccount riotAccount) throws StatusCodeException, InvalidRegionException {
+    public static MessageEmbed getStats(Guild guild, LinkedAccount linkedAccount, RiotAccount riotAccount) throws HttpErrorException {
         Language language = LanguageManager.getLanguage(guild);
-        ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
-        HenrikAccount henrikAccount = HenrikAPI.getAccountByRiotId(riotAccount.getGameName(), riotAccount.getTagLine());
-        Rank rank = henrikAccount.getMmr().getRank();
-        ArrayList<Tier> tiers = OfficerAPI.getCompetitiveTier(language.getLanguageCode()).getTiers();
 
-        String regionEmoji = switch (activeShard.getActiveShard()) {
+        RiotAPI riotAPI = new RiotAPI();
+        HenrikAPI henrikAPI = new HenrikAPI();
+
+        String region = riotAPI.getRegion(riotAccount.getPuuid());
+        HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
+        Rank rank = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion()).getRank();
+        ArrayList<Tier> tiers = new OfficerAPI().getCompetitiveTier(language.getLanguageCode()).getTiers();
+
+        String regionEmoji = switch (region) {
             case "eu" -> "\uD83C\uDDEA\uD83C\uDDFA";
             case "na" -> "\uD83C\uDDFA\uD83C\uDDF8";
             case "br", "latam" -> "\uD83C\uDDE7\uD83C\uDDF7";
@@ -79,7 +81,7 @@ public class ReplyMessages {
             case "ap" -> "\uD83C\uDDE6\uD83C\uDDFA";
             default -> "none";
         };
-        String regionName = RiotAPI.getPlatformData(activeShard.getActiveShard()).getName();
+        String regionName = riotAPI.getRegionName(region);
 
         Embed embed = new Embed();
         embed.setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null);

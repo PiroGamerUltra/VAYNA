@@ -1,6 +1,8 @@
 package dev.piste.vayna.apis.riot.gson;
 
-// GSON CLASS
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class RiotAccount {
 

@@ -4,7 +4,9 @@ import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 
 import java.util.ArrayList;
 
-// GSON CLASS
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class CompetitiveTier {
 

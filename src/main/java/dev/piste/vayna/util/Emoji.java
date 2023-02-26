@@ -3,6 +3,9 @@ package dev.piste.vayna.util;
 import dev.piste.vayna.Bot;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class Emoji {
 

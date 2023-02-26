@@ -1,9 +1,8 @@
 package dev.piste.vayna.apis.officer.gson;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
-// GSON CLASS
 @SuppressWarnings("ALL")
 public class Queue {
 

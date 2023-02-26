@@ -2,7 +2,9 @@ package dev.piste.vayna.apis.henrik.gson.mmr;
 
 import dev.piste.vayna.apis.henrik.gson.mmr.rank.Images;
 
-// GSON CLASS
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class Rank {
 

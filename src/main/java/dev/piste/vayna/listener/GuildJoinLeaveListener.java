@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class GuildJoinLeaveListener extends ListenerAdapter {
 

@@ -9,6 +9,9 @@ import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class AuthKey {
 
     private static final String DISCORD_USER_ID_FIELD = "discordUserId";

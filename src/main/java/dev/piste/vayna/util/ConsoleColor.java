@@ -1,5 +1,8 @@
 package dev.piste.vayna.util;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class ConsoleColor {
 

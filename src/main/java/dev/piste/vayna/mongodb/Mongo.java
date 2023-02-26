@@ -13,6 +13,9 @@ import org.bson.Document;
 
 import java.util.Collections;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class Mongo {
 
     private static MongoDatabase mongoDatabase;

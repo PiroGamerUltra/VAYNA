@@ -3,7 +3,9 @@ package dev.piste.vayna.apis.officer.gson;
 import dev.piste.vayna.apis.officer.gson.weapon.ShopData;
 import dev.piste.vayna.apis.officer.gson.weapon.WeaponStats;
 
-// GSON CLASS
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class Weapon {
 

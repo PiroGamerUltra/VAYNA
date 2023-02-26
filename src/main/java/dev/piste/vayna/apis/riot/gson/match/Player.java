@@ -3,9 +3,8 @@ package dev.piste.vayna.apis.riot.gson.match;
 import dev.piste.vayna.apis.riot.gson.match.player.Stats;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
-// GSON CLASS
 @SuppressWarnings("ALL")
 public class Player {
 

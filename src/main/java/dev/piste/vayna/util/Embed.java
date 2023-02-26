@@ -6,6 +6,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class Embed {
 
     private final EmbedBuilder embedBuilder;
