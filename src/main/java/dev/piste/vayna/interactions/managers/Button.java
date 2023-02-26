@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
  */
 public interface Button {
 
-    void perform(ButtonInteractionEvent event, String arg) throws HttpErrorException;
+    void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException;
 
     String getName();
 

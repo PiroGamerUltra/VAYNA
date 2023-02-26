@@ -8,7 +8,7 @@ import dev.piste.vayna.apis.officer.gson.Bundle;
 import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.interactions.selectmenus.string.BundleSelectMenu;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -34,7 +34,7 @@ public class StoreSlashCommand implements SlashCommand {
         HenrikAPI henrikAPI = new HenrikAPI();
 
         if(henrikAPI.getCurrentBundles().size() <= 1) {
-            event.getHook().editOriginalEmbeds(ReplyMessages.getBundle(event.getGuild(), henrikAPI.getCurrentBundles().get(0))).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getBundleEmbeds(language, henrikAPI.getCurrentBundles().get(0))).queue();
         } else {
             ArrayList<SelectOption> selectOptions = new ArrayList<>();
             for(CurrentBundle currentBundle : henrikAPI.getCurrentBundles()) {

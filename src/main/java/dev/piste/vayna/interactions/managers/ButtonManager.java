@@ -2,10 +2,10 @@ package dev.piste.vayna.interactions.managers;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
-import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
@@ -28,14 +28,15 @@ public class ButtonManager {
     }
 
     private static void addButton(Button button) {
-        buttons.put(button.getName().substring(0, button.getName().length()-1), button);
+        buttons.put(button.getName(), button);
     }
 
     public static void perform(ButtonInteractionEvent event) {
-        String[] buttonId = event.getButton().getId().split(";");
+        String buttonId = event.getButton().getId().split(";")[0];
+        String[] args = event.getButton().getId().substring(buttonId.length()).split(";");
         Thread thread = new Thread(() -> {
             try {
-                buttons.get(buttonId[0]).perform(event, (buttonId.length == 1 ? null : buttonId[1]));
+                buttons.get(buttonId).perform(event, args);
             } catch (HttpErrorException e) {
                 Embed embed = ErrorMessages.getStatusCodeErrorEmbed(event.getGuild(), event.getUser(), e);
 

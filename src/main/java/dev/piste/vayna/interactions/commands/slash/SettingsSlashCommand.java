@@ -6,7 +6,7 @@ import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.templates.SelectMenus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -38,7 +38,7 @@ public class SettingsSlashCommand implements SlashCommand {
             return;
         }
 
-        event.getHook().editOriginalEmbeds(ReplyMessages.getSettings(event.getGuild())).setActionRow(
+        event.getHook().editOriginalEmbeds(MessageEmbeds.getSettingsEmbed(LanguageManager.getLanguage(event.getGuild()), event.getGuild())).setActionRow(
                 SelectMenus.getSettingsSelectMenu(event.getGuild())
         ).queue();
 

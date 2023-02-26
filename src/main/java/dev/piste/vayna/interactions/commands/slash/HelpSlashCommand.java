@@ -4,7 +4,7 @@ import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.interactions.managers.SlashCommandManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
@@ -56,8 +56,8 @@ public class HelpSlashCommand implements SlashCommand {
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embed.build()).setActionRow(
                 Buttons.getSupportButton(event.getGuild()),
-                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emoji.getGitHub()),
-                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emoji.getTopGG())
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emojis.getGitHub()),
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emojis.getTopGG())
         ).queue();
     }
 

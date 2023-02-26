@@ -9,6 +9,7 @@ import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,10 +47,6 @@ public class SlashCommandManager {
         try {
             Bot.getJDA().upsertCommand(slashCommand.getCommandData()).queue();
         } catch (HttpErrorException e) {
-            if(Bot.isDebug()) {
-                System.out.println("Error registering slashCommand: " + e.getMessage());
-                return;
-            }
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             Embed embed = new Embed()
                     .setTitle("Register command HTTP error")
@@ -83,8 +80,8 @@ public class SlashCommandManager {
         thread.start();
     }
 
-    public static net.dv8tion.jda.api.interactions.commands.Command getAsJdaCommand(SlashCommand slashCommand) {
-        for(net.dv8tion.jda.api.interactions.commands.Command jdaCommand : Bot.getJDA().retrieveCommands().complete()) {
+    public static Command getAsJdaCommand(SlashCommand slashCommand) {
+        for(Command jdaCommand : Bot.getJDA().retrieveCommands().complete()) {
             if(jdaCommand.getName().equalsIgnoreCase(slashCommand.getName())) return jdaCommand;
         }
         return null;

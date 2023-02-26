@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.interactions.commands.slash.ConnectionSlashCommand;
 import dev.piste.vayna.interactions.managers.SlashCommandManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -54,7 +54,7 @@ public class ErrorMessages {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-region-embed-title"))
                 .setDescription(language.getTranslation("command-stats-error-region-embed-description")
-                        .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
+                        .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
                         .replaceAll("%riotid%", riotAccount.getRiotId()));
         return embed.build();
     }

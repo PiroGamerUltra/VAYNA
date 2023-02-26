@@ -6,10 +6,10 @@ import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -61,7 +61,7 @@ public class StatsSlashCommand implements SlashCommand {
                                 .setColor(255, 0, 0)
                                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-riotid-embed-title"))
                                 .setDescription(language.getTranslation("command-stats-error-riotid-embed-description")
-                                        .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
+                                        .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
                                         .replaceAll("%riotid%", gameName + "#" + tagLine));
                         event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                                 Buttons.getSupportButton(event.getGuild())
@@ -97,7 +97,7 @@ public class StatsSlashCommand implements SlashCommand {
         }
 
         try {
-            event.getHook().editOriginalEmbeds(ReplyMessages.getStats(event.getGuild(), linkedAccount, riotAccount)).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, linkedAccount, riotAccount)).queue();
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(

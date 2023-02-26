@@ -6,7 +6,9 @@ import dev.piste.vayna.interactions.managers.Button;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
+import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**
@@ -14,15 +16,17 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
  */
 public class VisibilityButton implements Button {
 
-    public void perform(ButtonInteractionEvent event, String arg) throws HttpErrorException {
+    public void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException {
+        Language language = LanguageManager.getLanguage(event.getGuild());
+
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
         if(!linkedAccount.isExisting()) {
-            event.editMessageEmbeds(ReplyMessages.getConnectionNone(event.getGuild(), event.getUser())).setActionRow(
+            event.editMessageEmbeds(MessageEmbeds.getNoConnectionEmbed(language, event.getUser())).setActionRow(
                     Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
-            linkedAccount.setVisibleToPublic(arg.equalsIgnoreCase("public")).update();
-            event.editMessageEmbeds(ReplyMessages.getConnectionPresent(event.getGuild(), event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+            linkedAccount.setVisibleToPublic(args[0].equalsIgnoreCase("public")).update();
+            event.editMessageEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
                     Buttons.getDisconnectButton(event.getGuild()),
                     Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())
             ).queue();
@@ -31,7 +35,7 @@ public class VisibilityButton implements Button {
 
     @Override
     public String getName() {
-        return "connection-visibility;";
+        return "connectionVisibility";
     }
 
 }

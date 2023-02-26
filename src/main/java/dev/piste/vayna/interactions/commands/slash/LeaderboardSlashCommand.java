@@ -12,7 +12,7 @@ import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
@@ -102,12 +102,12 @@ public class LeaderboardSlashCommand implements SlashCommand {
                 }
                 if(entry.getValue().getRank().getElo() == eloList.get(i)) {
                     if(rank.getElo() >= 2100) {
-                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
+                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
+                                Emojis.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "RR**)", false);
                     } else {
-                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emoji.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emoji.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
+                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
+                                Emojis.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
                                         " (**" + rank.getRankingInTier() + "**/**100**)", false);
                     }
 

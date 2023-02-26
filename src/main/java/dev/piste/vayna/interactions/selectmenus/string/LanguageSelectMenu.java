@@ -2,8 +2,9 @@ package dev.piste.vayna.interactions.selectmenus.string;
 
 import dev.piste.vayna.interactions.managers.StringSelectMenu;
 import dev.piste.vayna.mongodb.GuildSetting;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.templates.SelectMenus;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 /**
@@ -18,7 +19,7 @@ public class LanguageSelectMenu implements StringSelectMenu {
         guildSetting.update();
 
         // Reply
-        event.editMessageEmbeds(ReplyMessages.getSettings(event.getGuild())).setActionRow(
+        event.editMessageEmbeds(MessageEmbeds.getSettingsEmbed(LanguageManager.getLanguage(event.getGuild()), event.getGuild())).setActionRow(
                 SelectMenus.getSettingsSelectMenu(event.getGuild())
         ).queue();
     }

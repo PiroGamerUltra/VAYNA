@@ -4,7 +4,8 @@ import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.interactions.managers.StringSelectMenu;
-import dev.piste.vayna.util.templates.ReplyMessages;
+import dev.piste.vayna.util.templates.MessageEmbeds;
+import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 /**
@@ -19,7 +20,7 @@ public class BundleSelectMenu implements StringSelectMenu {
 
         for(CurrentBundle currentBundle : new HenrikAPI().getCurrentBundles()) {
             if(currentBundle.getBundleUuid().equals(bundleUuid)) {
-                event.editMessageEmbeds(ReplyMessages.getBundle(event.getGuild(), currentBundle)).queue();
+                event.editMessageEmbeds(MessageEmbeds.getBundleEmbeds(LanguageManager.getLanguage(event.getGuild()), currentBundle)).queue();
             }
         }
     }

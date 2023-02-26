@@ -21,12 +21,12 @@ public class HistoryButton implements Button {
 
 
     @Override
-    public void perform(ButtonInteractionEvent event, String arg) throws HttpErrorException {
+    public void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException {
         MessageEmbed.AuthorInfo author = event.getMessage().getEmbeds().get(0).getAuthor();
         event.deferReply().queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        RiotAccount riotAccount = new RiotAPI().getAccount(arg);
+        RiotAccount riotAccount = new RiotAPI().getAccount(args[0]);
         StringSelectMenu stringSelectMenu;
         try {
             stringSelectMenu = SelectMenus.getHistorySelectMenu(event.getGuild(), riotAccount);
@@ -54,6 +54,6 @@ public class HistoryButton implements Button {
 
     @Override
     public String getName() {
-        return "history;";
+        return "history";
     }
 }

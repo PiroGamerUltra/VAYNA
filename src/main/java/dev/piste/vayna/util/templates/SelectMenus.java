@@ -11,6 +11,7 @@ import dev.piste.vayna.apis.officer.gson.Agent;
 import dev.piste.vayna.apis.officer.gson.Map;
 import dev.piste.vayna.apis.officer.gson.Queue;
 import dev.piste.vayna.interactions.selectmenus.string.HistorySelectMenu;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -76,7 +77,7 @@ public class SelectMenus {
 
             selectOptions.add(SelectOption.of(queue.getDropdownText(), match.getMatchInfo().getMatchId() + ";" + region)
                     .withDescription(map.getDisplayName() + " (" + agent.getDisplayName() + ")")
-                    .withEmoji(dev.piste.vayna.util.Emoji.getQueue(queue.getUuid())
+                    .withEmoji(Emojis.getQueue(queue.getUuid())
                     ));
         }
 
