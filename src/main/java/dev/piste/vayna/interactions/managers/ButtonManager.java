@@ -44,7 +44,8 @@ public class ButtonManager {
                 ).queue();
                 if(Bot.isDebug()) return;
                 TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
-                embed.addField("URL", e.getMessage().split(" ")[1], false)
+                embed.addField("URL", e.getUri(), false)
+                        .addField("Request Method", e.getRequestMethod(), false)
                         .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();

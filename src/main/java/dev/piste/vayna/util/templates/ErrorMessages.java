@@ -18,9 +18,8 @@ import net.dv8tion.jda.api.entities.User;
 public class ErrorMessages {
 
     public static Embed getStatusCodeErrorEmbed(Guild guild, User user, HttpErrorException exception) {
-        String[] message = exception.getMessage().split(" ");
         Language language = LanguageManager.getLanguage(guild);
-        int statusCode = Integer.parseInt(message[0]);
+        int statusCode = exception.getStatusCode();
 
         Embed embed = new Embed()
                 .setColor(255, 0, 0)

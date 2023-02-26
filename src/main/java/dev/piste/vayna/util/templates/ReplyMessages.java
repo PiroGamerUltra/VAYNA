@@ -3,8 +3,11 @@ package dev.piste.vayna.util.templates;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
+import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
+import dev.piste.vayna.apis.henrik.gson.store.Item;
+import dev.piste.vayna.apis.officer.gson.*;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.apis.officer.OfficerAPI;
@@ -18,6 +21,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 /**
@@ -61,6 +65,58 @@ public class ReplyMessages {
                 .build();
     }
 
+    public static ArrayList<MessageEmbed> getBundle(Guild guild, CurrentBundle currentBundle) throws HttpErrorException {
+        Language language = LanguageManager.getLanguage(guild);
+
+        OfficerAPI officerAPI = new OfficerAPI();
+        ArrayList<MessageEmbed> embedList = new ArrayList<>();
+
+        Bundle bundle = officerAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
+
+        Embed bundleEmbed = new Embed()
+                .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
+                .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emoji.getVP().getFormatted(), true)
+                .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")
+                        .replaceAll("%timestamp%", "<t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>"), true)
+                .setImage(bundle.getDisplayIcon())
+                .removeFooter();
+        embedList.add(bundleEmbed.build());
+
+        for(Item item : currentBundle.getItems()) {
+            Embed itemEmbed = new Embed()
+                    .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
+                    .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emoji.getVP().getFormatted(), true)
+                    .removeFooter();
+            switch (item.getType()) {
+                case "buddy" -> {
+                    Buddy buddy = officerAPI.getBuddy(item.getUuid(), language.getLanguageCode());
+                    itemEmbed.setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
+                            .setThumbnail(buddy.getDisplayIcon());
+                }
+                case "player_card" -> {
+                    Playercard playercard = officerAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
+                    itemEmbed.setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
+                            .setThumbnail(playercard.getLargeArt())
+                            .setImage(playercard.getWideArt());
+                }
+                case "spray" -> {
+                    Spray spray = officerAPI.getSpray(item.getUuid(), language.getLanguageCode());
+                    itemEmbed.setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
+                            .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
+                }
+                case "skin_level" -> {
+                    Skin skin = officerAPI.getSkin(item.getUuid(), language.getLanguageCode());
+                    itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
+                            .setImage(skin.getDisplayIcon());
+                }
+                default -> itemEmbed.setTitle(language.getEmbedTitlePrefix() + item.getName())
+                        .setImage(item.getImage());
+            }
+            // Adding the item embed
+            embedList.add(itemEmbed.build());
+        }
+        return embedList;
+    }
 
     public static MessageEmbed getStats(Guild guild, LinkedAccount linkedAccount, RiotAccount riotAccount) throws HttpErrorException {
         Language language = LanguageManager.getLanguage(guild);

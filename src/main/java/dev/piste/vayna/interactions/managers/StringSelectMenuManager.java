@@ -2,6 +2,7 @@ package dev.piste.vayna.interactions.managers;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.interactions.selectmenus.string.BundleSelectMenu;
 import dev.piste.vayna.interactions.selectmenus.string.HistorySelectMenu;
 import dev.piste.vayna.interactions.selectmenus.string.LanguageSelectMenu;
 import dev.piste.vayna.interactions.selectmenus.string.SettingsSelectMenu;
@@ -25,6 +26,7 @@ public class StringSelectMenuManager {
         addStringSelectMenu(new SettingsSelectMenu());
         addStringSelectMenu(new LanguageSelectMenu());
         addStringSelectMenu(new HistorySelectMenu());
+        addStringSelectMenu(new BundleSelectMenu());
     }
 
     private static void addStringSelectMenu(StringSelectMenu stringSelectMenu) {
@@ -42,9 +44,10 @@ public class StringSelectMenuManager {
             ).queue();
             if(Bot.isDebug()) return;
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
-            embed.addField("URL", e.getMessage().split(" ")[1], false)
-                    .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
-                    .setDescription(" ");
+                embed.addField("URL", e.getUri(), false)
+                        .addField("Request Method", e.getRequestMethod(), false)
+                        .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
+                        .setDescription(" ");
             logChannel.sendMessageEmbeds(embed.build()).queue();
         }
         });

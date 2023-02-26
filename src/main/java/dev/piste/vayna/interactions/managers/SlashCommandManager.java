@@ -52,7 +52,7 @@ public class SlashCommandManager {
             }
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             Embed embed = new Embed()
-                    .setTitle("Register slashCommand HTTP error")
+                    .setTitle("Register command HTTP error")
                     .setDescription(e.getMessage());
             logChannel.sendMessageEmbeds(embed.build()).queue();
         }
@@ -72,9 +72,9 @@ public class SlashCommandManager {
                 event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
                         Buttons.getSupportButton(event.getGuild())
                 ).queue();
-                if(Bot.isDebug()) return;
                 TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
-                embed.addField("URL", e.getMessage().split(" ")[1], false)
+                embed.addField("URL", e.getUri(), false)
+                        .addField("Request Method", e.getRequestMethod(), false)
                         .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                         .setDescription(" ");
                 logChannel.sendMessageEmbeds(embed.build()).queue();

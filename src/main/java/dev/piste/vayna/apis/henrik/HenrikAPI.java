@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class HenrikAPI {
 
     private final String BASE_URL = "https://api.henrikdev.xyz/valorant";
-    private final RestClient restClient = new RestClient(BASE_URL).appendHeader("Authorization", "Bearer " + ConfigManager.getTokensConfig().getApiKeys().getHenrik());
+    private final RestClient restClient = new RestClient(BASE_URL).appendHeader("Authorization", ConfigManager.getTokensConfig().getApiKeys().getHenrik());
 
     public HenrikAccount getAccount(String gameName, String tagLine) throws HttpErrorException {
         String encodedGameName = URLEncoder.encode(gameName, StandardCharsets.UTF_8);
