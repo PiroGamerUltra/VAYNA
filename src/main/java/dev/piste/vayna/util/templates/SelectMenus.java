@@ -1,19 +1,17 @@
 package dev.piste.vayna.util.templates;
 
-import dev.piste.vayna.apis.StatusCodeException;
-import dev.piste.vayna.apis.riot.InvalidRegionException;
+import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.ActiveShard;
 import dev.piste.vayna.apis.riot.gson.Match;
-import dev.piste.vayna.apis.riot.gson.Matchlist;
+import dev.piste.vayna.apis.riot.gson.MatchListEntry;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.apis.riot.gson.match.Player;
-import dev.piste.vayna.apis.riot.gson.matchlist.ListedMatch;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.Agent;
 import dev.piste.vayna.apis.officer.gson.Map;
 import dev.piste.vayna.apis.officer.gson.Queue;
-import dev.piste.vayna.commands.selectmenu.HistorySelectMenu;
+import dev.piste.vayna.interactions.selectmenus.string.HistorySelectMenu;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -24,7 +22,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import java.util.ArrayList;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class SelectMenus {
 
@@ -37,20 +35,23 @@ public class SelectMenus {
                 .build();
     }
 
-    public static StringSelectMenu getHistorySelectMenu(Guild guild, RiotAccount riotAccount) throws StatusCodeException, InvalidRegionException {
+    public static StringSelectMenu getHistorySelectMenu(Guild guild, RiotAccount riotAccount) throws HttpErrorException {
         Language language = LanguageManager.getLanguage(guild);
 
-        ActiveShard activeShard = RiotAPI.getActiveShard(riotAccount.getPuuid());
-        Matchlist matchlist = RiotAPI.getMatchlist(riotAccount.getPuuid(), activeShard.getActiveShard());
+        OfficerAPI officerAPI = new OfficerAPI();
+        RiotAPI riotAPI = new RiotAPI();
 
-        ArrayList<Map> maps = OfficerAPI.getMaps(language.getLanguageCode());
-        ArrayList<Agent> agents = OfficerAPI.getAgents(language.getLanguageCode());
-        ArrayList<Queue> queues = OfficerAPI.getQueues(language.getLanguageCode());
+        String region = riotAPI.getRegion(riotAccount.getPuuid());
+        ArrayList<MatchListEntry> matchList = riotAPI.getMatchList(riotAccount.getPuuid(), region);
+
+        ArrayList<Map> maps = officerAPI.getMaps(language.getLanguageCode());
+        ArrayList<Agent> agents = officerAPI.getAgents(language.getLanguageCode());
+        ArrayList<Queue> queues = officerAPI.getQueues(language.getLanguageCode());
 
         ArrayList<SelectOption> selectOptions = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            ListedMatch listedMatch = matchlist.getHistory().get(i);
-            Match match = RiotAPI.getMatch(listedMatch.getMatchId(), activeShard.getActiveShard());
+            MatchListEntry matchListEntry = matchList.get(i);
+            Match match = riotAPI.getMatch(matchListEntry.getMatchId(), region);
             Player player = null;
             for(Player foundPlayer : match.getPlayers()) {
                 if(foundPlayer.getPuuid().equals(riotAccount.getPuuid())) player = foundPlayer;
@@ -74,9 +75,9 @@ public class SelectMenus {
                 }
             }
 
-            selectOptions.add(SelectOption.of(queue.getDropdownText(), match.getMatchInfo().getMatchId() + ";" + activeShard.getActiveShard())
+            selectOptions.add(SelectOption.of(queue.getDropdownText(), match.getMatchInfo().getMatchId() + ";" + region)
                     .withDescription(map.getDisplayName() + " (" + agent.getDisplayName() + ")")
-                    .withEmoji(dev.piste.vayna.util.Emoji.getQueue(queue.getUuid())
+                    .withEmoji(Emojis.getQueue(queue.getUuid())
                     ));
         }
 

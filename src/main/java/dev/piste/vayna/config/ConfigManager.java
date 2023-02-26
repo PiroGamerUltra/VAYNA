@@ -5,6 +5,9 @@ import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class ConfigManager {
 
     private static SettingsConfig settingsConfig;

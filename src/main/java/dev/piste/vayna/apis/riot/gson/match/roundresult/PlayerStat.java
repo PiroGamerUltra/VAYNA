@@ -8,9 +8,8 @@ import dev.piste.vayna.apis.riot.gson.match.roundresult.playerstat.Kill;
 import java.util.ArrayList;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
-// GSON CLASS
 @SuppressWarnings("ALL")
 public class PlayerStat {
 

@@ -1,11 +1,11 @@
 package dev.piste.vayna.util.templates;
 
-import dev.piste.vayna.apis.StatusCodeException;
+import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.commands.slash.ConnectionSlashCommand;
-import dev.piste.vayna.commands.manager.SlashCommandManager;
+import dev.piste.vayna.interactions.commands.slash.ConnectionSlashCommand;
+import dev.piste.vayna.interactions.managers.SlashCommandManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emoji;
+import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,14 +13,13 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class ErrorMessages {
 
-    public static Embed getStatusCodeErrorEmbed(Guild guild, User user, StatusCodeException exception) {
-        String[] message = exception.getMessage().split(" ");
+    public static Embed getStatusCodeErrorEmbed(Guild guild, User user, HttpErrorException exception) {
         Language language = LanguageManager.getLanguage(guild);
-        int statusCode = Integer.parseInt(message[0]);
+        int statusCode = exception.getStatusCode();
 
         Embed embed = new Embed()
                 .setColor(255, 0, 0)
@@ -55,7 +54,7 @@ public class ErrorMessages {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-region-embed-title"))
                 .setDescription(language.getTranslation("command-stats-error-region-embed-description")
-                        .replaceAll("%emoji:riotgames%", Emoji.getRiotGames().getFormatted())
+                        .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
                         .replaceAll("%riotid%", riotAccount.getRiotId()));
         return embed.build();
     }

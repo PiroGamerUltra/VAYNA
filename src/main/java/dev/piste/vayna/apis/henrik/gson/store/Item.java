@@ -1,6 +1,8 @@
 package dev.piste.vayna.apis.henrik.gson.store;
 
-// GSON CLASS
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 @SuppressWarnings("ALL")
 public class Item {
 

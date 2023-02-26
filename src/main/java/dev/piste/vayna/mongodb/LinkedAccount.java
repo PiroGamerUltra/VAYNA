@@ -10,6 +10,9 @@ import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class LinkedAccount {
 
     private static final String DISCORD_USER_ID_FIELD = "discordUserId";

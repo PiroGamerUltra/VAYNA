@@ -1,9 +1,8 @@
 package dev.piste.vayna.apis.riot.gson.match.player;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
-// GSON CLASS
 @SuppressWarnings("ALL")
 public class AbilityCasts {
 

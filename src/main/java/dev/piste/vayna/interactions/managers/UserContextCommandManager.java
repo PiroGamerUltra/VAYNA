@@ -1,0 +1,52 @@
+package dev.piste.vayna.interactions.managers;
+
+import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.interactions.commands.context.StatsContextCommand;
+import dev.piste.vayna.util.Embed;
+import dev.piste.vayna.util.templates.Buttons;
+import dev.piste.vayna.util.templates.ErrorMessages;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+
+import java.util.HashMap;
+
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
+public class UserContextCommandManager {
+
+    private static final HashMap<String, UserContextCommand> userContextCommands = new HashMap<>();
+
+    public static void registerStringSelectMenus() {
+        addUserContextCommand(new StatsContextCommand());
+    }
+
+    private static void addUserContextCommand(UserContextCommand userContextCommand) {
+        userContextCommands.put(userContextCommand.getName(), userContextCommand);
+        userContextCommand.register();
+    }
+
+    public static void perform(UserContextInteractionEvent event) {
+        Thread thread = new Thread(() -> {
+            try {
+                userContextCommands.get(event.getName()).perform(event);
+            } catch (HttpErrorException e) {
+                Embed embed = ErrorMessages.getStatusCodeErrorEmbed(event.getGuild(), event.getUser(), e);
+                event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
+                        Buttons.getSupportButton(event.getGuild())
+                ).queue();
+                if(Bot.isDebug()) return;
+                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
+                embed.addField("URL", e.getUri(), false)
+                        .addField("Request Method", e.getRequestMethod(), false)
+                        .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
+                        .setDescription(" ");
+                logChannel.sendMessageEmbeds(embed.build()).queue();
+            }
+        });
+        thread.start();
+    }
+
+}

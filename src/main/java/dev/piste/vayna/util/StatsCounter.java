@@ -7,6 +7,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import org.discordbots.api.client.DiscordBotListAPI;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class StatsCounter {
 
     private static long connectionsCounterRateLimitTimestampMillis = 0;

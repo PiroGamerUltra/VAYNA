@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
 public class LanguageManager {
 

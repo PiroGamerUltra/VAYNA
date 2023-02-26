@@ -2,7 +2,7 @@ package dev.piste.vayna;
 
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.listener.*;
-import dev.piste.vayna.commands.manager.*;
+import dev.piste.vayna.interactions.managers.*;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.ConsoleColor;
 import dev.piste.vayna.util.translations.LanguageManager;
@@ -18,6 +18,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * @author Piste | https://github.com/PisteDev
+ */
 public class Bot {
 
     private static JDA jda;

@@ -5,9 +5,8 @@ import dev.piste.vayna.apis.riot.gson.match.*;
 import java.util.ArrayList;
 
 /**
- * @author Piste | https://github.com/zPiste
+ * @author Piste | https://github.com/PisteDev
  */
-// GSON CLASS
 @SuppressWarnings("ALL")
 public class Match {
 
