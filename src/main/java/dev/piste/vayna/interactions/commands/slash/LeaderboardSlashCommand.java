@@ -49,7 +49,9 @@ public class LeaderboardSlashCommand implements SlashCommand {
                 try {
                     RiotAccount riotAccount = riotAPI.getAccount(linkedAccount.getRiotPuuid());
                     HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
-                    eloMap.put(member.getUser(), henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion()));
+                    MMR mmr = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion());
+                    if(mmr.getRank().getElo() == 0) continue;
+                    eloMap.put(member.getUser(), mmr);
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 429) throw e;
                 }
