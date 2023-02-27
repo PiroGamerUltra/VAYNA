@@ -1,6 +1,18 @@
+### Logs ###
+/logs/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Other ###
 /target/
 /src/main/resources/
 /src/test/
-/.idea/
+
+### Configuration ###
 *.json
-/.mvn/
+*.yml
+*.properties
