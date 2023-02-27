@@ -3,7 +3,7 @@ package dev.piste.vayna.interactions.commands.context;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
 import dev.piste.vayna.util.templates.MessageEmbeds;
@@ -25,20 +25,20 @@ public class StatsContextCommand implements UserContextCommand {
         event.deferReply().queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        LinkedAccount linkedAccount = new LinkedAccount(event.getTarget().getIdLong());
-        if(!linkedAccount.isExisting()) {
-            if (linkedAccount.getDiscordUserId() == event.getUser().getIdLong()) {
+        RsoConnection rsoConnection = new RsoConnection(event.getTarget().getIdLong());
+        if(!rsoConnection.isExisting()) {
+            if (rsoConnection.getDiscordUserId() == event.getUser().getIdLong()) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();
             } else {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention())).setActionRow(
+                event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsMention())).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();
             }
             return;
         } else {
-            if(!linkedAccount.isPubliclyVisible() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
+            if(!rsoConnection.isPubliclyVisible() && (rsoConnection.getDiscordUserId() != event.getUser().getIdLong())) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();
@@ -46,10 +46,10 @@ public class StatsContextCommand implements UserContextCommand {
             }
         }
 
-        RiotAccount riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+        RiotAccount riotAccount = new RiotAPI().getAccount(rsoConnection.getRiotPuuid());
 
         try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(LanguageManager.getLanguage(event.getGuild()), linkedAccount, riotAccount)).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(LanguageManager.getLanguage(event.getGuild()), rsoConnection, riotAccount)).queue();
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(

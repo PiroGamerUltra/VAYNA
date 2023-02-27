@@ -28,7 +28,7 @@ public class LanguageManager {
             return languageList.get("en-US");
         }
         GuildSetting guildSetting = new GuildSetting(guild.getIdLong());
-        return languageList.get(guildSetting.getLanguage());
+        return languageList.get(guildSetting.getLanguageCode());
     }
 
     public static Language getLanguage() {

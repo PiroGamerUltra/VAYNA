@@ -16,19 +16,19 @@ public class GuildSetting {
 
     private static final MongoCollection<Document> guildSettingsCollection = Mongo.getGuildSettingsCollection();
     private static final String GUILD_ID_FIELD = "guildId";
-    private static final String LANGUAGE_FIELD = "language";
+    private static final String LANGUAGE_CODE_FIELD = "languageCode";
 
     private final long guildId;
-    private String language;
+    private String languageCode;
 
     public GuildSetting(long guildId) {
         this.guildId = guildId;
         try (MongoCursor<Document> cursor = guildSettingsCollection.find(eq(GUILD_ID_FIELD, guildId)).iterator()) {
             if (cursor.hasNext()) {
                 Document guildSettingsDocument = cursor.next();
-                language = guildSettingsDocument.getString(LANGUAGE_FIELD);
+                languageCode = guildSettingsDocument.getString(LANGUAGE_CODE_FIELD);
             } else {
-                language = "en-US";
+                languageCode = "en-US";
                 insert();
             }
         } catch (MongoException e) {
@@ -36,23 +36,23 @@ public class GuildSetting {
         }
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLanguageCode() {
+        return languageCode;
     }
 
-    public GuildSetting setLanguage(String language) {
-        this.language = language;
+    public GuildSetting setLanguage(String languageCode) {
+        this.languageCode = languageCode;
         return this;
     }
 
     public void update() {
-        guildSettingsCollection.updateOne(eq(GUILD_ID_FIELD, guildId), set(LANGUAGE_FIELD, language), new UpdateOptions().upsert(true));
+        guildSettingsCollection.updateOne(eq(GUILD_ID_FIELD, guildId), set(LANGUAGE_CODE_FIELD, languageCode), new UpdateOptions().upsert(true));
     }
 
     private void insert() {
         Document newAuthKeyDocument = new Document();
         newAuthKeyDocument.put(GUILD_ID_FIELD, guildId);
-        newAuthKeyDocument.put(LANGUAGE_FIELD, language);
+        newAuthKeyDocument.put(LANGUAGE_CODE_FIELD, languageCode);
         guildSettingsCollection.insertOne(newAuthKeyDocument);
     }
 

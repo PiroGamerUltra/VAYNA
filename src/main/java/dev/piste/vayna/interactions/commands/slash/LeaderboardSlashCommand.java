@@ -9,7 +9,7 @@ import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
@@ -44,10 +44,10 @@ public class LeaderboardSlashCommand implements SlashCommand {
 
         // Collecting every connected Riot Games account in this server
         for(Member member : event.getGuild().getMembers()) {
-            LinkedAccount linkedAccount = new LinkedAccount(member.getUser().getIdLong());
-            if(linkedAccount.isExisting() && linkedAccount.isPubliclyVisible()) {
+            RsoConnection rsoConnection = new RsoConnection(member.getUser().getIdLong());
+            if(rsoConnection.isExisting() && rsoConnection.isPubliclyVisible()) {
                 try {
-                    RiotAccount riotAccount = riotAPI.getAccount(linkedAccount.getRiotPuuid());
+                    RiotAccount riotAccount = riotAPI.getAccount(rsoConnection.getRiotPuuid());
                     HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
                     MMR mmr = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion());
                     if(mmr.getRank().getElo() == 0) continue;

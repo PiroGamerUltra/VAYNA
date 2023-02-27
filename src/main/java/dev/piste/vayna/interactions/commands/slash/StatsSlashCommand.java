@@ -3,7 +3,7 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
@@ -30,22 +30,22 @@ public class StatsSlashCommand implements SlashCommand {
 
         Language language = LanguageManager.getLanguage(event.getGuild());
 
-        LinkedAccount linkedAccount = null;
+        RsoConnection rsoConnection = null;
         RiotAccount riotAccount = null;
         if(event.getSubcommandName() == null) return;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
-                linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-                if(linkedAccount.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+                rsoConnection = new RsoConnection(event.getUser().getIdLong());
+                if(rsoConnection.isExisting()) {
+                    riotAccount = new RiotAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats user <@user>
             case "user" -> {
-                linkedAccount = new LinkedAccount(event.getOption("user").getAsUser().getIdLong());
-                if(linkedAccount.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+                rsoConnection = new RsoConnection(event.getOption("user").getAsUser().getIdLong());
+                if(rsoConnection.isExisting()) {
+                    riotAccount = new RiotAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats riot-id <name> <tag>
@@ -54,7 +54,7 @@ public class StatsSlashCommand implements SlashCommand {
                 String tagLine = event.getOption("tag").getAsString();
                 try {
                     riotAccount = new RiotAPI().getAccount(gameName, tagLine);
-                    linkedAccount = new LinkedAccount(riotAccount.getPuuid());
+                    rsoConnection = new RsoConnection(riotAccount.getPuuid());
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                         Embed embed = new Embed()
@@ -75,21 +75,21 @@ public class StatsSlashCommand implements SlashCommand {
             }
         }
 
-        if(!linkedAccount.isExisting()) {
-            if(linkedAccount.getDiscordUserId() != 0) {
-                if (linkedAccount.getDiscordUserId() == event.getUser().getIdLong()) {
+        if(!rsoConnection.isExisting()) {
+            if(rsoConnection.getDiscordUserId() != 0) {
+                if (rsoConnection.getDiscordUserId() == event.getUser().getIdLong()) {
                     event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
                             Buttons.getSupportButton(language)
                     ).queue();
                 } else {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention())).setActionRow(
+                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsMention())).setActionRow(
                             Buttons.getSupportButton(language)
                     ).queue();
                 }
                 return;
             }
         } else {
-            if(!linkedAccount.isPubliclyVisible() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
+            if(!rsoConnection.isPubliclyVisible() && (rsoConnection.getDiscordUserId() != event.getUser().getIdLong())) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();
@@ -98,7 +98,7 @@ public class StatsSlashCommand implements SlashCommand {
         }
 
         try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, linkedAccount, riotAccount)).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).queue();
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(

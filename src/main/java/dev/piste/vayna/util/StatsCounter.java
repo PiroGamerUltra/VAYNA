@@ -19,7 +19,7 @@ public class StatsCounter {
         if(Bot.isDebug()) return;
         if(connectionsCounterRateLimitTimestampMillis == 0 || connectionsCounterRateLimitTimestampMillis<=System.currentTimeMillis()) {
             Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
-            String connectionCountChannelName = ConfigManager.getSettingsConfig().getStatsChannel().getConnections().getName().replace("%count%", Mongo.getLinkedAccountCollection().countDocuments() + "");
+            String connectionCountChannelName = ConfigManager.getSettingsConfig().getStatsChannel().getConnections().getName().replace("%count%", Mongo.getRsoConnectionsCollection().countDocuments() + "");
             VoiceChannel connectionCountChannel = supportGuild.getVoiceChannelById(ConfigManager.getSettingsConfig().getStatsChannel().getConnections().getId());
             if(connectionCountChannel.getName().equals(connectionCountChannelName)) return;
             connectionCountChannel.getManager().setName(connectionCountChannelName).queue();
