@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.officer.gson.agent;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Role {
 
     private String displayName;

@@ -6,7 +6,7 @@ import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class MMR {
 
     private String name;

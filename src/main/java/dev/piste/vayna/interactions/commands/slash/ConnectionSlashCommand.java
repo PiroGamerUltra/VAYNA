@@ -3,7 +3,6 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.util.StatsCounter;
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.translations.Language;

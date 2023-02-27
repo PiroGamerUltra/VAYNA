@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.riot.gson.match.roundresult;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class PlayerLocation {
 
     private String puuid;

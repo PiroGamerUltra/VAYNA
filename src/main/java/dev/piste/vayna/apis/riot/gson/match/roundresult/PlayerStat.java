@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class PlayerStat {
 
     private String puuid;

@@ -2,7 +2,6 @@ package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.apis.officer.gson.Weapon;
 import dev.piste.vayna.apis.officer.gson.weapon.DamageRanges;
 import dev.piste.vayna.util.Embed;

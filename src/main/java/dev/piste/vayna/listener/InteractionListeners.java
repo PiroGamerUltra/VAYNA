@@ -3,13 +3,14 @@ package dev.piste.vayna.listener;
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.interactions.managers.*;
+import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.MyLogger;
+import dev.piste.vayna.util.Logger;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
@@ -28,72 +29,44 @@ public class InteractionListeners extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        Thread thread = new Thread(() -> {
-            try {
-                SlashCommandManager.perform(event);
-            } catch (Exception e) {
-                handleException(LanguageManager.getLanguage(event.getGuild()), event.getHook(), e);
-            }
-        });
-        thread.setName("SlashCommandInteractionEvent");
-        thread.start();
+        performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
     }
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        Thread thread = new Thread(() -> {
-            try {
-                ButtonManager.perform(event);
-            } catch (Exception e) {
-                handleException(LanguageManager.getLanguage(event.getGuild()), event.getHook(), e);
-            }
-        });
-        thread.setName("ButtonInteractionEvent");
-        thread.start();
+        performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
     }
 
     @Override
     public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
-        Thread thread = new Thread(() -> {
-            try {
-                UserContextCommandManager.perform(event);
-            } catch (Exception e) {
-                handleException(LanguageManager.getLanguage(event.getGuild()), event.getHook(), e);
-            }
-        });
-        thread.setName("UserContextInteractionEvent");
-        thread.start();
+        performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
     }
 
     @Override
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
-        Thread thread = new Thread(() -> {
-            try {
-                StringSelectMenuManager.perform(event);
-            } catch (Exception e) {
-                handleException(LanguageManager.getLanguage(event.getGuild()), event.getHook(), e);
-            }
-        });
-        thread.setName("StringSelectInteractionEvent");
-        thread.start();
+        performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
     }
 
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
+        performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
+    }
+
+    private void performInteraction(Language language, GenericEvent event, InteractionHook interactionHook) {
         Thread thread = new Thread(() -> {
             try {
-                ModalManager.perform(event);
-            } catch (HttpErrorException e) {
-                handleException(LanguageManager.getLanguage(event.getGuild()), event.getHook(), e);
+                InteractionManager.perform(event);
+            } catch (Exception e) {
+                handleException(language, interactionHook, e);
             }
         });
-        thread.setName("ModalInteractionEvent");
+        thread.setName("InteractionEvent");
         thread.start();
     }
 
     private void handleException(Language language, InteractionHook interactionHook, Throwable throwable) {
         if(throwable instanceof HttpErrorException) {
-            new MyLogger(InteractionListeners.class).error("HTTP Error", throwable);
+            new Logger(InteractionListeners.class).error("HTTP Error", throwable);
             String statusCodeText = switch (((HttpErrorException) throwable).getStatusCode()) {
                 case 400 -> "Bad request";
                 case 401 -> "Unauthorized";
@@ -126,7 +99,7 @@ public class InteractionListeners extends ListenerAdapter {
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             logChannel.sendMessageEmbeds(logEmbed.build()).queue();
         } else {
-            new MyLogger(InteractionListeners.class).error("Unknown Error", throwable);
+            new Logger(InteractionListeners.class).error("Unknown Error", throwable);
             Embed embed = new Embed()
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-unknown-embed-title"))

@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.henrik.gson.mmr.rank.Images;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Rank {
 
     private int currenttier;

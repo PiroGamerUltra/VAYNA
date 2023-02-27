@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.riot.gson.match.player;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Stats {
 
     private int score;

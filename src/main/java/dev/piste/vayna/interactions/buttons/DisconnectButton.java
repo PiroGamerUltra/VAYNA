@@ -1,7 +1,6 @@
 package dev.piste.vayna.interactions.buttons;
 
 import dev.piste.vayna.util.StatsCounter;
-import dev.piste.vayna.interactions.managers.Button;
 import dev.piste.vayna.mongodb.AuthKey;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;

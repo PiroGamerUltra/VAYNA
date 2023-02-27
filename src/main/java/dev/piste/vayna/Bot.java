@@ -1,11 +1,10 @@
 package dev.piste.vayna;
 
 import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.listener.*;
-import dev.piste.vayna.interactions.managers.*;
 import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.util.ConsoleColor;
-import dev.piste.vayna.util.MyLogger;
+import dev.piste.vayna.util.Logger;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -30,10 +29,6 @@ public class Bot {
         return System.getProperty("os.name").startsWith("Windows");
     }
 
-    public static String getConsolePrefix(String name) {
-        return ConsoleColor.WHITE + "[" + ConsoleColor.PURPLE + name + ConsoleColor.WHITE + "]" + ConsoleColor.RESET + " ";
-    }
-
     public static void main(String[] args) {
         ConfigManager.loadConfigs();
         Mongo.connect();
@@ -49,41 +44,32 @@ public class Bot {
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .build();
 
-        // Registering all Managers
+        // Registering all interactions
+        InteractionManager.registerInteractions();
 
-        SlashCommandManager.registerCommands();
-        ButtonManager.registerButtons();
-        ModalManager.registerModals();
-        StringSelectMenuManager.registerStringSelectMenus();
-        UserContextCommandManager.registerStringSelectMenus();
-
-        new Bot().listenShutdown();
+        new Bot().listenReload();
 
         try {
             jda.awaitReady();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        new MyLogger(Bot.class).info("Started");
+        new Logger(Bot.class).info("Started");
     }
 
     public static JDA getJDA() {
         return jda;
     }
 
-    private void listenShutdown() {
+    private void listenReload() {
         new Thread(() -> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 while (reader.readLine() != null) {
-                    if (reader.readLine().equalsIgnoreCase("exit")) {
-                        if (jda != null) {
-                            jda.shutdown();
-                            System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.GREEN + "Stopped" + ConsoleColor.RESET);
-                        }
-                        reader.close();
-                    } else {
-                        System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.YELLOW + "Type 'exit' to stop the bot." + ConsoleColor.RESET);
+                    if (reader.readLine().equalsIgnoreCase("reload")) {
+                        LanguageManager.loadLanguages();
+                        ConfigManager.loadConfigs();
+                        new Logger(Bot.class).info("Reloaded");
                     }
                 }
             } catch (IOException ignored) {

@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.henrik.gson.store;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Item {
 
     private String uuid;

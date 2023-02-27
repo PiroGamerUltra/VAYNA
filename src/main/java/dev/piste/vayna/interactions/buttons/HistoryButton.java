@@ -3,7 +3,6 @@ package dev.piste.vayna.interactions.buttons;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.interactions.managers.Button;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;

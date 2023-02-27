@@ -9,7 +9,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.config.TokensConfig;
-import dev.piste.vayna.util.MyLogger;
+import dev.piste.vayna.util.Logger;
 import org.bson.Document;
 
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class Mongo {
         MongoClient mongoClient = MongoClients.create(settings);
         mongoDatabase = mongoClient.getDatabase("vayna");
 
-        new MyLogger(Mongo.class).info("Connected to MongoDB");
+        new Logger(Mongo.class).info("Connected to MongoDB");
     }
 
     public static MongoDatabase getMongoDatabase() {

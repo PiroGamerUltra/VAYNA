@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.officer.gson;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Gamemode {
 
     private String uuid;

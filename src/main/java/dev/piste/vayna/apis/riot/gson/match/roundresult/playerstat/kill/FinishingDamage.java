@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.riot.gson.match.roundresult.playerstat.kill;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class FinishingDamage {
 
     private String damageType;

@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.officer.gson.agent;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Ability {
 
     private String slot;

@@ -2,7 +2,6 @@ package dev.piste.vayna.interactions.modals;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.interactions.managers.Modal;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;

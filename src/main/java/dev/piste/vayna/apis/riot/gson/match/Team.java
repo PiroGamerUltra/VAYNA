@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.riot.gson.match;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Team {
 
     private String teamId;

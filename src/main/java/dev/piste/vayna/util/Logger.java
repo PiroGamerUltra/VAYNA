@@ -1,17 +1,16 @@
 package dev.piste.vayna.util;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
 @SuppressWarnings("unused")
-public class MyLogger {
+public class Logger {
 
-    private final Logger logger;
+    private final org.slf4j.Logger logger;
 
-    public MyLogger(Class<?> clazz) {
+    public Logger(Class<?> clazz) {
         logger = LoggerFactory.getLogger(clazz);
     }
 

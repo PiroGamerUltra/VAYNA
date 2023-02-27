@@ -1,4 +1,4 @@
-package dev.piste.vayna.interactions.managers;
+package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

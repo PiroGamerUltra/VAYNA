@@ -6,7 +6,7 @@ import dev.piste.vayna.apis.officer.gson.weapon.WeaponStats;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Weapon {
 
     private String uuid;

@@ -1,4 +1,4 @@
-package dev.piste.vayna.interactions.managers;
+package dev.piste.vayna.interactions.selectmenus.string;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;

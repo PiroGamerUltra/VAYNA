@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.henrik.gson.account;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Card {
 
     private String small;

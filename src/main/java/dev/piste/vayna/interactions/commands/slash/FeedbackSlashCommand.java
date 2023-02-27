@@ -1,6 +1,5 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.interactions.modals.FeedbackModal;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;

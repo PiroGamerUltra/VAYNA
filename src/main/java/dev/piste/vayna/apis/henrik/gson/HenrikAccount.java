@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.henrik.gson.account.Card;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class HenrikAccount {
 
     private String puuid;

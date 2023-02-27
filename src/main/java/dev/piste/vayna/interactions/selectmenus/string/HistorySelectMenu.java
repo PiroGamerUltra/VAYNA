@@ -6,7 +6,6 @@ import dev.piste.vayna.apis.riot.gson.Match;
 import dev.piste.vayna.apis.riot.gson.match.Player;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.Map;
-import dev.piste.vayna.interactions.managers.StringSelectMenu;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;

@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.officer.gson.competitivetier;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Tier {
 
     private int tier;

@@ -2,7 +2,6 @@ package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.apis.officer.gson.Map;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;

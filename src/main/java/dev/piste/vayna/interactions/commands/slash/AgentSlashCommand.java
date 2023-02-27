@@ -4,7 +4,6 @@ import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.Agent;
 import dev.piste.vayna.apis.officer.gson.agent.Ability;
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;

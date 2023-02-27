@@ -1,10 +1,8 @@
 package dev.piste.vayna.interactions.commands.context;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.interactions.managers.UserContextCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
@@ -12,6 +10,7 @@ import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class StatsContextCommand implements UserContextCommand {
         try {
             event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(LanguageManager.getLanguage(event.getGuild()), linkedAccount, riotAccount)).queue();
         } catch (HttpErrorException e) {
-            if(e.getStatusCode() == 404) {
+            if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();
@@ -63,12 +62,12 @@ public class StatsContextCommand implements UserContextCommand {
     }
 
     @Override
-    public String getName() {
-        return "Stats";
+    public CommandData getCommandData() {
+        return Commands.user(getName());
     }
 
     @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(Commands.user(getName())).queue();
+    public String getName() {
+        return "Stats";
     }
 }

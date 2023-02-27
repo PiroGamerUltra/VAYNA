@@ -3,7 +3,7 @@ package dev.piste.vayna.apis.henrik.gson.mmr;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class HighestRank {
 
     private String patched_tier;

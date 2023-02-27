@@ -5,7 +5,7 @@ import dev.piste.vayna.apis.riot.gson.match.player.Stats;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class Player {
 
     private String puuid;

@@ -5,7 +5,6 @@ import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.Bundle;
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.interactions.selectmenus.string.BundleSelectMenu;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.templates.MessageEmbeds;
