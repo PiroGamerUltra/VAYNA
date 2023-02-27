@@ -2,6 +2,7 @@ package dev.piste.vayna.util.translations;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import dev.piste.vayna.Bot;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,7 +17,7 @@ public class Language {
 
     public Language(String languageCode) {
         try {
-            translations = new Gson().fromJson(new FileReader("translations/" + languageCode + ".json"), new TypeToken<HashMap<String, String>>(){}.getType());
+            translations = new Gson().fromJson(new FileReader(Bot.isDebug() ? "C:/Users/nilsr/Development/VAYNA/DiscordBot/translations/" + languageCode + ".json" : "translations/" + languageCode + ".json"), new TypeToken<HashMap<String, String>>(){}.getType());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

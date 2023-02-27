@@ -116,7 +116,7 @@ public class InteractionManager {
             slashCommands.get(((SlashCommandInteractionEvent) event).getName()).perform((SlashCommandInteractionEvent) event);
         } else if(event instanceof ButtonInteractionEvent) {
             String buttonId = ((ButtonInteractionEvent) event).getButton().getId().split(";")[0];
-            String[] args = ((ButtonInteractionEvent) event).getButton().getId().substring(buttonId.length()).split(";");
+            String[] args = ((ButtonInteractionEvent) event).getButton().getId().contains(";") ? ((ButtonInteractionEvent) event).getButton().getId().substring(buttonId.length()+1).split(";") : new String[0];
             buttons.get(buttonId).perform((ButtonInteractionEvent) event, args);
         } else if(event instanceof ModalInteractionEvent) {
             modals.get(((ModalInteractionEvent) event).getModalId()).perform((ModalInteractionEvent) event);

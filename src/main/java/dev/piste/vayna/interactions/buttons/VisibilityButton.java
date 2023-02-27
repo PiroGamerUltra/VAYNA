@@ -27,9 +27,9 @@ public class VisibilityButton implements Button {
             ).queue();
         } else {
             linkedAccount.setVisibleToPublic(args[0].equalsIgnoreCase("public")).update();
-            event.editMessageEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+            event.editMessageEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isPubliclyVisible())).setActionRow(
                     Buttons.getDisconnectButton(language),
-                    Buttons.getVisibilityButton(language, linkedAccount.isVisibleToPublic())
+                    Buttons.getVisibilityButton(language, linkedAccount.isPubliclyVisible())
             ).queue();
         }
     }

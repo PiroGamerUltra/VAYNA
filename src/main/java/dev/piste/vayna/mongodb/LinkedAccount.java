@@ -88,7 +88,7 @@ public class LinkedAccount {
         return riotPuuid;
     }
 
-    public boolean isVisibleToPublic() {
+    public boolean isPubliclyVisible() {
         return publiclyVisible;
     }
 

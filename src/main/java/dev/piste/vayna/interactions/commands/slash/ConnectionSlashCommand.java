@@ -31,9 +31,9 @@ public class ConnectionSlashCommand implements SlashCommand {
                     Buttons.getConnectButton(language, new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isPubliclyVisible())).setActionRow(
                     Buttons.getDisconnectButton(language),
-                    Buttons.getVisibilityButton(language, linkedAccount.isVisibleToPublic())
+                    Buttons.getVisibilityButton(language, linkedAccount.isPubliclyVisible())
             ).queue();
         }
 

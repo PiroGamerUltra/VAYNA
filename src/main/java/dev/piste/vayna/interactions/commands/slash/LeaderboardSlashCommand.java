@@ -45,7 +45,7 @@ public class LeaderboardSlashCommand implements SlashCommand {
         // Collecting every connected Riot Games account in this server
         for(Member member : event.getGuild().getMembers()) {
             LinkedAccount linkedAccount = new LinkedAccount(member.getUser().getIdLong());
-            if(linkedAccount.isExisting() && linkedAccount.isVisibleToPublic()) {
+            if(linkedAccount.isExisting() && linkedAccount.isPubliclyVisible()) {
                 try {
                     RiotAccount riotAccount = riotAPI.getAccount(linkedAccount.getRiotPuuid());
                     HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());

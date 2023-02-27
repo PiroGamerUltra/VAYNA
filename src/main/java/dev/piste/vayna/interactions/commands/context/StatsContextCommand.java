@@ -38,7 +38,7 @@ public class StatsContextCommand implements UserContextCommand {
             }
             return;
         } else {
-            if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
+            if(!linkedAccount.isPubliclyVisible() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
                         Buttons.getSupportButton(language)
                 ).queue();

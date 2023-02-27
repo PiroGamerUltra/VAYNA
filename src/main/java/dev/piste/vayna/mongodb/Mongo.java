@@ -26,14 +26,13 @@ public class Mongo {
         TokensConfig.MongoCredentials mongoCredentials = ConfigManager.getTokensConfig().getMongoCreds();
 
         MongoCredential credential = MongoCredential.createCredential(mongoCredentials.getUsername(), mongoCredentials.getAuthDb(), mongoCredentials.getPassword().toCharArray());
-        MongoClientSettings settings =
-                MongoClientSettings.builder().credential(credential).applyToClusterSettings(builder ->
+        MongoClientSettings settings = MongoClientSettings.builder().credential(credential).applyToClusterSettings(builder ->
                         builder.hosts(Collections.singletonList(new ServerAddress(mongoCredentials.getHost(), mongoCredentials.getPort())))).build();
 
         MongoClient mongoClient = MongoClients.create(settings);
         mongoDatabase = mongoClient.getDatabase("vayna");
 
-        new Logger(Mongo.class).info("Connected to MongoDB");
+        new Logger(Mongo.class).info("Connected");
     }
 
     public static MongoDatabase getMongoDatabase() {
