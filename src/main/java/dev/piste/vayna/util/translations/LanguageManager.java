@@ -11,9 +11,10 @@ import java.util.HashMap;
  */
 public class LanguageManager {
 
-    private static final HashMap<String, Language> languageList = new HashMap<>();
+    private static HashMap<String, Language> languageList;
 
     public static void loadLanguages() {
+        languageList = new HashMap<>();
         loadLanguage("en-US");
         loadLanguage("de-DE");
     }
