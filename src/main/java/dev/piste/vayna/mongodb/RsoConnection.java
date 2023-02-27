@@ -8,37 +8,43 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.util.Date;
+
 import static com.mongodb.client.model.Filters.eq;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class LinkedAccount {
+public class RsoConnection {
 
     private static final String DISCORD_USER_ID_FIELD = "discordUserId";
     private static final String RIOT_PUUID_FIELD = "riotPuuid";
     private static final String PUBLICLY_VISIBLE_FIELD = "publiclyVisible";
-    private static final MongoCollection<Document> linkedAccountsCollection = Mongo.getLinkedAccountCollection();
+    private static final String CREATION_DATE_FIELD = "creationDate";
+    private static final MongoCollection<Document> collection = Mongo.getRsoConnectionsCollection();
 
-    private final Document linkedAccountDocument;
+    private final Document document;
     private final boolean isExisting;
     private final long discordUserId;
     private final String riotPuuid;
     private boolean publiclyVisible;
+    private final Date creationDate;
 
 
-    public LinkedAccount(long discordUserId) {
+    public RsoConnection(long discordUserId) {
         this.discordUserId = discordUserId;
-        try (MongoCursor<Document> cursor = linkedAccountsCollection.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
+        try (MongoCursor<Document> cursor = collection.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
             if (cursor.hasNext()) {
-                linkedAccountDocument = cursor.next();
-                riotPuuid = linkedAccountDocument.getString(RIOT_PUUID_FIELD);
-                publiclyVisible = linkedAccountDocument.getBoolean(PUBLICLY_VISIBLE_FIELD);
+                document = cursor.next();
+                riotPuuid = document.getString(RIOT_PUUID_FIELD);
+                publiclyVisible = document.getBoolean(PUBLICLY_VISIBLE_FIELD);
+                creationDate = document.getDate(CREATION_DATE_FIELD);
                 isExisting = true;
             } else {
-                linkedAccountDocument = null;
+                document = null;
                 riotPuuid = null;
                 publiclyVisible = false;
+                creationDate = null;
                 isExisting = false;
             }
         } catch (MongoException e) {
@@ -46,18 +52,20 @@ public class LinkedAccount {
         }
     }
 
-    public LinkedAccount(String riotPuuid) {
+    public RsoConnection(String riotPuuid) {
         this.riotPuuid = riotPuuid;
-        try (MongoCursor<Document> cursor = linkedAccountsCollection.find(eq(RIOT_PUUID_FIELD, riotPuuid)).iterator()) {
+        try (MongoCursor<Document> cursor = collection.find(eq(RIOT_PUUID_FIELD, riotPuuid)).iterator()) {
             if (cursor.hasNext()) {
-                linkedAccountDocument = cursor.next();
-                discordUserId = linkedAccountDocument.getLong(DISCORD_USER_ID_FIELD);
-                publiclyVisible = linkedAccountDocument.getBoolean(PUBLICLY_VISIBLE_FIELD);
+                document = cursor.next();
+                discordUserId = document.getLong(DISCORD_USER_ID_FIELD);
+                publiclyVisible = document.getBoolean(PUBLICLY_VISIBLE_FIELD);
+                creationDate = document.getDate(CREATION_DATE_FIELD);
                 isExisting = true;
             } else {
-                linkedAccountDocument = null;
+                document = null;
                 discordUserId = 0L;
                 publiclyVisible = false;
+                creationDate = null;
                 isExisting = false;
             }
         } catch (MongoException e) {
@@ -74,9 +82,10 @@ public class LinkedAccount {
             Bson updates = Updates.combine(
                     Updates.set(PUBLICLY_VISIBLE_FIELD, publiclyVisible),
                     Updates.set(DISCORD_USER_ID_FIELD, discordUserId),
-                    Updates.set(RIOT_PUUID_FIELD, riotPuuid)
+                    Updates.set(RIOT_PUUID_FIELD, riotPuuid),
+                    Updates.set(CREATION_DATE_FIELD, creationDate)
             );
-            linkedAccountsCollection.updateOne(linkedAccountDocument, updates, new UpdateOptions().upsert(true));
+            collection.updateOne(document, updates, new UpdateOptions().upsert(true));
         }
     }
 
@@ -92,13 +101,13 @@ public class LinkedAccount {
         return publiclyVisible;
     }
 
-    public LinkedAccount setVisibleToPublic(boolean publiclyVisible) {
+    public RsoConnection setVisibleToPublic(boolean publiclyVisible) {
         this.publiclyVisible = publiclyVisible;
         return this;
     }
 
     public void delete() {
-        linkedAccountsCollection.deleteOne(linkedAccountDocument);
+        collection.deleteOne(document);
     }
 
 }

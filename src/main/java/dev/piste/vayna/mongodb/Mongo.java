@@ -39,12 +39,12 @@ public class Mongo {
         return mongoDatabase;
     }
 
-    public static MongoCollection<Document> getLinkedAccountCollection() {
-        return getMongoDatabase().getCollection("linkedAccounts");
+    public static MongoCollection<Document> getRsoConnectionsCollection() {
+        return getMongoDatabase().getCollection("rsoConnections");
     }
 
-    public static MongoCollection<Document> getAuthKeyCollection() {
-        return getMongoDatabase().getCollection("authKeys");
+    public static MongoCollection<Document> getRsoAuthKeysCollection() {
+        return getMongoDatabase().getCollection("rsoAuthKeys");
     }
 
     public static MongoCollection<Document> getGuildSettingsCollection() {

@@ -12,7 +12,7 @@ import dev.piste.vayna.apis.officer.gson.*;
 import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.translations.Language;
@@ -23,25 +23,25 @@ import net.dv8tion.jda.api.entities.User;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class MessageEmbeds {
 
-    public static MessageEmbed getNoConnectionEmbed(Language language, User user) {
+    public static MessageEmbed getNoConnectionEmbed(Language language, User user, Date expirationDate) {
         return new Embed()
-                .setColor(209, 54, 57)
                 .setAuthor(user.getName(), user.getAvatarUrl())
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-connection-none-embed-title"))
-                .setDescription(language.getTranslation("command-connection-none-embed-description"))
+                .setDescription(language.getTranslation("command-connection-none-embed-description")
+                        .replaceAll("%expirationDate%", "<t:" + Math.round((float) expirationDate.getTime() / 1000) + ":R>"))
                 .build();
     }
 
     public static MessageEmbed getPresentConnectionEmbed(Language language, User user, String riotId, boolean visibleToPublic) {
         return new Embed()
                 .setAuthor(user.getName(), user.getAvatarUrl())
-                .setColor(209, 54, 57)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-connection-present-embed-title"))
                 .setDescription(language.getTranslation("command-connection-present-embed-description"))
                 .addField(language.getTranslation("command-connection-present-embed-field-1-name"),
@@ -110,7 +110,7 @@ public class MessageEmbeds {
         return embedList;
     }
 
-    public static MessageEmbed getStatsEmbed(Language language, LinkedAccount linkedAccount, RiotAccount riotAccount) throws HttpErrorException, IOException, InterruptedException {
+    public static MessageEmbed getStatsEmbed(Language language, RsoConnection rsoConnection, RiotAccount riotAccount) throws HttpErrorException, IOException, InterruptedException {
         RiotAPI riotAPI = new RiotAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
 
@@ -125,9 +125,9 @@ public class MessageEmbeds {
                 .setDescription(language.getTranslation("command-stats-embed-description"))
                 .addField(language.getTranslation("command-stats-embed-field-1-name"), Emojis.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true)
                 .addField(language.getTranslation("command-stats-embed-field-2-name"), Emojis.getRegion(region).getFormatted() + " " + riotAPI.getRegionName(region), true);
-        if(linkedAccount.isExisting()) {
+        if(rsoConnection.isExisting()) {
             embed.addField(language.getTranslation("command-stats-embed-field-3-name"),
-                    Emojis.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsTag() + "`)", true);
+                    Emojis.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsTag() + "`)", true);
         }
 
         if(rank.getCurrentTierPatched() == null) {
