@@ -14,13 +14,15 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class WeaponSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
@@ -50,7 +52,7 @@ public class WeaponSlashCommand implements SlashCommand {
     }
 
     @Override
-    public CommandData getCommandData() throws HttpErrorException {
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Weapon name", true);
         for(Weapon weapon : new OfficerAPI().getWeapons("en-US")) {
             if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;

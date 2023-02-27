@@ -1,5 +1,6 @@
 package dev.piste.vayna.interactions.managers;
 
+import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.interactions.modals.FeedbackModal;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
@@ -20,9 +21,8 @@ public class ModalManager {
         modals.put(modal.getName(), modal);
     }
 
-    public static void perform(ModalInteractionEvent event) {
-        Thread thread = new Thread(() -> modals.get(event.getModalId()).perform(event));
-        thread.start();
+    public static void perform(ModalInteractionEvent event) throws HttpErrorException {
+        modals.get(event.getModalId()).perform(event);
     }
 
 }

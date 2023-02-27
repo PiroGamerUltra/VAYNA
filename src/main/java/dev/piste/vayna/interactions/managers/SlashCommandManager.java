@@ -2,15 +2,14 @@ package dev.piste.vayna.interactions.managers;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.interactions.commands.slash.*;
 import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.interactions.commands.slash.*;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ErrorMessages;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class SlashCommandManager {
         slashCommands.put(slashCommand.getName(), slashCommand);
         try {
             Bot.getJDA().upsertCommand(slashCommand.getCommandData()).queue();
-        } catch (HttpErrorException e) {
+        } catch (HttpErrorException | IOException | InterruptedException e) {
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             Embed embed = new Embed()
                     .setTitle("Register command HTTP error")
@@ -59,25 +58,8 @@ public class SlashCommandManager {
         return slashCommands.values();
     }
 
-    public static void perform(SlashCommandInteractionEvent event) {
-
-        Thread thread = new Thread(() -> {
-            try {
-                slashCommands.get(event.getName().toLowerCase()).perform(event);
-            } catch (HttpErrorException e) {
-                Embed embed = ErrorMessages.getStatusCodeErrorEmbed(event.getGuild(), event.getUser(), e);
-                event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-                TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
-                embed.addField("URL", e.getUri(), false)
-                        .addField("Request Method", e.getRequestMethod(), false)
-                        .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
-                        .setDescription(" ");
-                logChannel.sendMessageEmbeds(embed.build()).queue();
-            }
-        });
-        thread.start();
+    public static void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+        slashCommands.get(event.getName().toLowerCase()).perform(event);
     }
 
     public static Command getAsJdaCommand(SlashCommand slashCommand) {

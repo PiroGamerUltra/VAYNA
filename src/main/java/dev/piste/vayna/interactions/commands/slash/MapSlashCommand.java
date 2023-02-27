@@ -13,13 +13,15 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class MapSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
@@ -38,7 +40,7 @@ public class MapSlashCommand implements SlashCommand {
     }
 
     @Override
-    public CommandData getCommandData() throws HttpErrorException {
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Map name", true);
         for(Map map : new OfficerAPI().getMaps("en-US")) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;

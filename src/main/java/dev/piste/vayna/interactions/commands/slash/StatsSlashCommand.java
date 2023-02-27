@@ -18,13 +18,15 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class StatsSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
 
         Language language = LanguageManager.getLanguage(event.getGuild());
@@ -64,7 +66,7 @@ public class StatsSlashCommand implements SlashCommand {
                                         .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
                                         .replaceAll("%riotid%", gameName + "#" + tagLine));
                         event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                                Buttons.getSupportButton(event.getGuild())
+                                Buttons.getSupportButton(language)
                         ).queue();
                         return;
                     } else {
@@ -78,11 +80,11 @@ public class StatsSlashCommand implements SlashCommand {
             if(linkedAccount.getDiscordUserId() != 0) {
                 if (linkedAccount.getDiscordUserId() == event.getUser().getIdLong()) {
                     event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
-                            Buttons.getSupportButton(event.getGuild())
+                            Buttons.getSupportButton(language)
                     ).queue();
                 } else {
                     event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention())).setActionRow(
-                            Buttons.getSupportButton(event.getGuild())
+                            Buttons.getSupportButton(language)
                     ).queue();
                 }
                 return;
@@ -90,7 +92,7 @@ public class StatsSlashCommand implements SlashCommand {
         } else {
             if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
+                        Buttons.getSupportButton(language)
                 ).queue();
                 return;
             }
@@ -101,7 +103,7 @@ public class StatsSlashCommand implements SlashCommand {
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
+                        Buttons.getSupportButton(language)
                 ).queue();
             } else {
                 throw e;

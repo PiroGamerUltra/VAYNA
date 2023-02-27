@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +27,7 @@ public class StoreSlashCommand implements SlashCommand {
 
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 

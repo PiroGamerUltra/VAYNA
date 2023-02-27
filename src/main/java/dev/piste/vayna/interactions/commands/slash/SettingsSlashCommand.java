@@ -33,7 +33,7 @@ public class SettingsSlashCommand implements SlashCommand {
                     .setDescription(language.getTranslation("command-settings-error-perms-embed-description"))
                     .setColor(255, 0, 0);
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    Buttons.getSupportButton(event.getGuild())
+                    Buttons.getSupportButton(language)
             ).queue();
             return;
         }

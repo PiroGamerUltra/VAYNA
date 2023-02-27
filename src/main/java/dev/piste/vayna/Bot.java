@@ -5,6 +5,7 @@ import dev.piste.vayna.listener.*;
 import dev.piste.vayna.interactions.managers.*;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.ConsoleColor;
+import dev.piste.vayna.util.MyLogger;
 import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -63,7 +64,7 @@ public class Bot {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(getConsolePrefix("Discord") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
+        new MyLogger(Bot.class).info("Started");
     }
 
     public static JDA getJDA() {

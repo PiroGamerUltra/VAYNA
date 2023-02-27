@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
@@ -21,7 +23,7 @@ public class HistoryButton implements Button {
 
 
     @Override
-    public void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException {
+    public void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException, IOException, InterruptedException {
         MessageEmbed.AuthorInfo author = event.getMessage().getEmbeds().get(0).getAuthor();
         event.deferReply().queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
@@ -33,7 +35,7 @@ public class HistoryButton implements Button {
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
+                        Buttons.getSupportButton(language)
                 ).queue();
                 return;
             } else {

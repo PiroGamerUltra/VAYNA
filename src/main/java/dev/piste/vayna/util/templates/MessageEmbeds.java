@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class MessageEmbeds {
                 .build();
     }
 
-    public static ArrayList<MessageEmbed> getBundleEmbeds(Language language, CurrentBundle currentBundle) throws HttpErrorException {
+    public static ArrayList<MessageEmbed> getBundleEmbeds(Language language, CurrentBundle currentBundle) throws HttpErrorException, IOException, InterruptedException {
         OfficerAPI officerAPI = new OfficerAPI();
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
         Bundle bundle = officerAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
@@ -109,7 +110,7 @@ public class MessageEmbeds {
         return embedList;
     }
 
-    public static MessageEmbed getStatsEmbed(Language language, LinkedAccount linkedAccount, RiotAccount riotAccount) throws HttpErrorException {
+    public static MessageEmbed getStatsEmbed(Language language, LinkedAccount linkedAccount, RiotAccount riotAccount) throws HttpErrorException, IOException, InterruptedException {
         RiotAPI riotAPI = new RiotAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
 

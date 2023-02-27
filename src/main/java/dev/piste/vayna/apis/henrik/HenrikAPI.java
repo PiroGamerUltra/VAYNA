@@ -11,6 +11,7 @@ import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.MMR;
 import dev.piste.vayna.config.ConfigManager;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -23,19 +24,19 @@ public class HenrikAPI {
     private final String BASE_URL = "https://api.henrikdev.xyz/valorant";
     private final RestClient restClient = new RestClient(BASE_URL).appendHeader("Authorization", ConfigManager.getTokensConfig().getApiKeys().getHenrik());
 
-    public HenrikAccount getAccount(String gameName, String tagLine) throws HttpErrorException {
+    public HenrikAccount getAccount(String gameName, String tagLine) throws HttpErrorException, IOException, InterruptedException {
         String encodedGameName = URLEncoder.encode(gameName, StandardCharsets.UTF_8);
         String encodedTagLine = URLEncoder.encode(tagLine, StandardCharsets.UTF_8);
         JsonObject jsonObject = restClient.doGet(String.format("/v1/account/%s/%s?force=true", encodedGameName, encodedTagLine)).getAsJsonObject("data");
         return new Gson().fromJson(jsonObject, HenrikAccount.class);
     }
 
-    public ArrayList<CurrentBundle> getCurrentBundles() throws HttpErrorException {
+    public ArrayList<CurrentBundle> getCurrentBundles() throws HttpErrorException, IOException, InterruptedException {
         JsonArray jsonArray = restClient.doGet("/v2/store-featured").getAsJsonArray("data");
         return new Gson().fromJson(jsonArray, new TypeToken<ArrayList<CurrentBundle>>(){}.getType());
     }
 
-    public MMR getMmr(String puuid, String region) throws HttpErrorException {
+    public MMR getMmr(String puuid, String region) throws HttpErrorException, IOException, InterruptedException {
         JsonObject jsonObject = restClient.doGet(String.format("/v2/by-puuid/mmr/%s/%s", region, puuid)).getAsJsonObject("data");
         return new Gson().fromJson(jsonObject, MMR.class);
     }

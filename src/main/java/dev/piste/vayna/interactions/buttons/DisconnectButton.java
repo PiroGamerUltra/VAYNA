@@ -22,7 +22,7 @@ public class DisconnectButton implements Button {
 
         // Reply
         event.editMessageEmbeds(MessageEmbeds.getNoConnectionEmbed(language, event.getUser())).setActionRow(
-                Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
+                Buttons.getConnectButton(language, new AuthKey(event.getUser().getIdLong()).getAuthKey())
         ).queue();
 
         StatsCounter.countConnections();

@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +36,7 @@ public class SelectMenus {
                 .build();
     }
 
-    public static StringSelectMenu getHistorySelectMenu(Guild guild, RiotAccount riotAccount) throws HttpErrorException {
+    public static StringSelectMenu getHistorySelectMenu(Guild guild, RiotAccount riotAccount) throws HttpErrorException, IOException, InterruptedException {
         Language language = LanguageManager.getLanguage(guild);
 
         OfficerAPI officerAPI = new OfficerAPI();

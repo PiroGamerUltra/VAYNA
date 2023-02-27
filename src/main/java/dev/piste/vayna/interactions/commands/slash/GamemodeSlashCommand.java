@@ -14,13 +14,15 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class GamemodeSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
@@ -40,7 +42,7 @@ public class GamemodeSlashCommand implements SlashCommand {
     }
 
     @Override
-    public CommandData getCommandData() throws HttpErrorException {
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Gamemode name", true);
         for(Queue queue : new OfficerAPI().getQueues("en-US")) {
             if(queue.getQueueId().equals("custom") ||queue.getQueueId().equals("newmap")) continue;
@@ -59,7 +61,7 @@ public class GamemodeSlashCommand implements SlashCommand {
         return LanguageManager.getLanguage().getTranslation("command-gamemode-description");
     }
 
-    private Gamemode getGamemode(String queueUuid, String languageCode) throws HttpErrorException {
+    private Gamemode getGamemode(String queueUuid, String languageCode) throws HttpErrorException, IOException, InterruptedException {
         String gamemodeUuid = switch (queueUuid) {
             case "d2faff85-4964-f52e-b6b5-73a5d66ccad6", "63d60a3e-4838-695d-9077-e9af5ed523ca", "6ca8aa97-413c-241b-8927-d5bd1661c1d4", "494b69f1-4e3a-1b03-c2cd-a4875d6e9cb6" -> "96bd3920-4f36-d026-2b28-c683eb0bcac5";
             case "f3126c5e-4a6c-1f02-b216-cb9bf58df856" -> "a8790ec5-4237-f2f0-e93b-08a8e89865b2";

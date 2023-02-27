@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 public class HistorySelectMenu implements StringSelectMenu {
 
     @Override
-    public void perform(StringSelectInteractionEvent event) throws HttpErrorException {
+    public void perform(StringSelectInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         Language language = LanguageManager.getLanguage(event.getGuild());
         MessageEmbed.AuthorInfo author = event.getMessage().getEmbeds().get(0).getAuthor();
         event.editMessageEmbeds(new Embed().setTitle("Fetching...").build()).queue();

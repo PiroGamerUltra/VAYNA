@@ -5,23 +5,24 @@ import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
 import dev.piste.vayna.apis.henrik.gson.MMR;
 import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
+import dev.piste.vayna.apis.riot.RiotAPI;
+import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.mongodb.LinkedAccount;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
+import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.translations.Language;
 import dev.piste.vayna.util.translations.LanguageManager;
-import dev.piste.vayna.util.templates.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 public class LeaderboardSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
@@ -65,7 +66,7 @@ public class LeaderboardSlashCommand implements SlashCommand {
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
                     .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    Buttons.getSupportButton(event.getGuild())
+                    Buttons.getSupportButton(language)
             ).queue();
             return;
         }

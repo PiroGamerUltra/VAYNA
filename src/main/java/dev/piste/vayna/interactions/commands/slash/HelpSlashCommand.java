@@ -55,7 +55,7 @@ public class HelpSlashCommand implements SlashCommand {
                 "» " + SlashCommandManager.getAsJdaCommand(new SettingsSlashCommand()).getAsMention() + " " + language.getTranslation("command-settings-description"), false);
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embed.build()).setActionRow(
-                Buttons.getSupportButton(event.getGuild()),
+                Buttons.getSupportButton(language),
                 Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emojis.getGitHub()),
                 Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emojis.getTopGG())
         ).queue();

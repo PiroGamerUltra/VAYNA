@@ -14,25 +14,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public class ConnectionSlashCommand implements SlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
         Language language = LanguageManager.getLanguage(event.getGuild());
 
         LinkedAccount linkedAccount = new LinkedAccount(event.getUser().getIdLong());
         if(!linkedAccount.isExisting()) {
             event.getHook().editOriginalEmbeds(MessageEmbeds.getNoConnectionEmbed(language, event.getUser())).setActionRow(
-                    Buttons.getConnectButton(event.getGuild(), new AuthKey(event.getUser().getIdLong()).getAuthKey())
+                    Buttons.getConnectButton(language, new AuthKey(event.getUser().getIdLong()).getAuthKey())
             ).queue();
         } else {
             event.getHook().editOriginalEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(linkedAccount.getRiotPuuid()).getRiotId(), linkedAccount.isVisibleToPublic())).setActionRow(
-                    Buttons.getDisconnectButton(event.getGuild()),
-                    Buttons.getVisibilityButton(event.getGuild(), linkedAccount.isVisibleToPublic())
+                    Buttons.getDisconnectButton(language),
+                    Buttons.getVisibilityButton(language, linkedAccount.isVisibleToPublic())
             ).queue();
         }
 
