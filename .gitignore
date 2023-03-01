@@ -16,3 +16,9 @@
 *.json
 *.yml
 *.properties
+
+### Batch ###
+*.bat
+
+### JAR ###
+*.jar
