@@ -18,8 +18,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class RsoAuthKey {
 
-    private static final String DISCORD_USER_ID_FIELD = "discordUserId";
-    private static final String RSO_AUTH_KEY_FIELD = "rsoAuthKey";
+    private static final String DISCORD_USER_ID_FIELD = "_id";
+    private static final String RSO_AUTH_KEY_FIELD = "authKey";
     private static final String EXPIRATION_DATE_FIELD = "expirationDate";
     private static final MongoCollection<Document> collection = Mongo.getRsoAuthKeysCollection();
 
@@ -67,10 +67,10 @@ public class RsoAuthKey {
     }
 
     private void insert() {
-        Document newDocument = new Document();
-        newDocument.put(DISCORD_USER_ID_FIELD, discordUserId);
-        newDocument.put(RSO_AUTH_KEY_FIELD, rsoAuthKey);
-        newDocument.put(EXPIRATION_DATE_FIELD, Date.from(Instant.now().plus(Duration.ofHours(1))));
+        Document newDocument = new Document()
+                .append(DISCORD_USER_ID_FIELD, discordUserId)
+                .append(RSO_AUTH_KEY_FIELD, rsoAuthKey)
+                .append(EXPIRATION_DATE_FIELD, Date.from(Instant.now().plus(Duration.ofHours(1))));
         collection.insertOne(newDocument);
     }
 

@@ -17,7 +17,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class RsoConnection {
 
-    private static final String DISCORD_USER_ID_FIELD = "discordUserId";
+    private static final String DISCORD_USER_ID_FIELD = "_id";
     private static final String RIOT_PUUID_FIELD = "riotPuuid";
     private static final String PUBLICLY_VISIBLE_FIELD = "publiclyVisible";
     private static final String CREATION_DATE_FIELD = "creationDate";
@@ -79,9 +79,9 @@ public class RsoConnection {
     public void update() {
         if(isExisting) {
             Bson updates = Updates.combine(
-                    Updates.set(PUBLICLY_VISIBLE_FIELD, publiclyVisible),
                     Updates.set(DISCORD_USER_ID_FIELD, discordUserId),
                     Updates.set(RIOT_PUUID_FIELD, riotPuuid),
+                    Updates.set(PUBLICLY_VISIBLE_FIELD, publiclyVisible),
                     Updates.set(CREATION_DATE_FIELD, creationDate)
             );
             COLLECTION.updateOne(document, updates, new UpdateOptions().upsert(true));
