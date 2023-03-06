@@ -4,8 +4,8 @@ import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -15,12 +15,11 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class HelpSlashCommand implements SlashCommand {
+public class HelpSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event, Language language) {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         Embed embed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"))

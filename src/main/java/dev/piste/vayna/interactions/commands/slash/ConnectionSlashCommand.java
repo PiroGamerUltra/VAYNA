@@ -5,8 +5,8 @@ import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.util.StatsCounter;
 import dev.piste.vayna.mongodb.RsoAuthKey;
 import dev.piste.vayna.mongodb.RsoConnection;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.MessageEmbeds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,12 +18,11 @@ import java.io.IOException;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class ConnectionSlashCommand implements SlashCommand {
+public class ConnectionSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         RsoConnection rsoConnection = new RsoConnection(event.getUser().getIdLong());
         if(!rsoConnection.isExisting()) {

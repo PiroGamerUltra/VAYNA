@@ -15,7 +15,7 @@ import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;

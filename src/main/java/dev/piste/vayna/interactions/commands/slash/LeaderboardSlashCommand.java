@@ -13,8 +13,8 @@ import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -29,12 +29,11 @@ import java.util.HashMap;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class LeaderboardSlashCommand implements SlashCommand {
+public class LeaderboardSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         RiotAPI riotAPI = new RiotAPI();
         HenrikAPI henrikAPI = new HenrikAPI();

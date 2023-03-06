@@ -6,7 +6,7 @@ import dev.piste.vayna.listener.GuildJoinLeaveListener;
 import dev.piste.vayna.listener.InteractionListeners;
 import dev.piste.vayna.mongodb.Mongo;
 import dev.piste.vayna.util.Logger;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -34,48 +34,57 @@ public class Bot {
         ConfigManager.loadConfigs();
         Mongo.connect();
         LanguageManager.loadLanguages();
+        registerListeners();
+        registerInteractions();
+        startReloadListener();
+        startJDA();
+    }
 
-        jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
-                .addEventListeners(new InteractionListeners())
-                .addEventListeners(new GuildJoinLeaveListener())
-                .setActivity(Activity.competing("VALORANT"))
-                .setStatus(OnlineStatus.ONLINE)
-                .setChunkingFilter(ChunkingFilter.ALL)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                .build();
+    private static void registerListeners() {
+        JDABuilder builder = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna());
+        builder.addEventListeners(new InteractionListeners());
+        builder.addEventListeners(new GuildJoinLeaveListener());
+        builder.setActivity(Activity.competing("VALORANT"));
+        builder.setStatus(OnlineStatus.ONLINE);
+        builder.setChunkingFilter(ChunkingFilter.ALL);
+        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+        builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+        jda = builder.build();
+    }
 
-        // Registering all interactions
+    private static void registerInteractions() {
         InteractionManager.registerInteractions();
-
-        new Bot().listenReload();
-
-        try {
-            jda.awaitReady();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        new Logger(Bot.class).info("Started");
     }
 
-    public static JDA getJDA() {
-        return jda;
-    }
-
-    private void listenReload() {
+    private static void startReloadListener() {
         new Thread(() -> {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
-                while (reader.readLine() != null) {
-                    if (reader.readLine().equalsIgnoreCase("reload")) {
+                while (true) {
+                    String input = reader.readLine();
+                    if (input != null && input.equalsIgnoreCase("reload")) {
                         LanguageManager.loadLanguages();
                         ConfigManager.loadConfigs();
                         new Logger(Bot.class).info("Reloaded");
                     }
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                new Logger(Bot.class).error("Error reading console input", e);
             }
         }).start();
+    }
+
+    private static void startJDA() {
+        try {
+            jda.awaitReady();
+            new Logger(Bot.class).info("Started");
+        } catch (InterruptedException e) {
+            new Logger(Bot.class).error("Error starting JDA", e);
+        }
+    }
+
+    public static JDA getJDA() {
+        return jda;
     }
 
 }

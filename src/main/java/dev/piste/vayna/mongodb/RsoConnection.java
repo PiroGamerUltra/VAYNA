@@ -21,7 +21,7 @@ public class RsoConnection {
     private static final String RIOT_PUUID_FIELD = "riotPuuid";
     private static final String PUBLICLY_VISIBLE_FIELD = "publiclyVisible";
     private static final String CREATION_DATE_FIELD = "creationDate";
-    private static final MongoCollection<Document> collection = Mongo.getRsoConnectionsCollection();
+    private static final MongoCollection<Document> COLLECTION = Mongo.getRsoConnectionsCollection();
 
     private final Document document;
     private final boolean isExisting;
@@ -30,10 +30,9 @@ public class RsoConnection {
     private boolean publiclyVisible;
     private final Date creationDate;
 
-
     public RsoConnection(long discordUserId) {
         this.discordUserId = discordUserId;
-        try (MongoCursor<Document> cursor = collection.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
+        try (MongoCursor<Document> cursor = COLLECTION.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
             if (cursor.hasNext()) {
                 document = cursor.next();
                 riotPuuid = document.getString(RIOT_PUUID_FIELD);
@@ -54,7 +53,7 @@ public class RsoConnection {
 
     public RsoConnection(String riotPuuid) {
         this.riotPuuid = riotPuuid;
-        try (MongoCursor<Document> cursor = collection.find(eq(RIOT_PUUID_FIELD, riotPuuid)).iterator()) {
+        try (MongoCursor<Document> cursor = COLLECTION.find(eq(RIOT_PUUID_FIELD, riotPuuid)).iterator()) {
             if (cursor.hasNext()) {
                 document = cursor.next();
                 discordUserId = document.getLong(DISCORD_USER_ID_FIELD);
@@ -85,7 +84,7 @@ public class RsoConnection {
                     Updates.set(RIOT_PUUID_FIELD, riotPuuid),
                     Updates.set(CREATION_DATE_FIELD, creationDate)
             );
-            collection.updateOne(document, updates, new UpdateOptions().upsert(true));
+            COLLECTION.updateOne(document, updates, new UpdateOptions().upsert(true));
         }
     }
 
@@ -107,7 +106,7 @@ public class RsoConnection {
     }
 
     public void delete() {
-        collection.deleteOne(document);
+        COLLECTION.deleteOne(document);
     }
 
 }

@@ -2,8 +2,8 @@ package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.MessageEmbeds;
 import dev.piste.vayna.util.templates.SelectMenus;
@@ -16,16 +16,14 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class SettingsSlashCommand implements SlashCommand {
+public class SettingsSlashCommand implements ISlashCommand {
 
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException {
         event.deferReply(true).queue();
 
         if(!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-            Language language = LanguageManager.getLanguage(event.getGuild());
-
             Embed embed = new Embed()
                     .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-settings-error-perms-embed-title"))

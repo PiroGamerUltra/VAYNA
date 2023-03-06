@@ -1,8 +1,8 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.interactions.modals.FeedbackModal;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -13,11 +13,10 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class FeedbackSlashCommand implements SlashCommand {
+public class FeedbackSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
-        Language language = LanguageManager.getLanguage(event.getGuild());
+    public void perform(SlashCommandInteractionEvent event, Language language) {
 
         // Creating the feedback modal
         TextInput feedbackInput = TextInput.create("feedback", language.getTranslation("command-feedback-modal-text-name"), TextInputStyle.PARAGRAPH)

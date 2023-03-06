@@ -8,7 +8,9 @@ public class MatchInfo {
 
     private String matchId;
     private String mapId;
+    private String gameVersion;
     private long gameLengthMillis;
+    private String region;
     private long gameStartMillis;
     private boolean isCompleted;
     private String queueId;
@@ -23,8 +25,16 @@ public class MatchInfo {
         return mapId;
     }
 
+    public String getGameVersion() {
+        return gameVersion;
+    }
+
     public long getGameLengthMillis() {
         return gameLengthMillis;
+    }
+
+    public String getRegion() {
+        return region;
     }
 
     public long getGameStartMillis() {

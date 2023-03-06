@@ -1,7 +1,6 @@
 package dev.piste.vayna.config;
 
 import com.google.gson.Gson;
-import dev.piste.vayna.Bot;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,8 +15,8 @@ public class ConfigManager {
 
     public static void loadConfigs() {
         try {
-            settingsConfig = new Gson().fromJson(new FileReader(Bot.isDebug() ? "C:/Users/nilsr/Development/VAYNA/DiscordBot/settings.json" : "settings.json"), SettingsConfig.class);
-            tokensConfig = new Gson().fromJson(new FileReader(Bot.isDebug() ? "C:/Users/nilsr/Development/VAYNA/DiscordBot/tokens.json" : "tokens.json"), TokensConfig.class);
+            settingsConfig = new Gson().fromJson(new FileReader("settings.json"), SettingsConfig.class);
+            tokensConfig = new Gson().fromJson(new FileReader("tokens.json"), TokensConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

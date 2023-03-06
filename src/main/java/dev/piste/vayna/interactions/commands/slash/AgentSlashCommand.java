@@ -5,8 +5,8 @@ import dev.piste.vayna.apis.officer.OfficerAPI;
 import dev.piste.vayna.apis.officer.gson.Agent;
 import dev.piste.vayna.apis.officer.gson.agent.Ability;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -20,12 +20,11 @@ import java.util.ArrayList;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class AgentSlashCommand implements SlashCommand {
+public class AgentSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the agent by the provided UUID
         Agent agent = new OfficerAPI().getAgent(event.getOption("name").getAsString(), language.getLanguageCode());

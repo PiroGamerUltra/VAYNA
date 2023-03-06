@@ -4,7 +4,8 @@ import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.henrik.HenrikAPI;
 import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
 import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.io.IOException;
@@ -12,11 +13,11 @@ import java.io.IOException;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class BundleSelectMenu implements StringSelectMenu {
+public class BundleSelectMenu implements IStringSelectMenu {
 
 
     @Override
-    public void perform(StringSelectInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(StringSelectInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         String bundleUuid = event.getValues().get(0);
 
         for(CurrentBundle currentBundle : new HenrikAPI().getCurrentBundles()) {

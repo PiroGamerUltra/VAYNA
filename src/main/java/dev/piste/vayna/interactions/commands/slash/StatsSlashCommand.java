@@ -9,8 +9,8 @@ import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
 import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -22,13 +22,11 @@ import java.io.IOException;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class StatsSlashCommand implements SlashCommand {
+public class StatsSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
-
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         RsoConnection rsoConnection = null;
         RiotAccount riotAccount = null;
@@ -98,7 +96,9 @@ public class StatsSlashCommand implements SlashCommand {
         }
 
         try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).setActionRow(
+                    Buttons.getHistoryButton(language, riotAccount)
+            ).queue();
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(

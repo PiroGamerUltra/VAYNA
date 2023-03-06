@@ -7,8 +7,8 @@ import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.ErrorMessages;
 import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -18,12 +18,11 @@ import java.io.IOException;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class StatsContextCommand implements UserContextCommand {
+public class StatsContextCommand implements IUserContextCommand {
 
     @Override
-    public void perform(UserContextInteractionEvent event) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         RsoConnection rsoConnection = new RsoConnection(event.getTarget().getIdLong());
         if(!rsoConnection.isExisting()) {

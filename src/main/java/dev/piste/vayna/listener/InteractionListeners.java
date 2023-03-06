@@ -7,8 +7,9 @@ import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Logger;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -57,35 +58,21 @@ public class InteractionListeners extends ListenerAdapter {
             try {
                 InteractionManager.perform(event);
             } catch (Exception e) {
-                handleException(language, interactionHook, e);
+                handleException(language, interactionHook, interactionHook.getInteraction().getUser(), e);
             }
         });
         thread.setName("InteractionEvent");
         thread.start();
     }
 
-    private void handleException(Language language, InteractionHook interactionHook, Throwable throwable) {
-        if(throwable instanceof HttpErrorException) {
+    private void handleException(Language language, InteractionHook interactionHook, User user, Throwable throwable) {
+        if(throwable instanceof HttpErrorException httpErrorException) {
             new Logger(InteractionListeners.class).error("HTTP Error", throwable);
-            String statusCodeText = switch (((HttpErrorException) throwable).getStatusCode()) {
-                case 400 -> "Bad request";
-                case 401 -> "Unauthorized";
-                case 403 -> "Forbidden";
-                case 404 -> "Not found";
-                case 405 -> "Method not allowed";
-                case 408 -> "Timeout";
-                case 500 -> "Internal server error";
-                case 502 -> "Bad gateway";
-                case 503 -> "Service unavailable";
-                case 504 -> "Gateway timeout";
-                case 429 -> "Too many requests";
-                default -> "Unknown";
-            };
             Embed embed = new Embed()
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-api-embed-title"))
                     .setDescription(language.getTranslation("error-api-embed-description"))
-                    .addField(language.getTranslation("error-api-embed-field-1-name"), "`" + ((HttpErrorException) throwable).getStatusCode() + ": " + statusCodeText + "`", false);
+                    .addField(language.getTranslation("error-api-embed-field-1-name"), "`" + httpErrorException.getStatusCode() + ": " + httpErrorException.getStatusReason() + "`", false);
             interactionHook.editOriginalEmbeds(embed.build()).setActionRow(
                     Buttons.getSupportButton(language)
             ).queue();
@@ -93,9 +80,12 @@ public class InteractionListeners extends ListenerAdapter {
             // Error logging
             Embed logEmbed = new Embed()
                     .setColor(255, 0, 0)
-                    .addField("URL", ((HttpErrorException) throwable).getUri(), true)
-                    .addField("Request Method", ((HttpErrorException) throwable).getRequestMethod(), true)
-                    .addField("Response Body", "```json\n" + ((HttpErrorException) throwable).getResponseBody() + "```", false);
+                    .setTitle("» HTTP Error")
+                    .setAuthor(user.getAsTag(), user.getAvatarUrl())
+                    .addField("Request Method", "`" + httpErrorException.getRequestMethod() + "`", true)
+                    .addField("Request URI", httpErrorException.getUri(), true)
+                    .addField("Response Code", "`" + httpErrorException.getStatusCode() + " (" + httpErrorException.getStatusReason() + ")`", true)
+                    .addField("Response Body", "```json\n" + httpErrorException.getResponseBody() + "```", false);
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             logChannel.sendMessageEmbeds(logEmbed.build()).queue();
         } else {
@@ -111,8 +101,9 @@ public class InteractionListeners extends ListenerAdapter {
             // Error logging
             Embed logEmbed = new Embed()
                     .setColor(255, 0, 0)
-                    .setTitle("Unknown Error")
-                    .addField("Exception", throwable.getClass().getName(), true);
+                    .setAuthor(user.getAsTag(), user.getAvatarUrl())
+                    .setTitle("» Unknown Error")
+                    .addField("Exception", "`" + throwable.getClass().getName() + "`", true);
             if(throwable.getMessage() != null) {
                 logEmbed.addField("Message", throwable.getMessage(), true);
             }

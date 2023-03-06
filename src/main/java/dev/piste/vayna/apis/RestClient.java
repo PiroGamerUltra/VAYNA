@@ -52,18 +52,17 @@ public class RestClient {
     }
 
     private JsonObject sendRequest(HttpRequest httpRequest) throws HttpErrorException, IOException, InterruptedException {
-            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() == 200) {
-                return JsonParser.parseString(response.body()).getAsJsonObject();
-            } else {
+        HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        System.out.println(httpRequest.uri());
+            if(HttpStatus.valueOf(response.statusCode()).isError()) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.body());
-                StringWriter stringWriter = new StringWriter();
-                JsonWriter jsonWriter = new JsonWriter(stringWriter);
+                StringWriter bodyWriter = new StringWriter();
+                JsonWriter jsonWriter = new JsonWriter(bodyWriter);
                 jsonWriter.setIndent("  ");
                 gson.toJson(jsonObject, jsonWriter);
-                String formattedResponseBody = stringWriter.toString();
-                throw new HttpErrorException(response.statusCode(), formattedResponseBody, httpRequest.uri().toString(), httpRequest.method());
+                throw new HttpErrorException(response.statusCode(), bodyWriter.toString(), httpRequest.uri().toString(), httpRequest.method());
             }
+        return JsonParser.parseString(response.body()).getAsJsonObject();
     }
 }

@@ -6,7 +6,7 @@ import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
 import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.translations.Language;
+import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 

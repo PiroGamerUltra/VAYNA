@@ -2,17 +2,18 @@ package dev.piste.vayna.interactions;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.interactions.buttons.Button;
+import dev.piste.vayna.interactions.buttons.IButton;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
 import dev.piste.vayna.interactions.commands.context.StatsContextCommand;
-import dev.piste.vayna.interactions.commands.context.UserContextCommand;
+import dev.piste.vayna.interactions.commands.context.IUserContextCommand;
 import dev.piste.vayna.interactions.commands.slash.*;
 import dev.piste.vayna.interactions.modals.FeedbackModal;
-import dev.piste.vayna.interactions.modals.Modal;
+import dev.piste.vayna.interactions.modals.IModal;
 import dev.piste.vayna.interactions.selectmenus.string.*;
 import dev.piste.vayna.util.Logger;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -29,11 +30,11 @@ import java.util.HashMap;
  */
 public class InteractionManager {
 
-    private static final HashMap<String, SlashCommand> slashCommands = new HashMap<>();
-    private static final HashMap<String, Button> buttons = new HashMap<>();
-    private static final HashMap<String, Modal> modals = new HashMap<>();
-    private static final HashMap<String, StringSelectMenu> stringSelectMenus = new HashMap<>();
-    private static final HashMap<String, UserContextCommand> userContextCommands = new HashMap<>();
+    private static final HashMap<String, ISlashCommand> slashCommands = new HashMap<>();
+    private static final HashMap<String, IButton> buttons = new HashMap<>();
+    private static final HashMap<String, IModal> modals = new HashMap<>();
+    private static final HashMap<String, IStringSelectMenu> stringSelectMenus = new HashMap<>();
+    private static final HashMap<String, IUserContextCommand> userContextCommands = new HashMap<>();
 
     public static void registerInteractions() {
         registerSlashCommands();
@@ -70,7 +71,6 @@ public class InteractionManager {
     private static void registerStringSelectMenus() {
         registerStringSelectMenu(new SettingsSelectMenu());
         registerStringSelectMenu(new LanguageSelectMenu());
-        registerStringSelectMenu(new HistorySelectMenu());
         registerStringSelectMenu(new BundleSelectMenu());
     }
 
@@ -78,7 +78,7 @@ public class InteractionManager {
         registerUserContextCommand(new StatsContextCommand());
     }
 
-    private static void registerSlashCommand(SlashCommand slashCommand) {
+    private static void registerSlashCommand(ISlashCommand slashCommand) {
         slashCommands.put(slashCommand.getName(), slashCommand);
         try {
             Bot.getJDA().upsertCommand(slashCommand.getCommandData()).queue();
@@ -87,24 +87,24 @@ public class InteractionManager {
         }
     }
 
-    private static void registerButton(Button button) {
+    private static void registerButton(IButton button) {
         buttons.put(button.getName(), button);
     }
 
-    private static void registerModal(Modal modal) {
+    private static void registerModal(IModal modal) {
         modals.put(modal.getName(), modal);
     }
 
-    private static void registerStringSelectMenu(StringSelectMenu stringSelectMenu) {
+    private static void registerStringSelectMenu(IStringSelectMenu stringSelectMenu) {
         stringSelectMenus.put(stringSelectMenu.getName(), stringSelectMenu);
     }
 
-    private static void registerUserContextCommand(UserContextCommand userContextCommand) {
+    private static void registerUserContextCommand(IUserContextCommand userContextCommand) {
         userContextCommands.put(userContextCommand.getName(), userContextCommand);
         Bot.getJDA().upsertCommand(userContextCommand.getCommandData()).queue();
     }
 
-    public static Command getSlashCommandAsJdaCommand(SlashCommand slashCommand) {
+    public static Command getSlashCommandAsJdaCommand(ISlashCommand slashCommand) {
         for(Command jdaCommand : Bot.getJDA().retrieveCommands().complete()) {
             if(jdaCommand.getName().equalsIgnoreCase(slashCommand.getName())) return jdaCommand;
         }
@@ -112,18 +112,18 @@ public class InteractionManager {
     }
 
     public static void perform(GenericEvent event) throws IOException, HttpErrorException, InterruptedException {
-        if(event instanceof SlashCommandInteractionEvent) {
-            slashCommands.get(((SlashCommandInteractionEvent) event).getName()).perform((SlashCommandInteractionEvent) event);
-        } else if(event instanceof ButtonInteractionEvent) {
-            String buttonId = ((ButtonInteractionEvent) event).getButton().getId().split(";")[0];
-            String[] args = ((ButtonInteractionEvent) event).getButton().getId().contains(";") ? ((ButtonInteractionEvent) event).getButton().getId().substring(buttonId.length()+1).split(";") : new String[0];
-            buttons.get(buttonId).perform((ButtonInteractionEvent) event, args);
-        } else if(event instanceof ModalInteractionEvent) {
-            modals.get(((ModalInteractionEvent) event).getModalId()).perform((ModalInteractionEvent) event);
-        } else if(event instanceof StringSelectInteractionEvent) {
-            stringSelectMenus.get(((StringSelectInteractionEvent) event).getSelectMenu().getId()).perform((StringSelectInteractionEvent) event);
-        } else if(event instanceof UserContextInteractionEvent) {
-            userContextCommands.get(((UserContextInteractionEvent) event).getName()).perform((UserContextInteractionEvent) event);
+        if(event instanceof SlashCommandInteractionEvent interactionEvent) {
+            slashCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+        } else if(event instanceof ButtonInteractionEvent interactionEvent) {
+            String buttonId = interactionEvent.getButton().getId().split(";")[0];
+            String[] args = interactionEvent.getButton().getId().contains(";") ? interactionEvent.getButton().getId().substring(buttonId.length()+1).split(";") : new String[0];
+            buttons.get(buttonId).perform(interactionEvent, args, LanguageManager.getLanguage(interactionEvent.getGuild()));
+        } else if(event instanceof ModalInteractionEvent interactionEvent) {
+            modals.get(interactionEvent.getModalId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+        } else if(event instanceof StringSelectInteractionEvent interactionEvent) {
+            stringSelectMenus.get(interactionEvent.getSelectMenu().getId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+        } else if(event instanceof UserContextInteractionEvent interactionEvent) {
+            userContextCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
         }
     }
 

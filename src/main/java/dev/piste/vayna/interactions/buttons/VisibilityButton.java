@@ -6,8 +6,7 @@ import dev.piste.vayna.mongodb.RsoAuthKey;
 import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.util.templates.Buttons;
 import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.io.IOException;
@@ -15,11 +14,9 @@ import java.io.IOException;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class VisibilityButton implements Button {
+public class VisibilityButton implements IButton {
 
-    public void perform(ButtonInteractionEvent event, String[] args) throws HttpErrorException, IOException, InterruptedException {
-        Language language = LanguageManager.getLanguage(event.getGuild());
-
+    public void perform(ButtonInteractionEvent event, String[] args, Language language) throws HttpErrorException, IOException, InterruptedException {
         RsoConnection rsoConnection = new RsoConnection(event.getUser().getIdLong());
         if(!rsoConnection.isExisting()) {
             RsoAuthKey rsoAuthKey = new RsoAuthKey(event.getUser().getIdLong());

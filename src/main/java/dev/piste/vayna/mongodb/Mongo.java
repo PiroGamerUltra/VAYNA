@@ -51,5 +51,8 @@ public class Mongo {
         return getMongoDatabase().getCollection("guildSettings");
     }
 
+    public static MongoCollection<Document> getMatchesCollection() {
+        return getMongoDatabase().getCollection("matches");
+    }
 
 }
