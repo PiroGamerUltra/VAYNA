@@ -34,22 +34,27 @@ public class Bot {
         ConfigManager.loadConfigs();
         Mongo.connect();
         LanguageManager.loadLanguages();
-        registerListeners();
         registerInteractions();
         startReloadListener();
         startJDA();
     }
 
-    private static void registerListeners() {
-        JDABuilder builder = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna());
-        builder.addEventListeners(new InteractionListeners());
-        builder.addEventListeners(new GuildJoinLeaveListener());
-        builder.setActivity(Activity.competing("VALORANT"));
-        builder.setStatus(OnlineStatus.ONLINE);
-        builder.setChunkingFilter(ChunkingFilter.ALL);
-        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
-        builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
-        jda = builder.build();
+    private static void startJDA() {
+        try {
+            jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
+                    .addEventListeners(new InteractionListeners())
+                    .addEventListeners(new GuildJoinLeaveListener())
+                    .setActivity(Activity.competing("VALORANT"))
+                    .setStatus(OnlineStatus.ONLINE)
+                    .setChunkingFilter(ChunkingFilter.ALL)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .build();
+            jda.awaitReady();
+            registerInteractions();
+        } catch (InterruptedException e) {
+            new Logger(Bot.class).error("Error while starting JDA", e);
+        }
     }
 
     private static void registerInteractions() {
@@ -72,15 +77,6 @@ public class Bot {
                 new Logger(Bot.class).error("Error reading console input", e);
             }
         }).start();
-    }
-
-    private static void startJDA() {
-        try {
-            jda.awaitReady();
-            new Logger(Bot.class).info("Started");
-        } catch (InterruptedException e) {
-            new Logger(Bot.class).error("Error starting JDA", e);
-        }
     }
 
     public static JDA getJDA() {
