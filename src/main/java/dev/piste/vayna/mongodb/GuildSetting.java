@@ -15,7 +15,7 @@ import static com.mongodb.client.model.Updates.set;
 public class GuildSetting {
 
     private static final MongoCollection<Document> guildSettingsCollection = Mongo.getGuildSettingsCollection();
-    private static final String GUILD_ID_FIELD = "guildId";
+    private static final String GUILD_ID_FIELD = "_id";
     private static final String LANGUAGE_CODE_FIELD = "languageCode";
 
     private final long guildId;
