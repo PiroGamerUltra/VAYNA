@@ -51,6 +51,7 @@ public class Bot {
                     .build();
             jda.awaitReady();
             registerInteractions();
+            new Logger(Bot.class).info("Started");
         } catch (InterruptedException e) {
             new Logger(Bot.class).error("Error while starting JDA", e);
         }
