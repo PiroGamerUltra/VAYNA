@@ -34,7 +34,6 @@ public class Bot {
         ConfigManager.loadConfigs();
         Mongo.connect();
         LanguageManager.loadLanguages();
-        registerInteractions();
         startReloadListener();
         startJDA();
     }

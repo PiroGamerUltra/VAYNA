@@ -53,7 +53,6 @@ public class RestClient {
 
     private JsonObject sendRequest(HttpRequest httpRequest) throws HttpErrorException, IOException, InterruptedException {
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        System.out.println(httpRequest.uri());
             if(HttpStatus.valueOf(response.statusCode()).isError()) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.body());

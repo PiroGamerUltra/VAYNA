@@ -96,9 +96,7 @@ public class StatsSlashCommand implements ISlashCommand {
         }
 
         try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).setActionRow(
-                    Buttons.getHistoryButton(language, riotAccount)
-            ).queue();
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).queue();
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
