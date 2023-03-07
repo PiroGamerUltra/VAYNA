@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import dev.piste.vayna.apis.RestClient;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.gson.*;
+import dev.piste.vayna.apis.RestClient;
+import dev.piste.vayna.apis.riot.gson.Match;
+import dev.piste.vayna.apis.riot.gson.MatchListEntry;
+import dev.piste.vayna.apis.riot.gson.PlatformData;
+import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.config.ConfigManager;
 
 import java.io.IOException;
@@ -39,9 +42,9 @@ public class RiotAPI {
         return jsonObject.get("activeShard").getAsString();
     }
 
-    public String getRegionName(String activeShard) throws HttpErrorException, IOException, InterruptedException {
+    public PlatformData getPlatformData(String activeShard) throws HttpErrorException, IOException, InterruptedException {
         JsonObject jsonObject = new RestClient(String.format(VAL_BASE_URL, activeShard)).appendHeader(KEY_HEADER_NAME, KEY_HEADER_VALUE).doGet("/status/v1/platform-data");
-        return jsonObject.get("name").getAsString();
+        return new Gson().fromJson(jsonObject, PlatformData.class);
     }
 
     public ArrayList<MatchListEntry> getMatchList(String puuid, String region) throws HttpErrorException, IOException, InterruptedException {

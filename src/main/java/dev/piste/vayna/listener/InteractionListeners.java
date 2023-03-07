@@ -28,6 +28,8 @@ import java.util.Arrays;
  */
 public class InteractionListeners extends ListenerAdapter {
 
+    private static final Logger LOGGER = new Logger(InteractionListeners.class);
+
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         performInteraction(LanguageManager.getLanguage(event.getGuild()), event, event.getHook());
@@ -67,7 +69,7 @@ public class InteractionListeners extends ListenerAdapter {
 
     private void handleException(Language language, InteractionHook interactionHook, User user, Throwable throwable) {
         if(throwable instanceof HttpErrorException httpErrorException) {
-            new Logger(InteractionListeners.class).error("HTTP Error", throwable);
+            LOGGER.error("HTTP Error", throwable);
             Embed embed = new Embed()
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-api-embed-title"))
@@ -89,7 +91,7 @@ public class InteractionListeners extends ListenerAdapter {
             TextChannel logChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getError());
             logChannel.sendMessageEmbeds(logEmbed.build()).queue();
         } else {
-            new Logger(InteractionListeners.class).error("Unknown Error", throwable);
+            LOGGER.error("Unknown Error", throwable);
             Embed embed = new Embed()
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-unknown-embed-title"))

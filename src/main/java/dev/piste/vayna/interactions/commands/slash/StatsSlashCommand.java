@@ -3,14 +3,13 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.riot.RiotAPI;
 import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.interactions.StatsInteraction;
 import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ErrorMessages;
-import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.translations.Language;
-import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -26,7 +25,7 @@ public class StatsSlashCommand implements ISlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
-        event.deferReply().queue();
+        event.deferReply(false).queue();
 
         RsoConnection rsoConnection = null;
         RiotAccount riotAccount = null;
@@ -73,39 +72,7 @@ public class StatsSlashCommand implements ISlashCommand {
             }
         }
 
-        if(!rsoConnection.isExisting()) {
-            if(rsoConnection.getDiscordUserId() != 0) {
-                if (rsoConnection.getDiscordUserId() == event.getUser().getIdLong()) {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
-                            Buttons.getSupportButton(language)
-                    ).queue();
-                } else {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsMention())).setActionRow(
-                            Buttons.getSupportButton(language)
-                    ).queue();
-                }
-                return;
-            }
-        } else {
-            if(!rsoConnection.isPubliclyVisible() && (rsoConnection.getDiscordUserId() != event.getUser().getIdLong())) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
-                        Buttons.getSupportButton(language)
-                ).queue();
-                return;
-            }
-        }
-
-        try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, rsoConnection, riotAccount)).queue();
-        } catch (HttpErrorException e) {
-            if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
-                        Buttons.getSupportButton(language)
-                ).queue();
-            } else {
-                throw e;
-            }
-        }
+        new StatsInteraction().perform(event.getUser(), riotAccount, rsoConnection, event.getHook(), language);
     }
 
     @Override

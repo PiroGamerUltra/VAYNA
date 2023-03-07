@@ -56,6 +56,7 @@ public class InteractionManager {
         registerSlashCommand(new LeaderboardSlashCommand());
         registerSlashCommand(new FeedbackSlashCommand());
         registerSlashCommand(new SettingsSlashCommand());
+        registerSlashCommand(new StatusSlashCommand());
     }
 
     private static void registerButtons() {

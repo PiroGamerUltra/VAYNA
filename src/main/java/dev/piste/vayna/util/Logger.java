@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
  * @author Piste | https://github.com/PisteDev
  */
 @SuppressWarnings("unused")
-public class Logger {
+public final class Logger {
 
     private final org.slf4j.Logger logger;
 
