@@ -82,17 +82,17 @@ public class Emojis {
         return emoji;
     }
 
-    public static Emoji getQueue(String queueUuid) {
+    public static Emoji getQueue(String queueName) {
         Emoji emoji = null;
-        switch (queueUuid) {
-            case "d2faff85-4964-f52e-b6b5-73a5d66ccad6" -> emoji = getRankByTierName(0);
-            case "63d60a3e-4838-695d-9077-e9af5ed523ca", "6ca8aa97-413c-241b-8927-d5bd1661c1d4", "494b69f1-4e3a-1b03-c2cd-a4875d6e9cb6" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443080876007526L);
-            case "f3126c5e-4a6c-1f02-b216-cb9bf58df856" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443079366058014L);
-            case "3652def6-48fa-b868-61cc-d29702fc5dfa" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443076585226343L);
-            case "b1983fc3-4594-ce27-cfa8-8eb2a9b93018" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443075108851712L);
-            case "154239f3-470c-612c-dd46-7db11282f208" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443070428008491L);
-            case "3938d5da-43bf-1e8c-f09f-858caf145975" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443072382533702L);
-            case "2d257217-464c-7c4b-efc6-51a55365d44a" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443067760422954L);
+        switch (queueName) {
+            case "competitive" -> emoji = getRankByTierName(0);
+            case "unrated", "newmap", "custom" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443080876007526L);
+            case "deathmatch" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443079366058014L);
+            case "ggteam" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443076585226343L);
+            case "onefa" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443075108851712L);
+            case "snowball" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443070428008491L);
+            case "spikerush" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443072382533702L);
+            case "swiftplay" -> emoji = EMOJI_GUILD_2.getEmojiById(1075443067760422954L);
         }
         return emoji;
     }

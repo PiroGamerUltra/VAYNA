@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class RiotGamesAPI {
 
     private final String KEY_HEADER_NAME = "X-Riot-Token";
-    private final String KEY_HEADER_VALUE = ConfigManager.getTokensConfig().getApiKeys().getRiot();
+    private final String KEY_HEADER_VALUE = ConfigManager.getTokensConfig().getApiKeys().getRiotGames();
     private final String RIOT_BASE_URL = "https://europe.api.riotgames.com/riot";
     private final String VAL_BASE_URL = "https://%s.api.riotgames.com/val";
     private final RestClient riotRestClient = new RestClient(RIOT_BASE_URL).appendHeader(KEY_HEADER_NAME, KEY_HEADER_VALUE);

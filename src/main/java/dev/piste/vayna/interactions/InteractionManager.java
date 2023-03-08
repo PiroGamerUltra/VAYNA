@@ -73,6 +73,7 @@ public class InteractionManager {
         registerStringSelectMenu(new SettingsSelectMenu());
         registerStringSelectMenu(new LanguageSelectMenu());
         registerStringSelectMenu(new BundleSelectMenu());
+        registerStringSelectMenu(new HistorySelectMenu());
     }
 
     private static void registerUserContextCommands() {

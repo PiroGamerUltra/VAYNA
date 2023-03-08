@@ -37,7 +37,7 @@ public class Buttons {
     }
 
     public static Button getHistoryButton(Language language, RiotAccount riotAccount) {
-        return Button.secondary(new HistoryButton().getName() + ";" + riotAccount.getPUUID(), language.getTranslation(";button-history"));
+        return Button.secondary(new HistoryButton().getName() + ";" + riotAccount.getPUUID(), language.getTranslation("button-history"));
     }
 
 }

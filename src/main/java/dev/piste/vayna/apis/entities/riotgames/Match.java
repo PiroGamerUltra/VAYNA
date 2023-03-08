@@ -15,12 +15,43 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Match {
 
+    @SerializedName("_id")
+    private String id;
     @SerializedName("matchInfo")
     private MatchInfo matchInfo;
     @SerializedName("players")
     private List<Player> players;
     @SerializedName("coaches")
     private List<Coach> coaches;
+    @SerializedName("teams")
+    private List<Team> teams;
+    @SerializedName("roundResults")
+    private List<RoundResult> roundResults;
+
+    public MatchInfo getMatchInfo() {
+        return matchInfo;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public List<Coach> getCoaches() {
+        return coaches;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public List<RoundResult> getRoundResults() {
+        return roundResults;
+    }
+
+    public Match setMongoId() {
+        id = matchInfo.getMatchId();
+        return this;
+    }
 
     public static class MatchInfo {
 
@@ -30,8 +61,8 @@ public class Match {
         private String mapPath;
         @SerializedName("gameLengthMillis")
         private long gameLengthMillis;
-        @SerializedName("gameStartTimeMillis")
-        private long gameStartTimeMillis;
+        @SerializedName("gameStartMillis")
+        private long gameStartMillis;
         @SerializedName("provisioningFlowId")
         private String provisioningFlowId;
         @SerializedName("isCompleted")
@@ -51,6 +82,10 @@ public class Match {
             return matchId;
         }
 
+        public String getMapPath() {
+            return mapPath;
+        }
+
         public Map getMap(String languageCode) throws IOException, HttpErrorException, InterruptedException {
             for(Map map : new OfficerAPI().getMaps(languageCode)) {
                 if(map.getPath().equals(mapPath)) {
@@ -61,11 +96,11 @@ public class Match {
         }
 
         public Date getGameStartDate() {
-            return new Date(gameStartTimeMillis);
+            return new Date(gameStartMillis);
         }
 
         public Date getGameEndDate() {
-            return new Date(gameStartTimeMillis + gameLengthMillis);
+            return new Date(gameStartMillis + gameLengthMillis);
         }
 
         public String getProvisioningFlowId() {
@@ -80,7 +115,13 @@ public class Match {
             return customGameName;
         }
 
+        public String getQueueName() {
+            if(queueName.equals("")) return "custom";
+            return queueName;
+        }
+
         public Queue getQueue(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+            if(queueName.equals("")) return new OfficerAPI().getQueue("63d60a3e-4838-695d-9077-e9af5ed523ca", languageCode);
             for(Queue queue : new OfficerAPI().getQueues(languageCode)) {
                 if(queue.getName().equals(queueName)) {
                     return queue;
@@ -108,6 +149,8 @@ public class Match {
         private String name;
         @SerializedName("tagLine")
         private String tag;
+        @SerializedName("teamId")
+        private String teamId;
         @SerializedName("partyId")
         private String partyId;
         @SerializedName("characterId")
@@ -137,8 +180,16 @@ public class Match {
             return name + "#" + tag;
         }
 
+        public String getTeamId() {
+            return teamId;
+        }
+
         public String getPartyId() {
             return partyId;
+        }
+
+        public String getAgentId() {
+            return agentId;
         }
 
         public Agent getAgent(String languageCode) throws IOException, HttpErrorException, InterruptedException {
@@ -249,6 +300,41 @@ public class Match {
 
         public String getTeamId() {
             return teamId;
+        }
+
+    }
+
+    public static class Team {
+
+        @SerializedName("teamId")
+        private String id;
+        @SerializedName("won")
+        private boolean isWinner;
+        @SerializedName("roundsPlayed")
+        private int playedRoundsCount;
+        @SerializedName("roundsWon")
+        private int wonRoundsCount;
+        @SerializedName("numPoints")
+        private int points;
+
+        public String getId() {
+            return id;
+        }
+
+        public boolean isWinner() {
+            return isWinner;
+        }
+
+        public int getPlayedRoundsCount() {
+            return playedRoundsCount;
+        }
+
+        public int getWonRoundsCount() {
+            return wonRoundsCount;
+        }
+
+        public int getPoints() {
+            return points;
         }
 
     }

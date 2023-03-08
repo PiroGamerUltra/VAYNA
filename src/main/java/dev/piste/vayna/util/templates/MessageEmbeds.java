@@ -88,7 +88,7 @@ public class MessageEmbeds {
                             .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
                 }
                 case "skin_level" -> {
-                    Skin skin = officerAPI.getSkin(item.getId(), language.getLanguageCode());
+                    Weapon.Skin skin = officerAPI.getSkin(item.getId(), language.getLanguageCode());
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
                             .setImage(skin.getDisplayIcon());
                 }

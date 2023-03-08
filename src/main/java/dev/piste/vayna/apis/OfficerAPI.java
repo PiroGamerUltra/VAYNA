@@ -168,14 +168,14 @@ public class OfficerAPI {
         }.getType());
     }
 
-    public Skin getSkin(String id, String languageCode) throws IOException, HttpErrorException, InterruptedException {
+    public Weapon.Skin getSkin(String id, String languageCode) throws IOException, HttpErrorException, InterruptedException {
         JsonObject jsonObject = restClient.doGet(String.format("/weapons/skins/%s?language=%s", id, languageCode)).getAsJsonObject("data");
-        return new Gson().fromJson(jsonObject, Skin.class);
+        return new Gson().fromJson(jsonObject, Weapon.Skin.class);
     }
 
-    public List<Skin> getSkins(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+    public List<Weapon.Skin> getSkins(String languageCode) throws IOException, HttpErrorException, InterruptedException {
         JsonArray jsonArray = restClient.doGet(String.format("/weapons/skins?language=%s", languageCode)).getAsJsonArray("data");
-        return new Gson().fromJson(jsonArray, new TypeToken<List<Skin>>() {
+        return new Gson().fromJson(jsonArray, new TypeToken<List<Weapon.Skin>>() {
         }.getType());
     }
 

@@ -103,7 +103,9 @@ public class StatsInteraction {
             }
         }
 
-        interactionHook.editOriginalEmbeds(embed.build()).queue();
+        interactionHook.editOriginalEmbeds(embed.build()).setActionRow(
+                Buttons.getHistoryButton(language, riotAccount)
+        ).queue();
     }
 
     private static String getProgressBar(int ranking) {
