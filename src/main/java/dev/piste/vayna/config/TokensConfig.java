@@ -1,13 +1,18 @@
 package dev.piste.vayna.config;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 @SuppressWarnings("ALL")
 public class TokensConfig {
 
+    @SerializedName("bot")
     private Bot bot;
+    @SerializedName("mongodb")
     private MongoCredentials mongodb;
+    @SerializedName("apiKeys")
     private APIKeys apiKeys;
 
     public Bot getBot() {
@@ -23,7 +28,10 @@ public class TokensConfig {
     }
 
     public static class Bot {
+
+        @SerializedName("vayna")
         private String vayna;
+        @SerializedName("development")
         private String development;
 
         public String getVayna() {
@@ -33,13 +41,20 @@ public class TokensConfig {
         public String getDevelopment() {
             return development;
         }
+
     }
 
     public static class MongoCredentials {
+
+        @SerializedName("host")
         private String host;
+        @SerializedName("port")
         private int port;
+        @SerializedName("username")
         private String username;
+        @SerializedName("password")
         private String password;
+        @SerializedName("authDb")
         private String authDb;
 
         public String getHost() {
@@ -61,15 +76,20 @@ public class TokensConfig {
         public String getAuthDb() {
             return authDb;
         }
+
     }
 
     public static class APIKeys {
-        private String riot;
+
+        @SerializedName("riotGames")
+        private String riotGames;
+        @SerializedName("henrik")
         private String henrik;
+        @SerializedName("topGG")
         private String topGG;
 
-        public String getRiot() {
-            return riot;
+        public String getRiotGames() {
+            return riotGames;
         }
 
         public String getHenrik() {
@@ -79,6 +99,7 @@ public class TokensConfig {
         public String getTopGG() {
             return topGG;
         }
+
     }
 
 }

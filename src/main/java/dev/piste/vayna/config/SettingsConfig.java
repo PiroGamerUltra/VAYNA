@@ -1,16 +1,24 @@
 package dev.piste.vayna.config;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class SettingsConfig {
 
+    @SerializedName("version")
     private String version;
+    @SerializedName("websiteUri")
     private String websiteUri;
+    @SerializedName("supportGuildId")
     private long supportGuildId;
+    @SerializedName("supportGuildInviteUri")
     private String supportGuildInviteUri;
+    @SerializedName("logChannelIds")
     private LogChannelIds logChannelIds;
+    @SerializedName("statsChannels")
     private StatsChannel statsChannel;
 
     public String getVersion() {
@@ -38,8 +46,12 @@ public class SettingsConfig {
     }
 
     public static class LogChannelIds {
+
+        @SerializedName("guild")
         private long guild;
+        @SerializedName("feedback")
         private long feedback;
+        @SerializedName("error")
         private long error;
 
         public long getGuild() {
@@ -53,9 +65,13 @@ public class SettingsConfig {
         public long getError() {
             return error;
         }
+
     }
     public static class StatsChannel {
+
+        @SerializedName("guilds")
         private Channel guilds;
+        @SerializedName("connections")
         private Channel connections;
 
         public Channel getGuilds() {
@@ -67,7 +83,10 @@ public class SettingsConfig {
         }
 
         public static class Channel {
+
+            @SerializedName("id")
             private long id;
+            @SerializedName("name")
             private String name;
 
             public long getId() {
@@ -77,7 +96,9 @@ public class SettingsConfig {
             public String getName() {
                 return name;
             }
+
         }
+
     }
 
 }
