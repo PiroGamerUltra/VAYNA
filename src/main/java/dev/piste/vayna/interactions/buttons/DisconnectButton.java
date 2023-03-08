@@ -21,7 +21,7 @@ public class DisconnectButton implements IButton {
         RsoAuthKey rsoAuthKey = new RsoAuthKey(event.getUser().getIdLong());
         rsoAuthKey.refreshExpirationDate();
         event.editMessageEmbeds(MessageEmbeds.getNoConnectionEmbed(language, event.getUser(), rsoAuthKey.getExpirationDate())).setActionRow(
-                Buttons.getConnectButton(language, rsoAuthKey.getRsoAuthKey())
+                Buttons.getConnectButton(language, rsoAuthKey.getAuthKey())
         ).queue();
 
         StatsCounter.countConnections();

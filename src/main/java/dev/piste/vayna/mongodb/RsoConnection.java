@@ -77,7 +77,7 @@ public class RsoConnection {
     }
 
     public void update() {
-        if(isExisting) {
+        if (isExisting) {
             Bson updates = Updates.combine(
                     Updates.set(DISCORD_USER_ID_FIELD, discordUserId),
                     Updates.set(RIOT_PUUID_FIELD, riotPuuid),

@@ -1,10 +1,9 @@
 package dev.piste.vayna.util.templates;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.henrik.gson.CurrentBundle;
-import dev.piste.vayna.apis.henrik.gson.store.Item;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.apis.officer.gson.*;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.entities.henrik.StoreBundle;
+import dev.piste.vayna.apis.entities.officer.*;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
@@ -13,7 +12,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -53,49 +51,49 @@ public class MessageEmbeds {
                 .build();
     }
 
-    public static ArrayList<MessageEmbed> getBundleEmbeds(Language language, CurrentBundle currentBundle) throws HttpErrorException, IOException, InterruptedException {
+    public static ArrayList<MessageEmbed> getBundleEmbeds(Language language, StoreBundle storeBundle) throws HttpErrorException, IOException, InterruptedException {
         OfficerAPI officerAPI = new OfficerAPI();
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
-        Bundle bundle = officerAPI.getBundle(currentBundle.getBundleUuid(), language.getLanguageCode());
+        Bundle bundle = officerAPI.getBundle(storeBundle.getId(), language.getLanguageCode());
 
         Embed bundleEmbed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
-                .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), currentBundle.getPrice() + " " + Emojis.getVP().getFormatted(), true)
+                .addField(language.getTranslation("command-store-embed-bundle-field-1-name"), storeBundle.getPrice() + " " + Emojis.getVP().getFormatted(), true)
                 .addField(language.getTranslation("command-store-embed-bundle-field-2-name"), language.getTranslation("command-store-embed-bundle-field-2-text")
-                        .replaceAll("%timestamp%", "<t:" + (Instant.now().getEpochSecond()+currentBundle.getSecondsRemaining()) + ":R>"), true)
+                        .replaceAll("%timestamp%", "<t:" + storeBundle.getRemovalDate().getTime() / 1000 + ":R>"), true)
                 .setImage(bundle.getDisplayIcon())
                 .removeFooter();
         embedList.add(bundleEmbed.build());
 
-        for(Item item : currentBundle.getItems()) {
+        for(StoreBundle.Item item : storeBundle.getItems()) {
             Embed itemEmbed = new Embed()
                     .addField(language.getTranslation("command-store-embed-item-field-1-name"), item.getAmount() + "x", true)
                     .addField(language.getTranslation("command-store-embed-item-field-2-name"), item.getBasePrice() + " " + Emojis.getVP().getFormatted(), true)
                     .removeFooter();
             switch (item.getType()) {
                 case "buddy" -> {
-                    Buddy buddy = officerAPI.getBuddy(item.getUuid(), language.getLanguageCode());
+                    Buddy buddy = officerAPI.getBuddy(item.getId(), language.getLanguageCode());
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
                             .setThumbnail(buddy.getDisplayIcon());
                 }
                 case "player_card" -> {
-                    Playercard playercard = officerAPI.getPlayercard(item.getUuid(), language.getLanguageCode());
+                    PlayerCard playercard = officerAPI.getPlayerCard(item.getId(), language.getLanguageCode());
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
                             .setThumbnail(playercard.getLargeArt())
                             .setImage(playercard.getWideArt());
                 }
                 case "spray" -> {
-                    Spray spray = officerAPI.getSpray(item.getUuid(), language.getLanguageCode());
+                    Spray spray = officerAPI.getSpray(item.getId(), language.getLanguageCode());
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
                             .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
                 }
                 case "skin_level" -> {
-                    Skin skin = officerAPI.getSkin(item.getUuid(), language.getLanguageCode());
+                    Skin skin = officerAPI.getSkin(item.getId(), language.getLanguageCode());
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
                             .setImage(skin.getDisplayIcon());
                 }
-                default -> itemEmbed.setTitle(language.getEmbedTitlePrefix() + item.getName())
-                        .setImage(item.getImage());
+                default -> itemEmbed.setTitle(language.getEmbedTitlePrefix() + item.getDisplayName())
+                        .setImage(item.getDisplayIcon());
             }
             embedList.add(itemEmbed.build());
         }

@@ -1,7 +1,7 @@
 package dev.piste.vayna.util.templates;
 
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
 import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
@@ -37,7 +37,7 @@ public class Buttons {
     }
 
     public static Button getHistoryButton(Language language, RiotAccount riotAccount) {
-        return Button.secondary(new HistoryButton().getName() + ";" + riotAccount.getPuuid(), language.getTranslation(";button-history"));
+        return Button.secondary(new HistoryButton().getName() + ";" + riotAccount.getPUUID(), language.getTranslation(";button-history"));
     }
 
 }

@@ -45,7 +45,7 @@ public class HelpSlashCommand implements ISlashCommand {
         embed.addField(language.getTranslation("command-help-embed-field-5-name"), "" +
                 "» " + InteractionManager.getSlashCommandAsJdaCommand(new MapSlashCommand()).getAsMention() + " " + language.getTranslation("command-map-description") + "\n" +
                 "» " + InteractionManager.getSlashCommandAsJdaCommand(new AgentSlashCommand()).getAsMention() + " " + language.getTranslation("command-agent-description") + "\n" +
-                "» " + InteractionManager.getSlashCommandAsJdaCommand(new GamemodeSlashCommand()).getAsMention() + " " + language.getTranslation("command-gamemode-description") + "\n" +
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new GameModeSlashCommand()).getAsMention() + " " + language.getTranslation("command-gamemode-description") + "\n" +
                 "» " + InteractionManager.getSlashCommandAsJdaCommand(new WeaponSlashCommand()).getAsMention() + " " + language.getTranslation("command-weapon-description") + "\n" +
                 "» "  + InteractionManager.getSlashCommandAsJdaCommand(new StoreSlashCommand()).getAsMention() + " " + language.getTranslation("command-store-description"), false);
 

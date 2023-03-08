@@ -1,14 +1,14 @@
 package dev.piste.vayna.interactions;
 
 import dev.piste.vayna.Bot;
+import dev.piste.vayna.apis.HenrikAPI;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
+import dev.piste.vayna.apis.entities.henrik.MMR;
+import dev.piste.vayna.apis.entities.officer.Rank;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
 import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Piste | https://github.com/PisteDev
@@ -50,12 +50,12 @@ public class StatsInteraction {
             }
         }
 
-        RiotAPI riotAPI = new RiotAPI();
+        RiotGamesAPI riotGamesAPI = new RiotGamesAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
 
         String region;
         try {
-            region = riotAPI.getRegion(riotAccount.getPuuid());
+            region = riotGamesAPI.getRegion(riotAccount.getPUUID());
         } catch (HttpErrorException e) {
             if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                 interactionHook.editOriginalEmbeds(ErrorMessages.getInvalidRegion(riotAccount, language)).setActionRow(
@@ -66,38 +66,38 @@ public class StatsInteraction {
                 throw e;
             }
         }
-        HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
-        Rank rank = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion()).getRank();
-        ArrayList<Tier> tiers = new OfficerAPI().getCompetitiveTier(language.getLanguageCode()).getTiers();
+        HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getName(), riotAccount.getTag());
+        MMR.CurrentData currentMmrData = henrikAPI.getMMR(henrikAccount.getId(), henrikAccount.getRegion()).getCurrentData();
+        List<Rank> ranks = new OfficerAPI().getRanks(language.getLanguageCode());
 
         Embed embed = new Embed()
-                .setAuthor(riotAccount.getRiotId(), henrikAccount.getCard() != null ? henrikAccount.getCard().getSmall() : null)
+                .setAuthor(riotAccount.getRiotId(), henrikAccount.getPlayerCard() != null ? henrikAccount.getPlayerCard().getSmallArt() : null)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-embed-title"))
                 .setDescription(language.getTranslation("command-stats-embed-description"))
-                .addField(language.getTranslation("command-stats-embed-field-1-name"), Emojis.getLevel().getFormatted() + " " + henrikAccount.getAccountLevel(), true)
-                .addField(language.getTranslation("command-stats-embed-field-2-name"), Emojis.getRegion(region).getFormatted() + " " + riotAPI.getPlatformData(region).getName(), true);
+                .addField(language.getTranslation("command-stats-embed-field-1-name"), Emojis.getLevel().getFormatted() + " " + henrikAccount.getLevel(), true)
+                .addField(language.getTranslation("command-stats-embed-field-2-name"), Emojis.getRegion(region).getFormatted() + " " + riotGamesAPI.getPlatformData(region).getRegionName(), true);
         if(rsoConnection.isExisting()) {
             embed.addField(language.getTranslation("command-stats-embed-field-3-name"),
                     Emojis.getDiscord().getFormatted() + " " + Bot.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsMention() + " (`" + Bot.getJDA().getUserById(rsoConnection.getDiscordUserId()).getAsTag() + "`)", true);
         }
 
-        if(rank.getCurrentTierPatched() == null) {
-            Tier tier = tiers.get(0);
-            embed.setThumbnail(tier.getLargeIcon())
-                    .addField(language.getTranslation("command-stats-embed-field-4-name"), Emojis.getRankByTierName(tier.getTier()).getFormatted()  + " " + tier.getTierName(), false)
+        if(currentMmrData.getRankName() == null) {
+            Rank rank = ranks.get(0);
+            embed.setThumbnail(rank.getLargeIcon())
+                    .addField(language.getTranslation("command-stats-embed-field-4-name"), Emojis.getRankByTierName(rank.getId()).getFormatted()  + " " + currentMmrData.getRankName(), false)
                     .addField(language.getTranslation("command-stats-embed-field-5-name"),
-                            "**" + rank.getGamesNeededForRating() + "** " + (rank.getGamesNeededForRating()==1 ? language.getTranslation("command-stats-embed-field-5-text-1") : language.getTranslation("command-stats-embed-field-5-text-2")), true);
+                            "**" + currentMmrData.getNeededGameCount() + "** " + (currentMmrData.getNeededGameCount() == 1 ? language.getTranslation("command-stats-embed-field-5-text-1") : language.getTranslation("command-stats-embed-field-5-text-2")), true);
         } else {
-            for (Tier tier : tiers) {
-                if (tier.getTier() == rank.getCurrentTier()) {
-                    embed.addField(language.getTranslation("command-stats-embed-field-4-name"), Emojis.getRankByTierName(tier.getTier()).getFormatted() + " " + tier.getTierName(), false)
-                            .setThumbnail(tier.getLargeIcon());
-                    if (rank.getCurrentTier() > 23) {
-                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), "**" + rank.getRankingInTier() + "**RR » " +
-                                (rank.getMmrChangeToLastGame() >= 0 ? Emojis.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emojis.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+            for (Rank rank : ranks) {
+                if (rank.getId() == currentMmrData.getRankId()) {
+                    embed.addField(language.getTranslation("command-stats-embed-field-4-name"), Emojis.getRankByTierName(rank.getId()).getFormatted() + " " + rank.getName(), false)
+                            .setThumbnail(rank.getLargeIcon());
+                    if (rank.getId() >= 24) {
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), "**" + currentMmrData.getRating() + "**RR » " +
+                                (currentMmrData.getLastRatingChange() >= 0 ? Emojis.getIncrease().getFormatted() + " **+" + currentMmrData.getLastRatingChange() + "**" : Emojis.getDecrease().getFormatted() + " **" + currentMmrData.getLastRatingChange() + "**"), false);
                     } else {
-                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), getProgressBar(rank.getRankingInTier()) + "\n" + "**" + rank.getRankingInTier() + "**/**100** » " +
-                                (rank.getMmrChangeToLastGame() >= 0 ? Emojis.getIncrease().getFormatted() + " **+" + rank.getMmrChangeToLastGame() + "**" : Emojis.getDecrease().getFormatted() + " **" + rank.getMmrChangeToLastGame() + "**"), false);
+                        embed.addField(language.getTranslation("command-stats-embed-field-6-name"), getProgressBar(currentMmrData.getRating()) + "\n" + "**" + currentMmrData.getRating() + "**/**100** » " +
+                                (currentMmrData.getLastRatingChange() >= 0 ? Emojis.getIncrease().getFormatted() + " **+" + currentMmrData.getLastRatingChange() + "**" : Emojis.getDecrease().getFormatted() + " **" + currentMmrData.getLastRatingChange() + "**"), false);
                     }
                 }
             }

@@ -1,9 +1,8 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.PlatformData;
-import dev.piste.vayna.apis.riot.gson.platformdata.Status;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.riotgames.PlatformData;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
@@ -15,11 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,28 +27,26 @@ public class StatusSlashCommand implements ISlashCommand {
         event.deferReply(true).queue();
 
         String riotLanguageCode = language.getLanguageCode().replaceAll("-", "_");
-        PlatformData platformData = new RiotAPI().getPlatformData(event.getOption("region").getAsString());
+        PlatformData platformData = new RiotGamesAPI().getPlatformData(event.getOption("region").getAsString());
 
         List<MessageEmbed> embedList = new ArrayList<>();
 
-        for(Status status : platformData.getMaintenances()) {
+        for(PlatformData.Status status : platformData.getMaintenances()) {
             String title = null;
-            for(Status.Content content : status.getTitles()) {
-                if(content.getLocale().equals(riotLanguageCode)) {
-                    title = content.getContent();
+            for(PlatformData.Translation translation : status.getTitles()) {
+                if(translation.getLocale().equals(riotLanguageCode)) {
+                    title = translation.getContent();
                 }
             }
             if(title == null) throw new NullPointerException("Error while getting title of maintenance (ID: " + status.getId() + ")!");
             List<String> updates = new ArrayList<>();
-            for(Status.Update update : status.getUpdates()) {
-                for(Status.Content content : update.getTranslations()) {
-                    if(content.getLocale().equals(riotLanguageCode)) {
-                        updates.add(content.getContent());
+            for(PlatformData.Update update : status.getUpdates()) {
+                for(PlatformData.Translation translation : update.getTranslations()) {
+                    if(translation.getLocale().equals(riotLanguageCode)) {
+                        updates.add(translation.getContent());
                     }
                 }
             }
-            LocalDateTime localDateTime = LocalDateTime.parse(status.getCreatedAt(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX"));
-            Date date = Date.from(localDateTime.atZone(ZoneId.of("MET")).toInstant());
             Embed embed = new Embed()
                     .setTitle(language.getEmbedTitlePrefix() + title);
             if(updates.size() > 1) {
@@ -63,7 +56,7 @@ public class StatusSlashCommand implements ISlashCommand {
             } else {
                 embed.setDescription(">>> " + updates.get(0));
             }
-            embed.addField(language.getTranslation("command-status-embed-field-2-name"), "<t:" + date.getTime()/1000 + ":F>", true);
+            embed.addField(language.getTranslation("command-status-embed-field-2-name"), "<t:" + status.getCreationDate().getTime()/1000 + ":F>", true);
             embedList.add(embed.build());
         }
 

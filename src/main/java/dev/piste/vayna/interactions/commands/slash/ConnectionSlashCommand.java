@@ -1,7 +1,7 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.RiotAPI;
+import dev.piste.vayna.apis.RiotGamesAPI;
 import dev.piste.vayna.util.StatsCounter;
 import dev.piste.vayna.mongodb.RsoAuthKey;
 import dev.piste.vayna.mongodb.RsoConnection;
@@ -29,10 +29,10 @@ public class ConnectionSlashCommand implements ISlashCommand {
             RsoAuthKey rsoAuthKey = new RsoAuthKey(event.getUser().getIdLong());
             rsoAuthKey.refreshExpirationDate();
             event.getHook().editOriginalEmbeds(MessageEmbeds.getNoConnectionEmbed(language, event.getUser(), rsoAuthKey.getExpirationDate())).setActionRow(
-                    Buttons.getConnectButton(language, rsoAuthKey.getRsoAuthKey())
+                    Buttons.getConnectButton(language, rsoAuthKey.getAuthKey())
             ).queue();
         } else {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotAPI().getAccount(rsoConnection.getRiotPuuid()).getRiotId(), rsoConnection.isPubliclyVisible())).setActionRow(
+            event.getHook().editOriginalEmbeds(MessageEmbeds.getPresentConnectionEmbed(language, event.getUser(), new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid()).getRiotId(), rsoConnection.isPubliclyVisible())).setActionRow(
                     Buttons.getDisconnectButton(language),
                     Buttons.getVisibilityButton(language, rsoConnection.isPubliclyVisible())
             ).queue();

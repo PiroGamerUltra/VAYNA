@@ -1,6 +1,6 @@
 package dev.piste.vayna.util.templates;
 
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.interactions.commands.slash.ConnectionSlashCommand;
 import dev.piste.vayna.translations.Language;

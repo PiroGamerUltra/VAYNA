@@ -47,7 +47,7 @@ public class InteractionManager {
     private static void registerSlashCommands() {
         registerSlashCommand(new AgentSlashCommand());
         registerSlashCommand(new ConnectionSlashCommand());
-        registerSlashCommand(new GamemodeSlashCommand());
+        registerSlashCommand(new GameModeSlashCommand());
         registerSlashCommand(new HelpSlashCommand());
         registerSlashCommand(new MapSlashCommand());
         registerSlashCommand(new StatsSlashCommand());

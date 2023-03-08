@@ -1,8 +1,8 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.StatsInteraction;
 import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.translations.Language;
@@ -35,14 +35,14 @@ public class StatsSlashCommand implements ISlashCommand {
             case "me" -> {
                 rsoConnection = new RsoConnection(event.getUser().getIdLong());
                 if(rsoConnection.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(rsoConnection.getRiotPuuid());
+                    riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats user <@user>
             case "user" -> {
                 rsoConnection = new RsoConnection(event.getOption("user").getAsUser().getIdLong());
                 if(rsoConnection.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(rsoConnection.getRiotPuuid());
+                    riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats riot-id <name> <tag>
@@ -50,8 +50,8 @@ public class StatsSlashCommand implements ISlashCommand {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
-                    riotAccount = new RiotAPI().getAccount(gameName, tagLine);
-                    rsoConnection = new RsoConnection(riotAccount.getPuuid());
+                    riotAccount = new RiotGamesAPI().getAccount(gameName, tagLine);
+                    rsoConnection = new RsoConnection(riotAccount.getPUUID());
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                         Embed embed = new Embed()

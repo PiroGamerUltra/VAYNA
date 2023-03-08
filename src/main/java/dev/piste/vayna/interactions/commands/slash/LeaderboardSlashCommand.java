@@ -1,13 +1,15 @@
 package dev.piste.vayna.interactions.commands.slash;
 
+import dev.piste.vayna.apis.HenrikAPI;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.apis.henrik.gson.MMR;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
+import dev.piste.vayna.apis.entities.henrik.MMR;
+import dev.piste.vayna.apis.entities.officer.Rank;
+import dev.piste.vayna.apis.entities.officer.Season;
+import dev.piste.vayna.apis.entities.riotgames.Leaderboard;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
 import dev.piste.vayna.mongodb.RsoConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
@@ -32,8 +34,9 @@ public class LeaderboardSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
 
-        RiotAPI riotAPI = new RiotAPI();
+        RiotGamesAPI riotGamesAPI = new RiotGamesAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
+        OfficerAPI officerAPI = new OfficerAPI();
 
         // Put all linked accounts in this guild in the eloMap
         HashMap<User, MMR> mmrMap = new HashMap<>();
@@ -43,12 +46,12 @@ public class LeaderboardSlashCommand implements ISlashCommand {
             RsoConnection rsoConnection = new RsoConnection(member.getUser().getIdLong());
             if(rsoConnection.isExisting() && rsoConnection.isPubliclyVisible()) {
                 try {
-                    RiotAccount riotAccount = riotAPI.getAccount(rsoConnection.getRiotPuuid());
-                    HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
-                    MMR mmr = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion());
-                    if(mmr.getRank().getCurrentTier() == 0) continue;
+                    RiotAccount riotAccount = riotGamesAPI.getAccount(rsoConnection.getRiotPuuid());
+                    HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getName(), riotAccount.getTag());
+                    MMR mmr = henrikAPI.getMMR(henrikAccount.getId(), henrikAccount.getRegion());
+                    if(mmr.getCurrentData().getRankId() == 0) continue;
                     mmrMap.put(member.getUser(), mmr);
-                    guildElo += mmr.getRank().getElo();
+                    guildElo += mmr.getCurrentData().getElo();
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 429) throw e;
                 }
@@ -69,7 +72,7 @@ public class LeaderboardSlashCommand implements ISlashCommand {
 
         Map<User, Integer> eloMap = new HashMap<>();
         for(Map.Entry<User, MMR> entry : mmrMap.entrySet()) {
-            eloMap.put(entry.getKey(), entry.getValue().getRank().getElo());
+            eloMap.put(entry.getKey(), entry.getValue().getCurrentData().getElo());
         }
 
         // Create a list of the elos and sort it // Calculate the average elo of this guild
@@ -83,52 +86,63 @@ public class LeaderboardSlashCommand implements ISlashCommand {
                 .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
-        ArrayList<Tier> tierList = new OfficerAPI().getCompetitiveTier(language.getLanguageCode()).getTiers();
+        List<Rank> ranks = officerAPI.getRanks(language.getLanguageCode());
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i < 20; i++) {
             if(eloEntryList.size() == i) break;
             User user = eloEntryList.get(i).getKey();
             MMR mmr = mmrMap.get(user);
-            Tier tier = tierList.stream()
-                    .filter(forTier -> forTier.getTier() == mmr.getRank().getCurrentTier())
+            Rank rank = ranks.stream()
+                    .filter(foundRank -> foundRank.getId() == mmr.getCurrentData().getRankId())
                     .findFirst()
                     .orElse(null);
 
-            if(mmr.getRank().getElo() >= 2100) {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                        Emojis.getRankByTierName(mmr.getRank().getCurrentTier()).getFormatted() + " " + tier.getTierName() +
-                                " (**" + mmr.getRank().getRankingInTier() + "RR**)", false);
+            if(mmr.getCurrentData().getElo() >= 2100) {
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                                " (**" + mmr.getCurrentData().getRating() + "RR**)", false);
             } else {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                        Emojis.getRankByTierName(mmr.getRank().getCurrentTier()).getFormatted() + " " + tier.getTierName() +
-                                " (**" + mmr.getRank().getRankingInTier() + "**/**100**)", false);
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                                " (**" + mmr.getCurrentData().getRating() + "**/**100**)", false);
             }
         }
 
+        Season currentSeason = null;
+        for(Season season : officerAPI.getSeasons(language.getLanguageCode())) {
+            if(season.getParentSeason(language.getLanguageCode()) == null) continue;
+            if(season.getStartDate().before(new Date()) && season.getEndDate().after(new Date())) {
+                currentSeason = season;
+                break;
+            }
+        }
+        if(currentSeason == null) throw new NullPointerException("No current season found");
+        Leaderboard.TierDetails tierDetails = riotGamesAPI.getLeaderboard(currentSeason.getId(), 1, 0, "eu").getTierDetails();
+
         // Put the average guild elo in the embed
-        int guildRatingInTier;
-        Tier guildTier;
+        int guildRatingInRank;
+        Rank guildRank;
 
         if(averageGuildElo < 2100) {
-            guildRatingInTier = averageGuildElo % 100;
-            guildTier = tierList.get((int) ((averageGuildElo / 100.0) + 3.0));
+            guildRatingInRank = averageGuildElo % 100;
+            guildRank = ranks.get((int) ((averageGuildElo / 100.0) + 3.0));
         } else {
-            guildRatingInTier = averageGuildElo - 2100;
-            if(guildRatingInTier < 90) {
-                guildTier = tierList.get(24);
-            } else if(guildRatingInTier < 200) {
-                guildTier = tierList.get(25);
-            } else if(guildRatingInTier < 450) {
-                guildTier = tierList.get(26);
+            guildRatingInRank = averageGuildElo - 2100;
+            if(guildRatingInRank < tierDetails.getImmortal2().getRatingThreshold()) {
+                guildRank = ranks.get(24);
+            } else if(guildRatingInRank < tierDetails.getImmortal3().getRatingThreshold()) {
+                guildRank = ranks.get(25);
+            } else if(guildRatingInRank < tierDetails.getRadiant().getRatingThreshold()) {
+                guildRank = ranks.get(26);
             } else {
-                guildTier = tierList.get(27);
+                guildRank = ranks.get(27);
             }
         }
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-embed-title")
-                .replaceAll("%rank:name%", guildTier.getTierName())
-                .replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
-        embed.setThumbnail(guildTier.getLargeIcon());
+                .replaceAll("%rank:name%", guildRank.getName())
+                .replaceAll("%rank:rating%", String.valueOf(guildRatingInRank)));
+        embed.setThumbnail(guildRank.getLargeIcon());
 
         // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
