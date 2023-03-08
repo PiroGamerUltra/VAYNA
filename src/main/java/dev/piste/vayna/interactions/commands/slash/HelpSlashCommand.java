@@ -1,12 +1,11 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.interactions.managers.SlashCommand;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.interactions.managers.SlashCommandManager;
+import dev.piste.vayna.interactions.InteractionManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -16,12 +15,11 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class HelpSlashCommand implements SlashCommand {
+public class HelpSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) {
+    public void perform(SlashCommandInteractionEvent event, Language language) {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         Embed embed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-help-embed-title"))
@@ -29,33 +27,33 @@ public class HelpSlashCommand implements SlashCommand {
                         .replaceAll("%version%", ConfigManager.getSettingsConfig().getVersion()), true);
         // General
         embed.addField(language.getTranslation("command-help-embed-field-2-name"),  "" +
-                "» " + SlashCommandManager.getAsJdaCommand(new HelpSlashCommand()).getAsMention() + " " + language.getTranslation("command-help-description") + "\n" +
-                "» " + SlashCommandManager.getAsJdaCommand(new FeedbackSlashCommand()).getAsMention() + " " + language.getTranslation("command-feedback-description"), false);
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new HelpSlashCommand()).getAsMention() + " " + language.getTranslation("command-help-description") + "\n" +
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new FeedbackSlashCommand()).getAsMention() + " " + language.getTranslation("command-feedback-description"), false);
         // /connection
         embed.addField(language.getTranslation("command-help-embed-field-3-name"),  "" +
-                "» " + SlashCommandManager.getAsJdaCommand(new ConnectionSlashCommand()).getAsMention() + " " + language.getTranslation("command-connection-description"), false);
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new ConnectionSlashCommand()).getAsMention() + " " + language.getTranslation("command-connection-description"), false);
         // /stats & /leaderboard
-        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand1 = SlashCommandManager.getAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(0);
-        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand2 = SlashCommandManager.getAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(1);
-        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand3 = SlashCommandManager.getAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(2);
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand1 = InteractionManager.getSlashCommandAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(0);
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand2 = InteractionManager.getSlashCommandAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(1);
+        net.dv8tion.jda.api.interactions.commands.Command.Subcommand subcommand3 = InteractionManager.getSlashCommandAsJdaCommand(new StatsSlashCommand()).getSubcommands().get(2);
         embed.addField(language.getTranslation("command-help-embed-field-4-name"), "" +
                 "» " + subcommand1.getAsMention() + " " + language.getTranslation("command-stats-user-description") + "\n" +
                 "» " + subcommand2.getAsMention() + " " + language.getTranslation("command-stats-riotid-description") + "\n" +
                 "» " + subcommand3.getAsMention() + " " + language.getTranslation("command-stats-me-description") + "\n" +
-                "» " + SlashCommandManager.getAsJdaCommand(new LeaderboardSlashCommand()).getAsMention() + " " + language.getTranslation("command-leaderboard-description"), false);
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new LeaderboardSlashCommand()).getAsMention() + " " + language.getTranslation("command-leaderboard-description"), false);
         // Info Commands
         embed.addField(language.getTranslation("command-help-embed-field-5-name"), "" +
-                "» " + SlashCommandManager.getAsJdaCommand(new MapSlashCommand()).getAsMention() + " " + language.getTranslation("command-map-description") + "\n" +
-                "» " + SlashCommandManager.getAsJdaCommand(new AgentSlashCommand()).getAsMention() + " " + language.getTranslation("command-agent-description") + "\n" +
-                "» " + SlashCommandManager.getAsJdaCommand(new GamemodeSlashCommand()).getAsMention() + " " + language.getTranslation("command-gamemode-description") + "\n" +
-                "» " + SlashCommandManager.getAsJdaCommand(new WeaponSlashCommand()).getAsMention() + " " + language.getTranslation("command-weapon-description") + "\n" +
-                "» "  + SlashCommandManager.getAsJdaCommand(new StoreSlashCommand()).getAsMention() + " " + language.getTranslation("command-store-description"), false);
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new MapSlashCommand()).getAsMention() + " " + language.getTranslation("command-map-description") + "\n" +
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new AgentSlashCommand()).getAsMention() + " " + language.getTranslation("command-agent-description") + "\n" +
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new GameModeSlashCommand()).getAsMention() + " " + language.getTranslation("command-gamemode-description") + "\n" +
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new WeaponSlashCommand()).getAsMention() + " " + language.getTranslation("command-weapon-description") + "\n" +
+                "» "  + InteractionManager.getSlashCommandAsJdaCommand(new StoreSlashCommand()).getAsMention() + " " + language.getTranslation("command-store-description"), false);
 
         embed.addField(language.getTranslation("command-help-embed-field-6-name"), "" +
-                "» " + SlashCommandManager.getAsJdaCommand(new SettingsSlashCommand()).getAsMention() + " " + language.getTranslation("command-settings-description"), false);
+                "» " + InteractionManager.getSlashCommandAsJdaCommand(new SettingsSlashCommand()).getAsMention() + " " + language.getTranslation("command-settings-description"), false);
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embed.build()).setActionRow(
-                Buttons.getSupportButton(event.getGuild()),
+                Buttons.getSupportButton(language),
                 Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emojis.getGitHub()),
                 Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emojis.getTopGG())
         ).queue();

@@ -1,27 +1,27 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.interactions.managers.SlashCommand;
-import dev.piste.vayna.apis.officer.gson.Map;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.entities.officer.Map;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class MapSlashCommand implements SlashCommand {
+public class MapSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the map by the provided UUID
         Map map = new OfficerAPI().getMap(event.getOption("name").getAsString(), language.getLanguageCode());
@@ -38,11 +38,11 @@ public class MapSlashCommand implements SlashCommand {
     }
 
     @Override
-    public CommandData getCommandData() throws HttpErrorException {
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Map name", true);
         for(Map map : new OfficerAPI().getMaps("en-US")) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
-            optionData.addChoice(map.getDisplayName(), map.getUuid());
+            optionData.addChoice(map.getDisplayName(), map.getId());
         }
         return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }

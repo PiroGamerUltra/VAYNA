@@ -1,50 +1,48 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.interactions.managers.SlashCommand;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.StatsInteraction;
+import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
 import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ErrorMessages;
-import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+import java.io.IOException;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class StatsSlashCommand implements SlashCommand {
+public class StatsSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
-        event.deferReply().queue();
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
+        event.deferReply(false).queue();
 
-        Language language = LanguageManager.getLanguage(event.getGuild());
-
-        LinkedAccount linkedAccount = null;
+        RsoConnection rsoConnection = null;
         RiotAccount riotAccount = null;
         if(event.getSubcommandName() == null) return;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
-                linkedAccount = new LinkedAccount(event.getUser().getIdLong());
-                if(linkedAccount.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+                rsoConnection = new RsoConnection(event.getUser().getIdLong());
+                if(rsoConnection.isExisting()) {
+                    riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats user <@user>
             case "user" -> {
-                linkedAccount = new LinkedAccount(event.getOption("user").getAsUser().getIdLong());
-                if(linkedAccount.isExisting()) {
-                    riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+                rsoConnection = new RsoConnection(event.getOption("user").getAsUser().getIdLong());
+                if(rsoConnection.isExisting()) {
+                    riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats riot-id <name> <tag>
@@ -52,8 +50,8 @@ public class StatsSlashCommand implements SlashCommand {
                 String gameName = event.getOption("name").getAsString();
                 String tagLine = event.getOption("tag").getAsString();
                 try {
-                    riotAccount = new RiotAPI().getAccount(gameName, tagLine);
-                    linkedAccount = new LinkedAccount(riotAccount.getPuuid());
+                    riotAccount = new RiotGamesAPI().getAccount(gameName, tagLine);
+                    rsoConnection = new RsoConnection(riotAccount.getPUUID());
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
                         Embed embed = new Embed()
@@ -64,7 +62,7 @@ public class StatsSlashCommand implements SlashCommand {
                                         .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
                                         .replaceAll("%riotid%", gameName + "#" + tagLine));
                         event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                                Buttons.getSupportButton(event.getGuild())
+                                Buttons.getSupportButton(language)
                         ).queue();
                         return;
                     } else {
@@ -74,39 +72,7 @@ public class StatsSlashCommand implements SlashCommand {
             }
         }
 
-        if(!linkedAccount.isExisting()) {
-            if(linkedAccount.getDiscordUserId() != 0) {
-                if (linkedAccount.getDiscordUserId() == event.getUser().getIdLong()) {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
-                            Buttons.getSupportButton(event.getGuild())
-                    ).queue();
-                } else {
-                    event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention())).setActionRow(
-                            Buttons.getSupportButton(event.getGuild())
-                    ).queue();
-                }
-                return;
-            }
-        } else {
-            if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-                return;
-            }
-        }
-
-        try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(language, linkedAccount, riotAccount)).queue();
-        } catch (HttpErrorException e) {
-            if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-            } else {
-                throw e;
-            }
-        }
+        new StatsInteraction().perform(event.getUser(), riotAccount, rsoConnection, event.getHook(), language);
     }
 
     @Override

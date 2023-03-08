@@ -1,11 +1,12 @@
 package dev.piste.vayna;
 
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.listener.*;
-import dev.piste.vayna.interactions.managers.*;
+import dev.piste.vayna.interactions.InteractionManager;
+import dev.piste.vayna.listener.GuildJoinLeaveListener;
+import dev.piste.vayna.listener.InteractionListeners;
 import dev.piste.vayna.mongodb.Mongo;
-import dev.piste.vayna.util.ConsoleColor;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.util.Logger;
+import dev.piste.vayna.translations.LanguageManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -29,65 +30,57 @@ public class Bot {
         return System.getProperty("os.name").startsWith("Windows");
     }
 
-    public static String getConsolePrefix(String name) {
-        return ConsoleColor.WHITE + "[" + ConsoleColor.PURPLE + name + ConsoleColor.WHITE + "]" + ConsoleColor.RESET + " ";
-    }
-
     public static void main(String[] args) {
         ConfigManager.loadConfigs();
         Mongo.connect();
         LanguageManager.loadLanguages();
+        startReloadListener();
+        startJDA();
+    }
 
-        jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
-                .addEventListeners(new InteractionListeners())
-                .addEventListeners(new GuildJoinLeaveListener())
-                .setActivity(Activity.competing("VALORANT"))
-                .setStatus(OnlineStatus.ONLINE)
-                .setChunkingFilter(ChunkingFilter.ALL)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                .build();
-
-        // Registering all Managers
-
-        SlashCommandManager.registerCommands();
-        ButtonManager.registerButtons();
-        ModalManager.registerModals();
-        StringSelectMenuManager.registerStringSelectMenus();
-        UserContextCommandManager.registerStringSelectMenus();
-
-        new Bot().listenShutdown();
-
+    private static void startJDA() {
         try {
+            jda = JDABuilder.createDefault(isDebug() ? ConfigManager.getTokensConfig().getBot().getDevelopment() : ConfigManager.getTokensConfig().getBot().getVayna())
+                    .addEventListeners(new InteractionListeners())
+                    .addEventListeners(new GuildJoinLeaveListener())
+                    .setActivity(Activity.competing("VALORANT"))
+                    .setStatus(OnlineStatus.ONLINE)
+                    .setChunkingFilter(ChunkingFilter.ALL)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .build();
             jda.awaitReady();
+            registerInteractions();
+            new Logger(Bot.class).info("Started");
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            new Logger(Bot.class).error("Error while starting JDA", e);
         }
-        System.out.println(getConsolePrefix("Discord") + ConsoleColor.GREEN + "Connected" + ConsoleColor.RESET);
+    }
+
+    private static void registerInteractions() {
+        InteractionManager.registerInteractions();
+    }
+
+    private static void startReloadListener() {
+        new Thread(() -> {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                while (true) {
+                    String input = reader.readLine();
+                    if (input != null && input.equalsIgnoreCase("reload")) {
+                        LanguageManager.loadLanguages();
+                        ConfigManager.loadConfigs();
+                        new Logger(Bot.class).info("Reloaded");
+                    }
+                }
+            } catch (IOException e) {
+                new Logger(Bot.class).error("Error reading console input", e);
+            }
+        }).start();
     }
 
     public static JDA getJDA() {
         return jda;
-    }
-
-    private void listenShutdown() {
-        new Thread(() -> {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            try {
-                while (reader.readLine() != null) {
-                    if (reader.readLine().equalsIgnoreCase("exit")) {
-                        if (jda != null) {
-                            jda.shutdown();
-                            System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.GREEN + "Stopped" + ConsoleColor.RESET);
-                        }
-                        reader.close();
-                    } else {
-                        System.out.println(getConsolePrefix("VAYNA") + ConsoleColor.YELLOW + "Type 'exit' to stop the bot." + ConsoleColor.RESET);
-                    }
-                }
-            } catch (IOException ignored) {
-            }
-        }).start();
     }
 
 }

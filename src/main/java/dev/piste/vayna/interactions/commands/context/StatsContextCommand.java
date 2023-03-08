@@ -1,70 +1,42 @@
 package dev.piste.vayna.interactions.commands.context;
 
-import dev.piste.vayna.Bot;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.interactions.managers.UserContextCommand;
-import dev.piste.vayna.mongodb.LinkedAccount;
-import dev.piste.vayna.util.templates.Buttons;
-import dev.piste.vayna.util.templates.ErrorMessages;
-import dev.piste.vayna.util.templates.MessageEmbeds;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.StatsInteraction;
+import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+
+import java.io.IOException;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class StatsContextCommand implements UserContextCommand {
+public class StatsContextCommand implements IUserContextCommand {
 
     @Override
-    public void perform(UserContextInteractionEvent event) throws HttpErrorException {
-        event.deferReply().queue();
+    public void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
+        event.deferReply(false).queue();
 
-        LinkedAccount linkedAccount = new LinkedAccount(event.getTarget().getIdLong());
-        if(!linkedAccount.isExisting()) {
-            if (linkedAccount.getDiscordUserId() == event.getUser().getIdLong()) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnectionSelf(event.getGuild(), event.getUser())).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-            } else {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getNoConnection(event.getGuild(), event.getUser(), event.getJDA().getUserById(linkedAccount.getDiscordUserId()).getAsMention())).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-            }
-            return;
-        } else {
-            if(!linkedAccount.isVisibleToPublic() && (linkedAccount.getDiscordUserId() != event.getUser().getIdLong())) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getPrivate(event.getGuild(), event.getUser())).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-                return;
-            }
+        RsoConnection rsoConnection = new RsoConnection(event.getTarget().getIdLong());
+        RiotAccount riotAccount = null;
+        if(rsoConnection.isExisting()) {
+            riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
         }
 
-        RiotAccount riotAccount = new RiotAPI().getAccount(linkedAccount.getRiotPuuid());
+        new StatsInteraction().perform(event.getUser(), riotAccount, rsoConnection, event.getHook(), language);
+    }
 
-        try {
-            event.getHook().editOriginalEmbeds(MessageEmbeds.getStatsEmbed(LanguageManager.getLanguage(event.getGuild()), linkedAccount, riotAccount)).queue();
-        } catch (HttpErrorException e) {
-            if(e.getStatusCode() == 404) {
-                event.getHook().editOriginalEmbeds(ErrorMessages.getInvalidRegion(event.getGuild(), event.getUser(), riotAccount)).setActionRow(
-                        Buttons.getSupportButton(event.getGuild())
-                ).queue();
-            } else {
-                throw e;
-            }
-        }
+    @Override
+    public CommandData getCommandData() {
+        return Commands.user(getName());
     }
 
     @Override
     public String getName() {
         return "Stats";
-    }
-
-    @Override
-    public void register() {
-        Bot.getJDA().upsertCommand(Commands.user(getName())).queue();
     }
 }

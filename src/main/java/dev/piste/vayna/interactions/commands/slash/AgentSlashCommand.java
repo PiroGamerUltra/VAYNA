@@ -1,13 +1,11 @@
 package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.apis.officer.gson.Agent;
-import dev.piste.vayna.apis.officer.gson.agent.Ability;
-import dev.piste.vayna.interactions.managers.SlashCommand;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.entities.officer.Agent;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -15,17 +13,17 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class AgentSlashCommand implements SlashCommand {
+public class AgentSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
         // Searching the agent by the provided UUID
         Agent agent = new OfficerAPI().getAgent(event.getOption("name").getAsString(), language.getLanguageCode());
@@ -48,21 +46,12 @@ public class AgentSlashCommand implements SlashCommand {
                 .removeFooter();
         embedList.add(roleEmbed.build());
 
-        for(Ability ability : agent.getAbilities()) {
+        for(Agent.Ability ability : agent.getAbilities()) {
             // Skip if the ability name is "Passive"
-            if(ability.getSlot().equalsIgnoreCase("Passive")) continue;
-            // Determine the hotkeys for the different ability types
-            String abilityKey;
-            switch (ability.getSlot()) {
-                case "Ability1" -> abilityKey = "Q";
-                case "Ability2" -> abilityKey = "E";
-                case "Grenade" -> abilityKey = "C";
-                case "Ultimate" -> abilityKey = "X";
-                default -> abilityKey = "Error";
-            }
+            if(ability.getSlotKey().equalsIgnoreCase("Passive")) continue;
             // Adding the ability embed
             Embed abilityEmbed = new Embed()
-                    .setAuthor(ability.getDisplayName() + " (" + abilityKey + ")", ability.getDisplayIcon())
+                    .setAuthor(ability.getDisplayName() + " (" + ability.getSlotKey() + ")", ability.getDisplayIcon())
                     .setDescription(">>> " + ability.getDescription())
                     .removeFooter();
             embedList.add(abilityEmbed.build());
@@ -83,10 +72,10 @@ public class AgentSlashCommand implements SlashCommand {
     }
 
     @Override
-    public CommandData getCommandData() throws HttpErrorException {
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "Agent name", true);
         for(Agent agent : new OfficerAPI().getAgents("en-US")) {
-            optionData.addChoice(agent.getDisplayName(), agent.getUuid());
+            optionData.addChoice(agent.getDisplayName(), agent.getId());
         }
         return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }

@@ -1,9 +1,13 @@
 package dev.piste.vayna.apis;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,6 +16,7 @@ import java.net.http.HttpResponse;
 /**
  * @author Piste | https://github.com/PisteDev
  */
+@SuppressWarnings("unused")
 public class RestClient {
 
     private final String baseUrl;
@@ -30,20 +35,33 @@ public class RestClient {
         return this;
     }
 
-    public JsonObject doGet(String path) throws HttpErrorException {
+    public JsonObject doGet(String path) throws HttpErrorException, IOException, InterruptedException {
         HttpRequest httpRequest = httpRequestBuilder
                 .uri(URI.create(baseUrl + path))
                 .GET()
                 .build();
-        try {
-            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() == 200) {
-                return JsonParser.parseString(response.body()).getAsJsonObject();
-            } else {
-                throw new HttpErrorException(response.statusCode(), httpRequest.uri().toString(), httpRequest.method());
+        return sendRequest(httpRequest);
+    }
+
+    public JsonObject doPost(String path, String body) throws HttpErrorException, IOException, InterruptedException {
+        HttpRequest httpRequest = httpRequestBuilder
+                .uri(URI.create(baseUrl + path))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        return sendRequest(httpRequest);
+    }
+
+    private JsonObject sendRequest(HttpRequest httpRequest) throws HttpErrorException, IOException, InterruptedException {
+        HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            if(HttpStatus.valueOf(response.statusCode()).isError()) {
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.body());
+                StringWriter bodyWriter = new StringWriter();
+                JsonWriter jsonWriter = new JsonWriter(bodyWriter);
+                jsonWriter.setIndent("  ");
+                gson.toJson(jsonObject, jsonWriter);
+                throw new HttpErrorException(response.statusCode(), bodyWriter.toString(), httpRequest.uri().toString(), httpRequest.method());
             }
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return JsonParser.parseString(response.body()).getAsJsonObject();
     }
 }

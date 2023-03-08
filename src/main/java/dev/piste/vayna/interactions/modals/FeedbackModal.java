@@ -2,22 +2,19 @@ package dev.piste.vayna.interactions.modals;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
-import dev.piste.vayna.interactions.managers.Modal;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
+import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class FeedbackModal implements Modal {
+public class FeedbackModal implements IModal {
 
     @Override
-    public void perform(ModalInteractionEvent event) {
-        event.deferReply().setEphemeral(true).queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
+    public void perform(ModalInteractionEvent event, Language language) {
+        event.deferReply(true).queue();
 
         Embed embed = new Embed()
                 .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())

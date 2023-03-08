@@ -6,6 +6,7 @@ import dev.piste.vayna.util.StatsCounter;
 import dev.piste.vayna.util.Embed;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,36 +21,30 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
-        final Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
-        final TextChannel logChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getGuild());
-        Embed embed = new Embed()
-                .setColor(0, 255, 0)
-                .setAuthor(event.getGuild().getName() + " (" + event.getGuild().getId() + ")", event.getGuild().getIconUrl())
-                .addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag() + " (" + event.getGuild().getOwner().getId() + ")", true)
-                .addField("Member count", event.getGuild().getMemberCount() + " members", true)
-                .setThumbnail(event.getGuild().getIconUrl());
-        if (event.getGuild().getBannerUrl() != null) {
-            embed.setImage(event.getGuild().getBannerUrl());
-        }
-        CompletableFuture.runAsync(() -> logChannel.sendMessageEmbeds(embed.build()).queue());
-        if (!Bot.isDebug()) {
-            StatsCounter.countGuilds();
-        }
+        log(event, event.getGuild());
     }
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        final Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
-        final TextChannel logChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getGuild());
+        log(event, event.getGuild());
+    }
+
+    private void log(GenericEvent event, Guild guild) {
         Embed embed = new Embed()
-                .setColor(255, 0, 0)
-                .setAuthor(event.getGuild().getName() + " (" + event.getGuild().getId() + ")", event.getGuild().getIconUrl())
-                .addField("Guild owner", event.getGuild().getOwner().getUser().getAsTag() + " (" + event.getGuild().getOwner().getId() + ")", true)
-                .addField("Member count", event.getGuild().getMemberCount() + " members", true)
-                .setThumbnail(event.getGuild().getIconUrl());
-        if (event.getGuild().getBannerUrl() != null) {
-            embed.setImage(event.getGuild().getBannerUrl());
+                .setAuthor(guild.getName() + " (" + guild.getId() + ")", guild.getIconUrl())
+                .addField("Guild owner", guild.getOwner().getUser().getAsTag() + " (" + guild.getOwner().getId() + ")", true)
+                .addField("Member count", guild.getMemberCount() + " members", true)
+                .setThumbnail(guild.getIconUrl());
+        if(event instanceof GuildLeaveEvent) {
+            embed.setColor(255, 0, 0);
+        } else {
+            embed.setColor(0, 255, 0);
         }
+        if (guild.getBannerUrl() != null) {
+            embed.setImage(guild.getBannerUrl());
+        }
+        Guild supportGuild = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId());
+        TextChannel logChannel = supportGuild.getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getGuild());
         CompletableFuture.runAsync(() -> logChannel.sendMessageEmbeds(embed.build()).queue());
         if (!Bot.isDebug()) {
             StatsCounter.countGuilds();

@@ -1,20 +1,20 @@
 package dev.piste.vayna.interactions.commands.slash;
 
+import dev.piste.vayna.apis.HenrikAPI;
 import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.henrik.HenrikAPI;
-import dev.piste.vayna.apis.henrik.gson.HenrikAccount;
-import dev.piste.vayna.apis.henrik.gson.MMR;
-import dev.piste.vayna.apis.henrik.gson.mmr.Rank;
-import dev.piste.vayna.apis.riot.RiotAPI;
-import dev.piste.vayna.apis.riot.gson.RiotAccount;
-import dev.piste.vayna.apis.officer.OfficerAPI;
-import dev.piste.vayna.apis.officer.gson.competitivetier.Tier;
-import dev.piste.vayna.interactions.managers.SlashCommand;
-import dev.piste.vayna.mongodb.LinkedAccount;
+import dev.piste.vayna.apis.OfficerAPI;
+import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
+import dev.piste.vayna.apis.entities.henrik.MMR;
+import dev.piste.vayna.apis.entities.officer.Rank;
+import dev.piste.vayna.apis.entities.officer.Season;
+import dev.piste.vayna.apis.entities.riotgames.Leaderboard;
+import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.translations.Language;
+import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.translations.Language;
-import dev.piste.vayna.util.translations.LanguageManager;
 import dev.piste.vayna.util.templates.Buttons;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -22,36 +22,36 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class LeaderboardSlashCommand implements SlashCommand {
+public class LeaderboardSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event) throws HttpErrorException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply().queue();
-        Language language = LanguageManager.getLanguage(event.getGuild());
 
-        RiotAPI riotAPI = new RiotAPI();
+        RiotGamesAPI riotGamesAPI = new RiotGamesAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
+        OfficerAPI officerAPI = new OfficerAPI();
 
         // Put all linked accounts in this guild in the eloMap
-        HashMap<User, MMR> eloMap = new HashMap<>();
-
+        HashMap<User, MMR> mmrMap = new HashMap<>();
+        int guildElo = 0;
         // Collecting every connected Riot Games account in this server
         for(Member member : event.getGuild().getMembers()) {
-            LinkedAccount linkedAccount = new LinkedAccount(member.getUser().getIdLong());
-            if(linkedAccount.isExisting() && linkedAccount.isVisibleToPublic()) {
+            RsoConnection rsoConnection = new RsoConnection(member.getUser().getIdLong());
+            if(rsoConnection.isExisting() && rsoConnection.isPubliclyVisible()) {
                 try {
-                    RiotAccount riotAccount = riotAPI.getAccount(linkedAccount.getRiotPuuid());
-                    HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getGameName(), riotAccount.getTagLine());
-                    MMR mmr = henrikAPI.getMmr(henrikAccount.getPuuid(), henrikAccount.getRegion());
-                    if(mmr.getRank().getElo() == 0) continue;
-                    eloMap.put(member.getUser(), mmr);
+                    RiotAccount riotAccount = riotGamesAPI.getAccount(rsoConnection.getRiotPuuid());
+                    HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getName(), riotAccount.getTag());
+                    MMR mmr = henrikAPI.getMMR(henrikAccount.getId(), henrikAccount.getRegion());
+                    if(mmr.getCurrentData().getRankId() == 0) continue;
+                    mmrMap.put(member.getUser(), mmr);
+                    guildElo += mmr.getCurrentData().getElo();
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 429) throw e;
                 }
@@ -59,85 +59,90 @@ public class LeaderboardSlashCommand implements SlashCommand {
         }
 
         // If no one has connected his Riot Games account yet
-        if(eloMap.isEmpty()) {
+        if(mmrMap.isEmpty()) {
             Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                     .setColor(255, 0, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
                     .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
             event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    Buttons.getSupportButton(event.getGuild())
+                    Buttons.getSupportButton(language)
             ).queue();
             return;
         }
 
-        // Create a list of the elos and sort it // Calculate the average elo of this guild
-        ArrayList<Integer> eloList = new ArrayList<>();
-        int memberElos = 0;
-        for(MMR mmr : eloMap.values()) {
-            memberElos += mmr.getRank().getElo();
-            eloList.add(mmr.getRank().getElo());
+        Map<User, Integer> eloMap = new HashMap<>();
+        for(Map.Entry<User, MMR> entry : mmrMap.entrySet()) {
+            eloMap.put(entry.getKey(), entry.getValue().getCurrentData().getElo());
         }
-        eloList.sort(Collections.reverseOrder());
-        int guildElo = memberElos / eloMap.size();
+
+        // Create a list of the elos and sort it // Calculate the average elo of this guild
+        List<Map.Entry<User, Integer>> eloEntryList = new ArrayList<>(eloMap.entrySet());
+        eloEntryList.sort(Map.Entry.comparingByValue());
+        Collections.reverse(eloEntryList);
+
+        int averageGuildElo = guildElo / eloMap.size();
 
         Embed embed = new Embed()
                 .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-description"));
 
-        ArrayList<Tier> tierList = new OfficerAPI().getCompetitiveTier(language.getLanguageCode()).getTiers();
+        List<Rank> ranks = officerAPI.getRanks(language.getLanguageCode());
 
         // Create an embed field for the best 20 players in this guild
-        for(int i = 0; i<20; i++) {
-            if(eloList.size() == i) break;
-            for(HashMap.Entry<User, MMR> entry : eloMap.entrySet()) {
-                User user = entry.getKey();
-                MMR mmr = entry.getValue();
-                Rank rank = mmr.getRank();
-                Tier tier = null;
-                for(Tier forTier : tierList) {
-                    if(forTier.getTier() == rank.getCurrentTier()) {
-                        tier = forTier;
-                        break;
-                    }
-                }
-                if(entry.getValue().getRank().getElo() == eloList.get(i)) {
-                    if(rank.getElo() >= 2100) {
-                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emojis.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
-                                        " (**" + rank.getRankingInTier() + "RR**)", false);
-                    } else {
-                        embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getGameName() + "#" + mmr.getTagLine() + ")",
-                                Emojis.getRankByTierName(rank.getCurrentTier()).getFormatted() + " " + tier.getTierName() +
-                                        " (**" + rank.getRankingInTier() + "**/**100**)", false);
-                    }
+        for(int i = 0; i < 20; i++) {
+            if(eloEntryList.size() == i) break;
+            User user = eloEntryList.get(i).getKey();
+            MMR mmr = mmrMap.get(user);
+            Rank rank = ranks.stream()
+                    .filter(foundRank -> foundRank.getId() == mmr.getCurrentData().getRankId())
+                    .findFirst()
+                    .orElse(null);
 
-                }
+            if(mmr.getCurrentData().getElo() >= 2100) {
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                                " (**" + mmr.getCurrentData().getRating() + "RR**)", false);
+            } else {
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                                " (**" + mmr.getCurrentData().getRating() + "**/**100**)", false);
             }
         }
 
-        // Put the average guild elo in the embed
-        int guildRatingInTier;
-        Tier guildTier;
+        Season currentSeason = null;
+        for(Season season : officerAPI.getSeasons(language.getLanguageCode())) {
+            if(season.getParentSeason(language.getLanguageCode()) == null) continue;
+            if(season.getStartDate().before(new Date()) && season.getEndDate().after(new Date())) {
+                currentSeason = season;
+                break;
+            }
+        }
+        if(currentSeason == null) throw new NullPointerException("No current season found");
+        Leaderboard.TierDetails tierDetails = riotGamesAPI.getLeaderboard(currentSeason.getId(), 1, 0, "eu").getTierDetails();
 
-        if(guildElo < 2100) {
-            guildRatingInTier = guildElo % 100;
-            guildTier = tierList.get((int) ((guildElo / 100.0) + 3.0));
+        // Put the average guild elo in the embed
+        int guildRatingInRank;
+        Rank guildRank;
+
+        if(averageGuildElo < 2100) {
+            guildRatingInRank = averageGuildElo % 100;
+            guildRank = ranks.get((int) ((averageGuildElo / 100.0) + 3.0));
         } else {
-            guildRatingInTier = guildElo - 2100;
-            if(guildRatingInTier < 90) {
-                guildTier = tierList.get(24);
-            } else if(guildRatingInTier < 200) {
-                guildTier = tierList.get(25);
-            } else if(guildRatingInTier < 450) {
-                guildTier = tierList.get(26);
+            guildRatingInRank = averageGuildElo - 2100;
+            if(guildRatingInRank < tierDetails.getImmortal2().getRatingThreshold()) {
+                guildRank = ranks.get(24);
+            } else if(guildRatingInRank < tierDetails.getImmortal3().getRatingThreshold()) {
+                guildRank = ranks.get(25);
+            } else if(guildRatingInRank < tierDetails.getRadiant().getRatingThreshold()) {
+                guildRank = ranks.get(26);
             } else {
-                guildTier = tierList.get(27);
+                guildRank = ranks.get(27);
             }
         }
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-embed-title")
-                .replaceAll("%rank:name%", guildTier.getTierName())
-                .replaceAll("%rank:rating%", String.valueOf(guildRatingInTier)));
-        embed.setThumbnail(guildTier.getLargeIcon());
+                .replaceAll("%rank:name%", guildRank.getName())
+                .replaceAll("%rank:rating%", String.valueOf(guildRatingInRank)));
+        embed.setThumbnail(guildRank.getLargeIcon());
 
         // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
