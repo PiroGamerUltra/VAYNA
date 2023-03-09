@@ -16,7 +16,7 @@ import static com.mongodb.client.model.Filters.eq;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class RsoAuthKey {
+public class RSOAuthKey {
 
     private static final String DISCORD_USER_ID_FIELD = "_id";
     private static final String AUTH_KEY_FIELD = "authKey";
@@ -27,7 +27,7 @@ public class RsoAuthKey {
     private final String authKey;
     private Date expirationDate;
 
-    public RsoAuthKey(long discordUserId) {
+    public RSOAuthKey(long discordUserId) {
         this.discordUserId = discordUserId;
         try (MongoCursor<Document> cursor = COLLECTION.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
             if (cursor.hasNext()) {

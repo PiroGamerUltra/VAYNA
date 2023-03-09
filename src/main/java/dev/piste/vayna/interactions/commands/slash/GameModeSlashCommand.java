@@ -4,6 +4,7 @@ import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.OfficerAPI;
 import dev.piste.vayna.apis.entities.officer.GameMode;
 import dev.piste.vayna.apis.entities.officer.Queue;
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
@@ -22,31 +23,18 @@ public class GameModeSlashCommand implements ISlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
-        event.deferReply().setEphemeral(true).queue();
+        event.deferReply(true).queue();
 
-        // Searching the gamemode by the provided UUID
-        Queue queue = new OfficerAPI().getQueue(event.getOption("name").getAsString(), language.getLanguageCode());
-        GameMode gameMode = queue.getParentGameMode(language.getLanguageCode());
+        Queue queue = new OfficerAPI().getQueue(event.getOption("name").getAsString(), language.getLocale());
+        GameMode gameMode = queue.getParentGameMode(language.getLocale());
 
-        // Creating the reply embed
         Embed embed = new Embed()
                 .setAuthor(queue.getDropdownText() + (queue.isBeta() ? " " + language.getTranslation("command-gamemode-embed-author") : ""), gameMode.getDisplayIcon())
                 .setDescription(">>> " + queue.getDescription())
                 .addField(language.getTranslation("command-gamemode-embed-field-1-name"), gameMode.getDuration(), true)
                 .removeFooter();
 
-        // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
-    }
-
-    @Override
-    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
-        OptionData optionData = new OptionData(OptionType.STRING, "name", "Gamemode name", true);
-        for(Queue queue : new OfficerAPI().getQueues("en-US")) {
-            if(queue.getName().equals("custom") || queue.getName().equals("newmap")) continue;
-            optionData.addChoice(queue.getDropdownText(), queue.getId());
-        }
-        return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }
 
     @Override
@@ -55,8 +43,18 @@ public class GameModeSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return LanguageManager.getLanguage().getTranslation("command-gamemode-description");
+    public String getDescription(Language language) {
+        return language.getTranslation("command-gamemode-desc");
+    }
+
+    @Override
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the gamemode", true);
+        for(Queue queue : new OfficerAPI().getQueues(LanguageManager.getDefaultLanguage().getLocale())) {
+            if(queue.getName().equals("custom") || queue.getName().equals("newmap")) continue;
+            optionData.addChoice(queue.getDropdownText(), queue.getId());
+        }
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).addOptions(optionData);
     }
 
 }

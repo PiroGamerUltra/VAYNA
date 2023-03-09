@@ -2,18 +2,17 @@ package dev.piste.vayna.interactions.selectmenus.string;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.apis.entities.officer.Queue;
 import dev.piste.vayna.apis.entities.riotgames.Match;
 import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.util.interfaces.IStringSelectMenu;
 import dev.piste.vayna.mongodb.MongoMatch;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Piste | https://github.com/PisteDev
@@ -43,33 +42,39 @@ public class HistorySelectMenu implements IStringSelectMenu {
                 .findFirst()
                 .orElse(null);
 
-        List<Match.Player> teamRed = match.getPlayers().stream()
-                .filter(matchPlayer -> matchPlayer.getTeamId().equalsIgnoreCase("Red"))
-                .toList();
-        List<Match.Player> teamBlue = match.getPlayers().stream()
-                .filter(matchPlayer -> matchPlayer.getTeamId().equalsIgnoreCase("Blue"))
-                .toList();
-        String redString = teamRed.stream()
-                .map(matchPlayer -> Emojis.getRankByTierName(matchPlayer.getRankId()).getFormatted() + " " + matchPlayer.getRiotId())
-                .collect(Collectors.joining("\n"));
-        String blueString = teamBlue.stream()
-                .map(matchPlayer -> Emojis.getRankByTierName(matchPlayer.getRankId()).getFormatted() + " " + matchPlayer.getRiotId())
-                .collect(Collectors.joining("\n"));
+        Queue queue = match.getMatchInfo().getQueue(language.getLocale());
 
-
-
-        Embed embed = new Embed()
-                .setAuthor(author.getName(), author.getIconUrl())
-                .setImage(match.getMatchInfo().getMap(language.getLanguageCode()).getListViewIcon())
-                .setThumbnail(player.getAgent(language.getLanguageCode()).getDisplayIcon())
-                .setTitle(language.getEmbedTitlePrefix() + match.getMatchInfo().getQueue(language.getLanguageCode()).getDropdownText())
+        Embed matchEmbed = new Embed()
+                .setAuthor(riotAccount.getRiotId(), author.getIconUrl())
+                .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText())
+                .setImage(match.getMatchInfo().getMap(language.getLocale()).getListViewIcon())
                 .addField("Date", "\uD83D\uDCC5 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":D>\n" +
                         "\uD83D\uDD50 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":t> - <t:" + match.getMatchInfo().getGameEndDate().getTime() / 1000 + ":t> " +
-                        "(" + (match.getMatchInfo().getGameEndDate().getTime() - match.getMatchInfo().getGameStartDate().getTime()) / 1000 / 60 + " minutes)", false)
-                .addField("Attackers", redString, true)
-                .addField("Defenders", blueString, true);
+                        "(" + (match.getMatchInfo().getGameEndDate().getTime() - match.getMatchInfo().getGameStartDate().getTime()) / 1000 / 60 + " minutes)", false);
+        if(queue.getName().equalsIgnoreCase("competitive")) {
+            Match.Team ownTeam = match.getTeams().stream()
+                    .filter(matchTeam -> matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+            Match.Team enemyTeam = match.getTeams().stream()
+                    .filter(matchTeam -> !matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+            if(ownTeam.isWinner()) {
+                matchEmbed.setColor(0, 255, 0)
+                        .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText() + " (" + "Victory " + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+            } else {
+                if(enemyTeam.isWinner()) {
+                    matchEmbed.setColor(255, 0, 0)
+                            .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText() + " (" + "Defeat " + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+                } else {
+                    matchEmbed.setColor(255, 255, 0)
+                            .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText() + " (" + "Draw " + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+                }
+            }
+        }
 
-        event.getHook().editOriginalEmbeds(embed.build()).queue();
+        event.getHook().editOriginalEmbeds(matchEmbed.build()).queue();
     }
 
     @Override

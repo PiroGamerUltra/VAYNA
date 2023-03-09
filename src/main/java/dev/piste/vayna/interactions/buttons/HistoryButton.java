@@ -9,6 +9,7 @@ import dev.piste.vayna.apis.entities.officer.Queue;
 import dev.piste.vayna.apis.entities.riotgames.Match;
 import dev.piste.vayna.apis.entities.riotgames.MatchList;
 import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.util.interfaces.IButton;
 import dev.piste.vayna.mongodb.MongoMatch;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
@@ -20,8 +21,10 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Piste | https://github.com/PisteDev
@@ -43,11 +46,12 @@ public class HistoryButton implements IButton {
 
         List<SelectOption> selectOptions = new ArrayList<>();
 
-        List<Agent> agents = officerAPI.getAgents(language.getLanguageCode());
-        List<Map> maps = officerAPI.getMaps(language.getLanguageCode());
-        List<Queue> queues = officerAPI.getQueues(language.getLanguageCode());
+        List<Agent> agents = officerAPI.getAgents(language.getLocale());
+        List<Map> maps = officerAPI.getMaps(language.getLocale());
+        List<Queue> queues = officerAPI.getQueues(language.getLocale());
 
         for(int i = 0; i < 25; i++) {
+            if(matchList.size() <= i) break;
             MatchList.Entry matchListEntry = matchList.get(i);
             MongoMatch mongoMatch = new MongoMatch(matchListEntry.getMatchId());
             Match match;
@@ -78,8 +82,10 @@ public class HistoryButton implements IButton {
                     break;
                 }
             }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a zzz");
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Europe/Berlin")));
             selectOptions.add(SelectOption.of(queue.getDropdownText() + " (" + map.getDisplayName() + ")", match.getMatchInfo().getMatchId() + ";" + region)
-                    .withDescription(agentName + " - " + new SimpleDateFormat("dd/MM/yyyy hh:mm a zzz").format(match.getMatchInfo().getGameStartDate()))
+                    .withDescription(agentName + " - " + simpleDateFormat.format(match.getMatchInfo().getGameStartDate()))
                     .withEmoji(Emojis.getQueue(queue.getName())));
         }
 

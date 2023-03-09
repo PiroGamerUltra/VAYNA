@@ -3,13 +3,15 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.RiotGamesAPI;
 import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.util.exceptions.InvalidRegionException;
+import dev.piste.vayna.interactions.util.exceptions.RSOConnectionMissingException;
+import dev.piste.vayna.interactions.util.exceptions.RSOConnectionPrivateException;
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.interactions.StatsInteraction;
-import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.interactions.util.exceptions.InvalidRiotIdException;
+import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
-import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.templates.Buttons;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -24,47 +26,37 @@ import java.io.IOException;
 public class StatsSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException {
         event.deferReply(false).queue();
 
-        RsoConnection rsoConnection = null;
+        RSOConnection rsoConnection = null;
         RiotAccount riotAccount = null;
         if(event.getSubcommandName() == null) return;
         switch (event.getSubcommandName()) {
             // /stats me
             case "me" -> {
-                rsoConnection = new RsoConnection(event.getUser().getIdLong());
+                rsoConnection = new RSOConnection(event.getUser().getIdLong());
                 if(rsoConnection.isExisting()) {
                     riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats user <@user>
             case "user" -> {
-                rsoConnection = new RsoConnection(event.getOption("user").getAsUser().getIdLong());
+                rsoConnection = new RSOConnection(event.getOption("user").getAsUser().getIdLong());
                 if(rsoConnection.isExisting()) {
                     riotAccount = new RiotGamesAPI().getAccount(rsoConnection.getRiotPuuid());
                 }
             }
             // /stats riot-id <name> <tag>
             case "riot-id" -> {
-                String gameName = event.getOption("name").getAsString();
-                String tagLine = event.getOption("tag").getAsString();
+                String name = event.getOption("name").getAsString();
+                String tag = event.getOption("tag").getAsString();
                 try {
-                    riotAccount = new RiotGamesAPI().getAccount(gameName, tagLine);
-                    rsoConnection = new RsoConnection(riotAccount.getPUUID());
+                    riotAccount = new RiotGamesAPI().getAccount(name, tag);
+                    rsoConnection = new RSOConnection(riotAccount.getPUUID());
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 400 || e.getStatusCode() == 404) {
-                        Embed embed = new Embed()
-                                .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
-                                .setColor(255, 0, 0)
-                                .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-stats-error-riotid-embed-title"))
-                                .setDescription(language.getTranslation("command-stats-error-riotid-embed-description")
-                                        .replaceAll("%emoji:riotgames%", Emojis.getRiotGames().getFormatted())
-                                        .replaceAll("%riotid%", gameName + "#" + tagLine));
-                        event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                                Buttons.getSupportButton(language)
-                        ).queue();
-                        return;
+                        throw new InvalidRiotIdException(name, tag);
                     } else {
                         throw e;
                     }
@@ -72,18 +64,7 @@ public class StatsSlashCommand implements ISlashCommand {
             }
         }
 
-        new StatsInteraction().perform(event.getUser(), riotAccount, rsoConnection, event.getHook(), language);
-    }
-
-    @Override
-    public CommandData getCommandData() {
-        SubcommandData userSub = new SubcommandData("user", LanguageManager.getLanguage().getTranslation("command-stats-user-description"))
-                .addOption(OptionType.USER, "user", "Discord user", true);
-        SubcommandData riotIdSub = new SubcommandData("riot-id", LanguageManager.getLanguage().getTranslation("command-stats-riotid-description"))
-                .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
-                .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
-        SubcommandData meSub = new SubcommandData("me", LanguageManager.getLanguage().getTranslation("command-stats-me-description"));
-        return Commands.slash(getName(), getDescription()).addSubcommands(userSub, riotIdSub, meSub);
+        StatsInteraction.sendStatsEmbed(riotAccount, rsoConnection, event.getHook(), language);
     }
 
     @Override
@@ -92,8 +73,19 @@ public class StatsSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return "Get general information about a VALORANT profile";
+    public String getDescription(Language language) {
+        return language.getTranslation("command-stats-desc");
+    }
+
+    @Override
+    public CommandData getCommandData() {
+        SubcommandData userSub = new SubcommandData("user", LanguageManager.getDefaultLanguage().getTranslation("command-stats-user-desc"))
+                .addOption(OptionType.USER, "user", "Discord user", true);
+        SubcommandData riotIdSub = new SubcommandData("riot-id", LanguageManager.getDefaultLanguage().getTranslation("command-stats-riotid-desc"))
+                .addOption(OptionType.STRING, "name", "The name of the Riot-ID (<name>#<tag>)", true)
+                .addOption(OptionType.STRING, "tag", "The tag of the Riot-ID (<name>#<tag>)", true);
+        SubcommandData meSub = new SubcommandData("me", LanguageManager.getDefaultLanguage().getTranslation("command-stats-me-desc"));
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).addSubcommands(userSub, riotIdSub, meSub);
     }
 
 }

@@ -59,6 +59,11 @@ public class Embed {
         return this;
     }
 
+    public Embed setAuthor(String name) {
+        embedBuilder.setAuthor(name);
+        return this;
+    }
+
     public Embed setImage(String url) {
         embedBuilder.setImage(url);
         return this;

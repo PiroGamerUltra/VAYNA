@@ -43,8 +43,24 @@ public class Language {
      * Retrieves the language code for this language.
      * @return the language code
      */
-    public String getLanguageCode() {
-        return translations.get("language-code");
+    public String getLocale() {
+        return translations.get("locale");
+    }
+
+    /**
+     * Retrieves the name of this language.
+     * @return the language name
+     */
+    public String getName() {
+        return translations.get("name");
+    }
+
+    /**
+     * Retrieves the emoji for this country.
+     * @return the country emoji
+     */
+    public String getEmoji() {
+        return translations.get("emoji");
     }
 
     /**

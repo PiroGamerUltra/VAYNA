@@ -32,7 +32,7 @@ public class HttpErrorException extends Exception {
         return responseBody;
     }
 
-    public String getUri() {
+    public String getURI() {
         return uri;
     }
 

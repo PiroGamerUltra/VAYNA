@@ -15,7 +15,7 @@ import static com.mongodb.client.model.Filters.eq;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-public class RsoConnection {
+public class RSOConnection {
 
     private static final String DISCORD_USER_ID_FIELD = "_id";
     private static final String RIOT_PUUID_FIELD = "riotPuuid";
@@ -30,7 +30,7 @@ public class RsoConnection {
     private boolean publiclyVisible;
     private final Date creationDate;
 
-    public RsoConnection(long discordUserId) {
+    public RSOConnection(long discordUserId) {
         this.discordUserId = discordUserId;
         try (MongoCursor<Document> cursor = COLLECTION.find(eq(DISCORD_USER_ID_FIELD, discordUserId)).iterator()) {
             if (cursor.hasNext()) {
@@ -51,7 +51,7 @@ public class RsoConnection {
         }
     }
 
-    public RsoConnection(String riotPuuid) {
+    public RSOConnection(String riotPuuid) {
         this.riotPuuid = riotPuuid;
         try (MongoCursor<Document> cursor = COLLECTION.find(eq(RIOT_PUUID_FIELD, riotPuuid)).iterator()) {
             if (cursor.hasNext()) {
@@ -100,7 +100,7 @@ public class RsoConnection {
         return publiclyVisible;
     }
 
-    public RsoConnection setVisibleToPublic(boolean publiclyVisible) {
+    public RSOConnection setVisibleToPublic(boolean publiclyVisible) {
         this.publiclyVisible = publiclyVisible;
         return this;
     }

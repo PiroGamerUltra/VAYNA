@@ -1,5 +1,6 @@
 package dev.piste.vayna.interactions.commands.slash;
 
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.interactions.modals.FeedbackModal;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
@@ -18,21 +19,15 @@ public class FeedbackSlashCommand implements ISlashCommand {
     @Override
     public void perform(SlashCommandInteractionEvent event, Language language) {
 
-        // Creating the feedback modal
-        TextInput feedbackInput = TextInput.create("feedback", language.getTranslation("command-feedback-modal-text-name"), TextInputStyle.PARAGRAPH)
-                .setPlaceholder(language.getTranslation("command-feedback-modal-text-placeholder"))
+        TextInput feedbackInput = TextInput.create("feedback", language.getTranslation("modal-feedback-input-name"), TextInputStyle.PARAGRAPH)
+                .setPlaceholder(language.getTranslation("modal-feedback-input-placeholder"))
                 .setMaxLength(4000)
                 .build();
-        Modal modal = Modal.create(new FeedbackModal().getName(), language.getTranslation("command-feedback-modal-title"))
+        Modal modal = Modal.create(new FeedbackModal().getName(), language.getTranslation("modal-feedback-title"))
                 .addActionRow(feedbackInput)
                 .build();
-        // Reply
-        event.replyModal(modal).queue();
-    }
 
-    @Override
-    public CommandData getCommandData() {
-        return Commands.slash(getName(), getDescription());
+        event.replyModal(modal).queue();
     }
 
     @Override
@@ -41,7 +36,12 @@ public class FeedbackSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return LanguageManager.getLanguage().getTranslation("command-feedback-description");
+    public String getDescription(Language language) {
+        return language.getTranslation("command-feedback-desc");
+    }
+
+    @Override
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage()));
     }
 }

@@ -3,6 +3,7 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.OfficerAPI;
 import dev.piste.vayna.apis.entities.officer.Weapon;
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
@@ -21,12 +22,10 @@ public class WeaponSlashCommand implements ISlashCommand {
 
     @Override
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
-        event.deferReply().setEphemeral(true).queue();
+        event.deferReply(true).queue();
 
-        // Searching the weapon by the provided UUID
-        Weapon weapon = new OfficerAPI().getWeapon(event.getOption("name").getAsString(), language.getLanguageCode());
+        Weapon weapon = new OfficerAPI().getWeapon(event.getOption("name").getAsString(), language.getLocale());
 
-        // Creating the reply embed
         Embed embed = new Embed()
                 .setAuthor(weapon.getDisplayName(), weapon.getKillStreamIcon())
                 .setImage(weapon.getDisplayIcon())
@@ -44,18 +43,7 @@ public class WeaponSlashCommand implements ISlashCommand {
                             language.getTranslation("command-weapon-embed-field-7-text-3") + " - " + damageRange.getLegDamageCount(), false);
         }
 
-        // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
-    }
-
-    @Override
-    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
-        OptionData optionData = new OptionData(OptionType.STRING, "name", "Weapon name", true);
-        for(Weapon weapon : new OfficerAPI().getWeapons("en-US")) {
-            if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;
-            optionData.addChoice(weapon.getDisplayName(), weapon.getId());
-        }
-        return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }
 
     @Override
@@ -64,7 +52,18 @@ public class WeaponSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return LanguageManager.getLanguage().getTranslation("command-weapon-description");
+    public String getDescription(Language language) {
+        return language.getTranslation("command-weapon-desc");
     }
+
+    @Override
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
+        OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the weapon", true);
+        for(Weapon weapon : new OfficerAPI().getWeapons(LanguageManager.getDefaultLanguage().getLocale())) {
+            if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;
+            optionData.addChoice(weapon.getDisplayName(), weapon.getId());
+        }
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).addOptions(optionData);
+    }
+
 }

@@ -3,6 +3,7 @@ package dev.piste.vayna.interactions.commands.slash;
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.apis.RiotGamesAPI;
 import dev.piste.vayna.apis.entities.riotgames.PlatformData;
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
@@ -41,7 +42,7 @@ public class StatusSlashCommand implements ISlashCommand {
             Embed embed = new Embed()
                     .setColor(0, 255, 0)
                     .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-status-good-embed-title"))
-                    .setDescription(language.getTranslation("command-status-good-embed-description"));
+                    .setDescription(language.getTranslation("command-status-good-embed-desc"));
             embedList.add(embed.build());
         }
 
@@ -49,7 +50,7 @@ public class StatusSlashCommand implements ISlashCommand {
     }
 
     private MessageEmbed getStatusEmbed(PlatformData.Status status, Language language) {
-        String riotLanguageCode = language.getLanguageCode().replaceAll("-", "_");
+        String riotLanguageCode = language.getLocale().replaceAll("-", "_");
 
         String title = null;
         for(PlatformData.Translation translation : status.getTitles()) {
@@ -70,25 +71,13 @@ public class StatusSlashCommand implements ISlashCommand {
                 .setTitle(language.getEmbedTitlePrefix() + title);
         if(updates.size() > 1) {
             for(int i = 0; i < updates.size(); i++) {
-                embed.addField(language.getTranslation("command-status-embed-field-1-name").replaceAll("%updateIndex%", String.valueOf(i)), ">>> " + updates.get(i), false);
+                embed.addField(language.getTranslation("command-status-bad-embed-field-1-name").replaceAll("%updateIndex%", String.valueOf(i)), ">>> " + updates.get(i), false);
             }
         } else {
             embed.setDescription(">>> " + updates.get(0));
         }
-        embed.addField(language.getTranslation("command-status-embed-field-2-name"), "<t:" + status.getCreationDate().getTime()/1000 + ":F>", true);
+        embed.addField(language.getTranslation("command-status-bad-embed-field-2-name"), "<t:" + status.getCreationDate().getTime()/1000 + ":F>", true);
         return embed.build();
-    }
-
-    @Override
-    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
-        OptionData optionData = new OptionData(OptionType.STRING, "region", "Region", true)
-                .addChoice("Europe", "eu")
-                .addChoice("North America", "na")
-                .addChoice("Korea", "kr")
-                .addChoice("Asia Pacific", "ap")
-                .addChoice("Brazil", "br")
-                .addChoice("Latin America", "latam");
-        return Commands.slash(getName(), getDescription()).addOptions(optionData);
     }
 
     @Override
@@ -97,7 +86,20 @@ public class StatusSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return LanguageManager.getLanguage().getTranslation("command-status-description");
+    public String getDescription(Language language) {
+        return language.getTranslation("command-status-desc");
     }
+
+    @Override
+    public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
+        OptionData optionData = new OptionData(OptionType.STRING, "region", "The region", true)
+                .addChoice("Europe", "eu")
+                .addChoice("North America", "na")
+                .addChoice("Korea", "kr")
+                .addChoice("Asia Pacific", "ap")
+                .addChoice("Brazil", "br")
+                .addChoice("Latin America", "latam");
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).addOptions(optionData);
+    }
+
 }

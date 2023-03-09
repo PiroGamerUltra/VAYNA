@@ -1,4 +1,4 @@
-package dev.piste.vayna.interactions.buttons;
+package dev.piste.vayna.interactions.util.interfaces;
 
 import dev.piste.vayna.apis.HttpErrorException;
 import dev.piste.vayna.translations.Language;

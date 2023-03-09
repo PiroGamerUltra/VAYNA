@@ -2,6 +2,7 @@ package dev.piste.vayna.interactions.modals;
 
 import dev.piste.vayna.Bot;
 import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.interactions.util.interfaces.IModal;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -20,10 +21,9 @@ public class FeedbackModal implements IModal {
                 .setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
                 .setColor(0, 255, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("modal-feedback-embed-title"))
-                .setDescription(language.getTranslation("modal-feedback-embed-description"));
+                .setDescription(language.getTranslation("modal-feedback-embed-desc"));
         event.getHook().editOriginalEmbeds(embed.build()).queue();
 
-        if(Bot.isDebug()) return;
         TextChannel feedbackChannel = Bot.getJDA().getGuildById(ConfigManager.getSettingsConfig().getSupportGuildId()).getTextChannelById(ConfigManager.getSettingsConfig().getLogChannelIds().getFeedback());
         Embed feedbackEmbed = new Embed()
                 .setAuthor(event.getUser().getAsTag(), event.getUser().getAvatarUrl())
@@ -37,4 +37,5 @@ public class FeedbackModal implements IModal {
     public String getName() {
         return "feedback";
     }
+
 }
