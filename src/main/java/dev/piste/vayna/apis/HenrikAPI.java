@@ -1,6 +1,7 @@
 package dev.piste.vayna.apis;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
@@ -35,8 +36,8 @@ public class HenrikAPI {
     }
 
     public List<StoreBundle> getStoreBundles() throws IOException, HttpErrorException, InterruptedException {
-        JsonObject jsonObject = restClient.doGet("/v2/store-featured").getAsJsonObject("data");
-        return new Gson().fromJson(jsonObject, new TypeToken<List<StoreBundle>>(){}.getType());
+        JsonArray jsonArray = restClient.doGet("/v2/store-featured").getAsJsonArray("data");
+        return new Gson().fromJson(jsonArray, new TypeToken<List<StoreBundle>>(){}.getType());
     }
 
 }
