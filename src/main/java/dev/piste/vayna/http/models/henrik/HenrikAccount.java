@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.entities.henrik;
+package dev.piste.vayna.http.models.henrik;
 
 import com.google.gson.annotations.SerializedName;
 

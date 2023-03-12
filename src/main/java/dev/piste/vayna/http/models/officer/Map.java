@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.entities.officer;
+package dev.piste.vayna.http.models.officer;
 
 import com.google.gson.annotations.SerializedName;
 

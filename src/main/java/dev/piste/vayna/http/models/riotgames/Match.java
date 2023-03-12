@@ -1,9 +1,9 @@
-package dev.piste.vayna.apis.entities.riotgames;
+package dev.piste.vayna.http.models.riotgames;
 
 import com.google.gson.annotations.SerializedName;
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.OfficerAPI;
-import dev.piste.vayna.apis.entities.officer.*;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.http.models.officer.*;
 
 import java.io.IOException;
 import java.util.Date;

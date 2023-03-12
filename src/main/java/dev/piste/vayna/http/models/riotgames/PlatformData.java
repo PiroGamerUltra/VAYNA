@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.entities.riotgames;
+package dev.piste.vayna.http.models.riotgames;
 
 import com.google.gson.annotations.SerializedName;
 

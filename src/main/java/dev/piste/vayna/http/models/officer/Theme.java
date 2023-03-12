@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis.entities.officer;
+package dev.piste.vayna.http.models.officer;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName;
  * @author Piste | https://github.com/PisteDev
  */
 @SuppressWarnings("unused")
-public class PlayerTitle {
+public class Theme {
 
     @SerializedName("uuid")
     private String id;
     @SerializedName("displayName")
     private String displayName;
-    @SerializedName("titleText")
-    private String titleText;
-    @SerializedName("isHiddenIfNotOwned")
-    private boolean isHiddenIfNotOwned;
+    @SerializedName("displayIcon")
+    private String displayIcon;
+    @SerializedName("storeFeaturedImage")
+    private String storeFeaturedImage;
     @SerializedName("assetPath")
     private String assetPath;
 
@@ -27,12 +27,12 @@ public class PlayerTitle {
         return displayName;
     }
 
-    public String getTitleText() {
-        return titleText;
+    public String getDisplayIcon() {
+        return displayIcon;
     }
 
-    public boolean isHiddenIfNotOwned() {
-        return isHiddenIfNotOwned;
+    public String getStoreFeaturedImage() {
+        return storeFeaturedImage;
     }
 
     public String getAssetPath() {
