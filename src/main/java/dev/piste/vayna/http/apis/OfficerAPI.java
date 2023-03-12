@@ -1,10 +1,12 @@
-package dev.piste.vayna.apis;
+package dev.piste.vayna.http.apis;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import dev.piste.vayna.apis.entities.officer.*;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.RestClient;
+import dev.piste.vayna.http.models.officer.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,10 +17,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class OfficerAPI {
 
-    private final String BASE_URL = "https://valorant-api.com/v1";
-    private final RestClient restClient = new RestClient(BASE_URL);
+    private final RestClient restClient;
 
     private final String CURRENT_COMPETITIVETIER_ID = "03621f52-342b-cf4e-4f86-9350a49c6d04";
+
+    public OfficerAPI() {
+        String BASE_URL = "https://valorant-api.com/v1";
+        restClient = new RestClient(BASE_URL);
+    }
 
     public Season getSeason(String uuid, String languageCode) throws HttpErrorException, IOException, InterruptedException {
         JsonObject jsonObject = restClient.doGet(String.format("/seasons/%s?language=%s", uuid, languageCode)).getAsJsonObject("data");

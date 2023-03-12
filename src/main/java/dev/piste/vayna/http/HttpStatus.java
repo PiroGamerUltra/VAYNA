@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis;
+package dev.piste.vayna.http;
 
 /**
  * @author Piste | https://github.com/PisteDev

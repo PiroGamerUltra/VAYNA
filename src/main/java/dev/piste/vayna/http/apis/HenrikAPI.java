@@ -1,12 +1,14 @@
-package dev.piste.vayna.apis;
+package dev.piste.vayna.http.apis;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
-import dev.piste.vayna.apis.entities.henrik.MMR;
-import dev.piste.vayna.apis.entities.henrik.StoreBundle;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.RestClient;
+import dev.piste.vayna.http.models.henrik.HenrikAccount;
+import dev.piste.vayna.http.models.henrik.MMR;
+import dev.piste.vayna.http.models.henrik.StoreBundle;
 import dev.piste.vayna.config.ConfigManager;
 
 import java.io.IOException;
@@ -20,8 +22,12 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class HenrikAPI {
 
-    private final String BASE_URL = "https://api.henrikdev.xyz/valorant";
-    private final RestClient restClient = new RestClient(BASE_URL).appendHeader("Authorization", ConfigManager.getTokensConfig().getApiKeys().getHenrik());
+    private final RestClient restClient;
+
+    public HenrikAPI() {
+        String BASE_URL = "https://api.henrikdev.xyz/valorant";
+        restClient = new RestClient(BASE_URL).addHeader("Authorization", ConfigManager.getTokensConfig().getApiKeys().getHenrik());
+    }
 
     public HenrikAccount getAccount(String name, String tag) throws HttpErrorException, IOException, InterruptedException {
         String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);

@@ -1,4 +1,4 @@
-package dev.piste.vayna.apis;
+package dev.piste.vayna.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,7 +30,7 @@ public class RestClient {
         this.httpRequestBuilder.header("Content-Type", "application/json");
     }
 
-    public RestClient appendHeader(String key, String value) {
+    public RestClient addHeader(String key, String value) {
         this.httpRequestBuilder.header(key, value);
         return this;
     }
