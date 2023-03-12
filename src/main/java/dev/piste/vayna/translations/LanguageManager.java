@@ -10,11 +10,11 @@ import java.util.*;
  */
 public class LanguageManager {
 
-    private static final Map<String, Language> LANGUAGE_LIST = new HashMap<>();
+    private static final Map<String, Language> LANGUAGES = new HashMap<>();
     private static final String DEFAULT_LOCALE = "en-US";
 
     /**
-     * Method to load all supported languages into the map.
+     * Loads all available languages.
      */
     public static void loadLanguages() {
         loadLanguage("en-US");
@@ -22,55 +22,51 @@ public class LanguageManager {
     }
 
     /**
-     * Method to load a language object into the map.
+     * Loads a language from the translations folder.
      *
      * @param locale The locale identifier of the language to load.
      */
     private static void loadLanguage(String locale) {
-        LANGUAGE_LIST.put(locale, new Language(locale));
+        LANGUAGES.put(locale, new Language(locale));
     }
 
     /**
-     * Method to get the language for a guild. If guild is null, returns default language.
+     * Returns the language object for a given guild.
      *
      * @param guild The guild for which to get the language.
-     * @return The language for the guild.
+     * @return The language object for the guild.
      */
     public static Language getLanguage(Guild guild) {
-        if (guild == null) {
-            return getDefaultLanguage();
-        }
-        GuildSetting guildSetting = new GuildSetting(guild.getIdLong());
-        return getLanguage(guildSetting.getLanguageCode());
+        if (guild == null) return getDefaultLanguage();
+        return getLanguage(new GuildSetting(guild.getIdLong()).getLanguageCode());
     }
 
     /**
-     * Method to get the default language.
+     * Returns the default language object.
      *
-     * @return The default language.
+     * @return The default language object.
      */
     public static Language getDefaultLanguage() {
         return getLanguage(DEFAULT_LOCALE);
     }
 
     /**
-     * Method to get the language object for a given language code.
+     * Returns the language object for a given locale identifier.
      *
      * @param locale The locale identifier for which to get the language object.
-     * @return The language object for the given language code, or English if the language code is not found.
+     * @return The language object for the given locale identifier, or default language if the locale is not found.
      */
     private static Language getLanguage(String locale) {
-        Language language = LANGUAGE_LIST.get(locale);
-        return language != null ? language : LANGUAGE_LIST.get("en-US");
+        return LANGUAGES.get(locale) != null ? LANGUAGES.get(locale) : LANGUAGES.get(DEFAULT_LOCALE);
     }
 
     /**
-     * Method to get the collection of all supported languages.
+     * Returns a list of all loaded languages.
      *
-     * @return The collection of all supported languages.
+     * @return The collection of all loaded languages.
      */
     public static Collection<Language> getLanguages() {
-        return Collections.unmodifiableCollection(LANGUAGE_LIST.values());
+        return Collections.unmodifiableCollection(LANGUAGES.values());
     }
 
 }
