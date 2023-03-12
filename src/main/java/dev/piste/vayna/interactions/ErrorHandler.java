@@ -41,8 +41,6 @@ public class ErrorHandler {
             messageEmbed = getRsoConnectionMissingExceptionEmbed(rsoConnectionMissingException, hook, language);
         } else if(exception instanceof RSOConnectionPrivateException rsoConnectionPrivateException) {
             messageEmbed = getRsoConnectionPrivateExceptionEmbed(rsoConnectionPrivateException, language);
-        } else if(exception instanceof InvalidUserProvidedException invalidUserProvidedException) {
-            messageEmbed = getInvalidUserProvidedExceptionEmbed(invalidUserProvidedException, language);
         } else {
             messageEmbed = getUnknownExceptionEmbed(exception, language);
         }
@@ -161,17 +159,6 @@ public class ErrorHandler {
                 .setColor(255, 0, 0)
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-unknown-embed-title"))
                 .setDescription(language.getTranslation("error-unknown-embed-desc"));
-
-        return embed.build();
-    }
-
-    private static MessageEmbed getInvalidUserProvidedExceptionEmbed(InvalidUserProvidedException exception, Language language) {
-        LOGGER.debug("Invalid User Provided", exception);
-
-        Embed embed = new Embed()
-                .setColor(255, 0, 0)
-                .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("error-nouserprovided-embed-title"))
-                .setDescription(language.getTranslation("error-nouserprovided-embed-desc"));
 
         return embed.build();
     }

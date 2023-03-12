@@ -11,7 +11,6 @@ import dev.piste.vayna.http.models.officer.Rank;
 import dev.piste.vayna.http.models.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.util.exceptions.InvalidRegionException;
-import dev.piste.vayna.interactions.util.exceptions.InvalidUserProvidedException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionMissingException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionPrivateException;
 import dev.piste.vayna.mongodb.RSOConnection;
@@ -32,7 +31,7 @@ import java.util.List;
  */
 public class StatsInteraction {
 
-    public static void sendStatsEmbed(RiotAccount riotAccount, RSOConnection rsoConnection, InteractionHook hook, Language language) throws IOException, HttpErrorException, InterruptedException, RSOConnectionMissingException, RSOConnectionPrivateException, InvalidRegionException, InvalidUserProvidedException {
+    public static void sendStatsEmbed(RiotAccount riotAccount, RSOConnection rsoConnection, InteractionHook hook, Language language) throws IOException, HttpErrorException, InterruptedException, RSOConnectionMissingException, RSOConnectionPrivateException, InvalidRegionException {
 
         if(!rsoConnection.isExisting()) {
             if(rsoConnection.getDiscordUserId() != 0) {
@@ -72,9 +71,10 @@ public class StatsInteraction {
                 .setDescription(language.getTranslation("stats-embed-desc"));
         if(rsoConnection.isExisting()) {
             User connectionUser = hook.getJDA().getUserById(rsoConnection.getDiscordUserId());
-            if(connectionUser == null) throw new InvalidUserProvidedException();
-            embed.addField(language.getTranslation("stats-embed-field-1-name"),
-                    DiscordEmoji.DISCORD.getAsDiscordEmoji().getFormatted() + " `" + connectionUser.getAsTag() + "` (" + connectionUser.getAsMention() + ")", false);
+            if(connectionUser != null) {
+                embed.addField(language.getTranslation("stats-embed-field-1-name"),
+                        DiscordEmoji.DISCORD.getAsDiscordEmoji().getFormatted() + " `" + connectionUser.getAsTag() + "` (" + connectionUser.getAsMention() + ")", false);
+            }
         }
         embed.addField(language.getTranslation("stats-embed-field-2-name"), DiscordEmoji.LEVEL.getAsDiscordEmoji().getFormatted() + " " + henrikAccount.getLevel(), true)
                 .addField(language.getTranslation("stats-embed-field-3-name"), UnicodeEmoji.Region.getRegionById(region.getId()).getAsDiscordEmoji().getFormatted() + " " + region.getName(), true);

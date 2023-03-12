@@ -4,7 +4,6 @@ import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.RiotGamesAPI;
 import dev.piste.vayna.http.models.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.util.exceptions.InvalidRegionException;
-import dev.piste.vayna.interactions.util.exceptions.InvalidUserProvidedException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionMissingException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionPrivateException;
 import dev.piste.vayna.interactions.util.interfaces.IUserContextCommand;
@@ -23,7 +22,7 @@ import java.io.IOException;
 public class StatsContextCommand implements IUserContextCommand {
 
     @Override
-    public void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException {
+    public void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException {
         event.deferReply(false).queue();
 
         RSOConnection rsoConnection = new RSOConnection(event.getTarget().getIdLong());
