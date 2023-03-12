@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public interface ISlashCommand {
 
-    void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, GuildConnectionsMissingException, InsufficientPermissionException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException;
+    void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, GuildConnectionsMissingException, InsufficientPermissionException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException;
 
     String getName();
 
