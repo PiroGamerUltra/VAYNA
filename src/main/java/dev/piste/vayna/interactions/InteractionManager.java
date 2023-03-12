@@ -57,6 +57,7 @@ public class InteractionManager {
         registerSlashCommand(new FeedbackSlashCommand());
         registerSlashCommand(new SettingsSlashCommand());
         registerSlashCommand(new StatusSlashCommand());
+        registerSlashCommand(new VoteSlashCommand());
     }
 
     private static void registerButtons() {
