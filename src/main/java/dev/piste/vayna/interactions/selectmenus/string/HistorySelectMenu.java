@@ -52,10 +52,10 @@ public class HistorySelectMenu implements IStringSelectMenu {
         Embed matchEmbed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), author.getIconUrl())
                 .setImage(match.getMatchInfo().getMap(language.getLocale()).getListViewIcon())
-                .addField("Date", "\uD83D\uDCC5 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":D>\n" +
+                .addField(language.getTranslation("selectmenu-history-embed-field-1-name"), "\uD83D\uDCC5 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":D>\n" +
                         "\uD83D\uDD50 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":t> - <t:" + match.getMatchInfo().getGameEndDate().getTime() / 1000 + ":t> " +
                         "(" + (match.getMatchInfo().getGameEndDate().getTime() - match.getMatchInfo().getGameStartDate().getTime()) / 1000 / 60 + " minutes)", false)
-                .addField("Game Mode", DiscordEmoji.Queue.getQueueById(queue.getId()).getAsDiscordEmoji().getFormatted() + " " + queue.getDropdownText(), false);
+                .addField(language.getTranslation("selectmenu-history-embed-field-2-name"), DiscordEmoji.Queue.getQueueById(queue.getId()).getAsDiscordEmoji().getFormatted() + " " + queue.getDropdownText(), false);
 
         if(!queue.getName().equalsIgnoreCase("deathmatch")) {
             Match.Team ownTeam = match.getTeams().stream()
