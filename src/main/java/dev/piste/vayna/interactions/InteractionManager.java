@@ -1,7 +1,7 @@
 package dev.piste.vayna.interactions;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
