@@ -1,21 +1,24 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HenrikAPI;
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.OfficerAPI;
-import dev.piste.vayna.apis.RiotGamesAPI;
-import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
-import dev.piste.vayna.apis.entities.henrik.MMR;
-import dev.piste.vayna.apis.entities.officer.Rank;
-import dev.piste.vayna.apis.entities.officer.Season;
-import dev.piste.vayna.apis.entities.riotgames.Leaderboard;
-import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
-import dev.piste.vayna.mongodb.RsoConnection;
+import dev.piste.vayna.http.apis.HenrikAPI;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.http.apis.RiotGamesAPI;
+import dev.piste.vayna.http.apis.ValorantAPI;
+import dev.piste.vayna.http.models.henrik.HenrikAccount;
+import dev.piste.vayna.http.models.henrik.MMR;
+import dev.piste.vayna.http.models.officer.Rank;
+import dev.piste.vayna.http.models.officer.Season;
+import dev.piste.vayna.http.models.riotgames.Leaderboard;
+import dev.piste.vayna.http.models.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.util.exceptions.GuildConnectionsMissingException;
+import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
+import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
+import dev.piste.vayna.util.DiscordEmoji;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
-import dev.piste.vayna.util.templates.Buttons;
+import dev.piste.vayna.util.RiotRegion;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -31,8 +34,8 @@ import java.util.*;
 public class LeaderboardSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
-        event.deferReply().queue();
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, GuildConnectionsMissingException {
+        event.deferReply(false).queue();
 
         RiotGamesAPI riotGamesAPI = new RiotGamesAPI();
         HenrikAPI henrikAPI = new HenrikAPI();
@@ -40,10 +43,10 @@ public class LeaderboardSlashCommand implements ISlashCommand {
 
         // Put all linked accounts in this guild in the eloMap
         HashMap<User, MMR> mmrMap = new HashMap<>();
-        int guildElo = 0;
+        int guildMemberElo = 0;
         // Collecting every connected Riot Games account in this server
         for(Member member : event.getGuild().getMembers()) {
-            RsoConnection rsoConnection = new RsoConnection(member.getUser().getIdLong());
+            RSOConnection rsoConnection = new RSOConnection(member.getUser().getIdLong());
             if(rsoConnection.isExisting() && rsoConnection.isPubliclyVisible()) {
                 try {
                     RiotAccount riotAccount = riotGamesAPI.getAccount(rsoConnection.getRiotPuuid());
@@ -51,7 +54,7 @@ public class LeaderboardSlashCommand implements ISlashCommand {
                     MMR mmr = henrikAPI.getMMR(henrikAccount.getId(), henrikAccount.getRegion());
                     if(mmr.getCurrentData().getRankId() == 0) continue;
                     mmrMap.put(member.getUser(), mmr);
-                    guildElo += mmr.getCurrentData().getElo();
+                    guildMemberElo += mmr.getCurrentData().getElo();
                 } catch (HttpErrorException e) {
                     if(e.getStatusCode() == 429) throw e;
                 }
@@ -59,16 +62,7 @@ public class LeaderboardSlashCommand implements ISlashCommand {
         }
 
         // If no one has connected his Riot Games account yet
-        if(mmrMap.isEmpty()) {
-            Embed embed = new Embed().setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl())
-                    .setColor(255, 0, 0)
-                    .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-error-empty-embed-title"))
-                    .setDescription(language.getTranslation("command-leaderboard-error-empty-embed-description"));
-            event.getHook().editOriginalEmbeds(embed.build()).setActionRow(
-                    Buttons.getSupportButton(language)
-            ).queue();
-            return;
-        }
+        if(mmrMap.isEmpty()) throw new GuildConnectionsMissingException(event.getGuild());
 
         Map<User, Integer> eloMap = new HashMap<>();
         for(Map.Entry<User, MMR> entry : mmrMap.entrySet()) {
@@ -80,13 +74,11 @@ public class LeaderboardSlashCommand implements ISlashCommand {
         eloEntryList.sort(Map.Entry.comparingByValue());
         Collections.reverse(eloEntryList);
 
-        int averageGuildElo = guildElo / eloMap.size();
-
         Embed embed = new Embed()
                 .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
-                .setDescription(language.getTranslation("command-leaderboard-embed-description"));
+                .setDescription(language.getTranslation("command-leaderboard-embed-desc"));
 
-        List<Rank> ranks = officerAPI.getRanks(language.getLanguageCode());
+        List<Rank> ranks = officerAPI.getRanks(language);
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i < 20; i++) {
@@ -99,58 +91,54 @@ public class LeaderboardSlashCommand implements ISlashCommand {
                     .orElse(null);
 
             if(mmr.getCurrentData().getElo() >= 2100) {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
-                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        DiscordEmoji.Rank.getRankById(rank.getId()).getAsDiscordEmoji().getFormatted() + " " + rank.getName() +
                                 " (**" + mmr.getCurrentData().getRating() + "RR**)", false);
             } else {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
-                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        DiscordEmoji.Rank.getRankById(rank.getId()).getAsDiscordEmoji().getFormatted() + " " + rank.getName() +
                                 " (**" + mmr.getCurrentData().getRating() + "**/**100**)", false);
             }
         }
 
         Season currentSeason = null;
-        for(Season season : officerAPI.getSeasons(language.getLanguageCode())) {
-            if(season.getParentSeason(language.getLanguageCode()) == null) continue;
+        for(Season season : officerAPI.getSeasons(language)) {
+            if(season.getParentSeason(language) == null) continue;
             if(season.getStartDate().before(new Date()) && season.getEndDate().after(new Date())) {
                 currentSeason = season;
                 break;
             }
         }
         if(currentSeason == null) throw new NullPointerException("No current season found");
-        Leaderboard.TierDetails tierDetails = riotGamesAPI.getLeaderboard(currentSeason.getId(), 1, 0, "eu").getTierDetails();
+        Leaderboard.TierDetails tierDetails = new ValorantAPI(RiotRegion.EUROPE).getLeaderboard(currentSeason.getId(), 1, 0).getTierDetails();
 
         // Put the average guild elo in the embed
-        int guildRatingInRank;
-        Rank guildRank;
+        int guildElo = guildMemberElo / eloMap.size();
+        int guildRankId;
+        int guildRating;
 
-        if(averageGuildElo < 2100) {
-            guildRatingInRank = averageGuildElo % 100;
-            guildRank = ranks.get((int) ((averageGuildElo / 100.0) + 3.0));
+        if(guildElo < 2100) {
+            guildRating = guildElo % 100;
+            guildRankId = (int) ((guildElo / 100.0) + 3.0);
         } else {
-            guildRatingInRank = averageGuildElo - 2100;
-            if(guildRatingInRank < tierDetails.getImmortal2().getRatingThreshold()) {
-                guildRank = ranks.get(24);
-            } else if(guildRatingInRank < tierDetails.getImmortal3().getRatingThreshold()) {
-                guildRank = ranks.get(25);
-            } else if(guildRatingInRank < tierDetails.getRadiant().getRatingThreshold()) {
-                guildRank = ranks.get(26);
+            guildRating = guildElo - 2100;
+            if(guildRating < tierDetails.getImmortal2().getRatingThreshold()) {
+                guildRankId = 24;
+            } else if(guildRating < tierDetails.getImmortal3().getRatingThreshold()) {
+                guildRankId = 25;
+            } else if(guildRating < tierDetails.getRadiant().getRatingThreshold()) {
+                guildRankId = 26;
             } else {
-                guildRank = ranks.get(27);
+                guildRankId = 27;
             }
         }
+        Rank guildRank = ranks.get(guildRankId);
         embed.setTitle(language.getEmbedTitlePrefix() + language.getTranslation("command-leaderboard-embed-title")
                 .replaceAll("%rank:name%", guildRank.getName())
-                .replaceAll("%rank:rating%", String.valueOf(guildRatingInRank)));
+                .replaceAll("%rank:rating%", String.valueOf(guildRating)));
         embed.setThumbnail(guildRank.getLargeIcon());
 
-        // Reply
         event.getHook().editOriginalEmbeds(embed.build()).queue();
-    }
-
-    @Override
-    public CommandData getCommandData() {
-        return Commands.slash(getName(), getDescription()).setGuildOnly(true);
     }
 
     @Override
@@ -159,7 +147,13 @@ public class LeaderboardSlashCommand implements ISlashCommand {
     }
 
     @Override
-    public String getDescription() {
-        return LanguageManager.getLanguage().getTranslation("command-leaderboard-description");
+    public String getDescription(Language language) {
+        return language.getTranslation("command-leaderboard-desc");
     }
+
+    @Override
+    public CommandData getCommandData() {
+        return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).setGuildOnly(true);
+    }
+
 }

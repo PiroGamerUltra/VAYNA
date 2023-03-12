@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+import dev.piste.vayna.translations.LanguageManager;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -16,20 +17,22 @@ import static com.mongodb.client.model.Filters.eq;
 public class GuildSetting {
 
     private static final String GUILD_ID_FIELD = "_id";
-    private static final String LANGUAGE_CODE_FIELD = "languageCode";
+    private static final String LOCALE_FIELD = "locale";
     private static final MongoCollection<Document> COLLECTION = Mongo.getGuildSettingsCollection();
 
+    private Document document;
+
     private final long guildId;
-    private String languageCode;
+    private String locale;
 
     public GuildSetting(long guildId) {
         this.guildId = guildId;
         try (MongoCursor<Document> cursor = COLLECTION.find(eq(GUILD_ID_FIELD, guildId)).iterator()) {
             if (cursor.hasNext()) {
-                Document document = cursor.next();
-                languageCode = document.getString(LANGUAGE_CODE_FIELD);
+                document = cursor.next();
+                locale = document.getString(LOCALE_FIELD);
             } else {
-                languageCode = "en-US";
+                locale = LanguageManager.getDefaultLanguage().getLocale();
                 insert();
             }
         } catch (MongoException e) {
@@ -37,28 +40,28 @@ public class GuildSetting {
         }
     }
 
-    public String getLanguageCode() {
-        return languageCode;
+    public String getLocale() {
+        return locale;
     }
 
-    public GuildSetting setLanguage(String languageCode) {
-        this.languageCode = languageCode;
+    public GuildSetting setLocale(String locale) {
+        this.locale = locale;
         return this;
     }
 
     public void update() {
         Bson updates = Updates.combine(
                 Updates.set(GUILD_ID_FIELD, guildId),
-                Updates.set(LANGUAGE_CODE_FIELD, languageCode)
+                Updates.set(LOCALE_FIELD, locale)
         );
         COLLECTION.updateOne(eq(GUILD_ID_FIELD, guildId), updates, new UpdateOptions().upsert(true));
     }
 
     private void insert() {
-        Document newDocument = new Document()
+        document = new Document()
                 .append(GUILD_ID_FIELD, guildId)
-                .append(LANGUAGE_CODE_FIELD, languageCode);
-        COLLECTION.insertOne(newDocument);
+                .append(LOCALE_FIELD, locale);
+        COLLECTION.insertOne(document);
     }
 
 }

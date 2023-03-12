@@ -1,25 +1,25 @@
 package dev.piste.vayna.interactions;
 
 import dev.piste.vayna.Bot;
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.interactions.buttons.IButton;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.HistoryButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
 import dev.piste.vayna.interactions.commands.context.StatsContextCommand;
-import dev.piste.vayna.interactions.commands.context.IUserContextCommand;
 import dev.piste.vayna.interactions.commands.slash.*;
 import dev.piste.vayna.interactions.modals.FeedbackModal;
-import dev.piste.vayna.interactions.modals.IModal;
 import dev.piste.vayna.interactions.selectmenus.string.*;
-import dev.piste.vayna.util.Logger;
+import dev.piste.vayna.interactions.util.interfaces.*;
+import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
+import dev.piste.vayna.util.Logger;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.io.IOException;
@@ -57,6 +57,14 @@ public class InteractionManager {
         registerSlashCommand(new FeedbackSlashCommand());
         registerSlashCommand(new SettingsSlashCommand());
         registerSlashCommand(new StatusSlashCommand());
+        registerSlashCommand(new VoteSlashCommand());
+        registerSlashCommand(new PatchSlashCommand());
+
+        for(Command command : Bot.getJDA().retrieveCommands().complete()) {
+            if(!slashCommands.containsKey(command.getName())) {
+                command.delete().queue();
+            }
+        }
     }
 
     private static void registerButtons() {
@@ -72,7 +80,9 @@ public class InteractionManager {
     private static void registerStringSelectMenus() {
         registerStringSelectMenu(new SettingsSelectMenu());
         registerStringSelectMenu(new LanguageSelectMenu());
-        registerStringSelectMenu(new BundleSelectMenu());
+        registerStringSelectMenu(new StoreSelectMenu());
+        registerStringSelectMenu(new HistorySelectMenu());
+        registerStringSelectMenu(new PatchSelectMenu());
     }
 
     private static void registerUserContextCommands() {
@@ -101,7 +111,7 @@ public class InteractionManager {
     }
 
     private static void registerUserContextCommand(IUserContextCommand userContextCommand) {
-        userContextCommands.put(userContextCommand.getName(), userContextCommand);
+        userContextCommands.put(userContextCommand.getDisplayName(), userContextCommand);
         Bot.getJDA().upsertCommand(userContextCommand.getCommandData()).queue();
     }
 
@@ -112,19 +122,23 @@ public class InteractionManager {
         return null;
     }
 
-    public static void perform(GenericEvent event) throws IOException, HttpErrorException, InterruptedException {
-        if(event instanceof SlashCommandInteractionEvent interactionEvent) {
-            slashCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
-        } else if(event instanceof ButtonInteractionEvent interactionEvent) {
-            String buttonId = interactionEvent.getButton().getId().split(";")[0];
-            String[] args = interactionEvent.getButton().getId().contains(";") ? interactionEvent.getButton().getId().substring(buttonId.length()+1).split(";") : new String[0];
-            buttons.get(buttonId).perform(interactionEvent, args, LanguageManager.getLanguage(interactionEvent.getGuild()));
-        } else if(event instanceof ModalInteractionEvent interactionEvent) {
-            modals.get(interactionEvent.getModalId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
-        } else if(event instanceof StringSelectInteractionEvent interactionEvent) {
-            stringSelectMenus.get(interactionEvent.getSelectMenu().getId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
-        } else if(event instanceof UserContextInteractionEvent interactionEvent) {
-            userContextCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+    public static void perform(GenericEvent event, InteractionHook hook, Language language) {
+        try {
+            if(event instanceof SlashCommandInteractionEvent interactionEvent) {
+                slashCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+            } else if(event instanceof ButtonInteractionEvent interactionEvent) {
+                String buttonId = interactionEvent.getButton().getId().split(";")[0];
+                String[] args = interactionEvent.getButton().getId().contains(";") ? interactionEvent.getButton().getId().substring(buttonId.length()+1).split(";") : new String[0];
+                buttons.get(buttonId).perform(interactionEvent, args, LanguageManager.getLanguage(interactionEvent.getGuild()));
+            } else if(event instanceof ModalInteractionEvent interactionEvent) {
+                modals.get(interactionEvent.getModalId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+            } else if(event instanceof StringSelectInteractionEvent interactionEvent) {
+                stringSelectMenus.get(interactionEvent.getSelectMenu().getId()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+            } else if(event instanceof UserContextInteractionEvent interactionEvent) {
+                userContextCommands.get(interactionEvent.getName()).perform(interactionEvent, LanguageManager.getLanguage(interactionEvent.getGuild()));
+            }
+        } catch (Exception e) {
+            ErrorHandler.handleException(e, hook, language);
         }
     }
 
