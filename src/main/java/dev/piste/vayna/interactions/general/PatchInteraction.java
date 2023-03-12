@@ -28,7 +28,7 @@ public class PatchInteraction {
         Embed embed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + patchNotes.getTitle(), patchNotes.getURI())
                 .setImage(patchNotes.getBanner())
-                .addField(language.getTranslation("command-patchnotes-embed-field-1-name"), UnicodeEmoji.CALENDAR.getUnicode() + " <t:" + patchNotes.getDate().getTime() / 1000 + ":D>", true);
+                .addField(language.getTranslation("command-patch-embed-field-1-name"), UnicodeEmoji.CALENDAR.getUnicode() + " <t:" + patchNotes.getDate().getTime() / 1000 + ":D>", true);
 
         List<SelectOption> selectOptions = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class PatchInteraction {
         }
 
         StringSelectMenu stringSelectMenu = StringSelectMenu.create(new PatchSelectMenu().getName())
-                .setPlaceholder(language.getTranslation("selectmenu-patchnotes-placeholder"))
+                .setPlaceholder(language.getTranslation("selectmenu-patch-placeholder"))
                 .addOptions(selectOptions)
                 .build();
 
