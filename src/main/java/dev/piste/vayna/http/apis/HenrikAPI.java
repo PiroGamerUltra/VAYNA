@@ -8,8 +8,10 @@ import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.RestClient;
 import dev.piste.vayna.http.models.henrik.HenrikAccount;
 import dev.piste.vayna.http.models.henrik.MMR;
+import dev.piste.vayna.http.models.henrik.News;
 import dev.piste.vayna.http.models.henrik.StoreBundle;
 import dev.piste.vayna.config.ConfigManager;
+import dev.piste.vayna.translations.Language;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -44,6 +46,11 @@ public class HenrikAPI {
     public List<StoreBundle> getStoreBundles() throws IOException, HttpErrorException, InterruptedException {
         JsonArray jsonArray = restClient.doGet("/v2/store-featured").getAsJsonArray("data");
         return new Gson().fromJson(jsonArray, new TypeToken<List<StoreBundle>>(){}.getType());
+    }
+
+    public List<News> getNews(Language language) throws IOException, HttpErrorException, InterruptedException {
+        JsonArray jsonArray = restClient.doGet(String.format("/v1/website/%s", language.getLocale().toLowerCase())).getAsJsonArray("data");
+        return new Gson().fromJson(jsonArray, new TypeToken<List<News>>(){}.getType());
     }
 
 }
