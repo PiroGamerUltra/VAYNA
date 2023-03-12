@@ -23,7 +23,7 @@ import java.io.IOException;
 public class StatsSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException {
         event.deferReply(false).queue();
 
         RSOConnection rsoConnection = null;
