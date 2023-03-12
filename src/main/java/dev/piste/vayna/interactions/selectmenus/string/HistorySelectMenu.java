@@ -68,14 +68,14 @@ public class HistorySelectMenu implements IStringSelectMenu {
                     .orElse(null);
             if(ownTeam.isWinner()) {
                 matchEmbed.setColor(0, 255, 0)
-                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-victory") + " (" + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-victory") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
             } else {
                 if(enemyTeam.isWinner()) {
                     matchEmbed.setColor(255, 0, 0)
-                            .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText() + language.getTranslation("selectmenu-history-embed-title-defeat") + " (" + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-defeat") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
                 } else {
                     matchEmbed.setColor(255, 255, 0)
-                            .setTitle(language.getEmbedTitlePrefix() + queue.getDropdownText() + language.getTranslation("selectmenu-history-embed-title-draw") + " (" + ownTeam.getWonRoundsCount() + " - " + enemyTeam.getWonRoundsCount() + ")");
+                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-draw") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
                 }
             }
         } else {
