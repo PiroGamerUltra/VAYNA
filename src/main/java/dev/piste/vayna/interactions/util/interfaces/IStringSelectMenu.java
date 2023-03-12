@@ -1,6 +1,6 @@
 package dev.piste.vayna.interactions.util.interfaces;
 
-import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 

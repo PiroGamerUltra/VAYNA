@@ -1,8 +1,8 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.OfficerAPI;
-import dev.piste.vayna.apis.entities.officer.Agent;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.http.models.officer.Agent;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;

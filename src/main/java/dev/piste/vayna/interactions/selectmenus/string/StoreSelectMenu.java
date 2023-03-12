@@ -1,9 +1,9 @@
 package dev.piste.vayna.interactions.selectmenus.string;
 
-import dev.piste.vayna.apis.HenrikAPI;
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.entities.henrik.StoreBundle;
-import dev.piste.vayna.interactions.StoreInteraction;
+import dev.piste.vayna.http.apis.HenrikAPI;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.models.henrik.StoreBundle;
+import dev.piste.vayna.interactions.general.StoreInteraction;
 import dev.piste.vayna.interactions.util.interfaces.IStringSelectMenu;
 import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;

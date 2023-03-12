@@ -1,12 +1,13 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.RiotGamesAPI;
-import dev.piste.vayna.apis.entities.riotgames.PlatformData;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.ValorantAPI;
+import dev.piste.vayna.http.models.riotgames.PlatformData;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
+import dev.piste.vayna.util.RiotRegion;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -27,7 +28,7 @@ public class StatusSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        PlatformData platformData = new RiotGamesAPI().getPlatformData(event.getOption("region").getAsString());
+        PlatformData platformData = new ValorantAPI(RiotRegion.getRiotRegionById(event.getOption("region").getAsString())).getPlatformData();
 
         List<MessageEmbed> embedList = new ArrayList<>();
 

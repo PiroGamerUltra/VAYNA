@@ -1,6 +1,6 @@
 package dev.piste.vayna.interactions.buttons;
 
-import dev.piste.vayna.interactions.ConnectionInteraction;
+import dev.piste.vayna.interactions.general.ConnectionInteraction;
 import dev.piste.vayna.interactions.util.interfaces.IButton;
 import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;

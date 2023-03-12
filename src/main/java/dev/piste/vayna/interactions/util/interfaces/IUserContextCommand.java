@@ -1,7 +1,8 @@
 package dev.piste.vayna.interactions.util.interfaces;
 
-import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.interactions.util.exceptions.InvalidRegionException;
+import dev.piste.vayna.interactions.util.exceptions.InvalidUserProvidedException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionMissingException;
 import dev.piste.vayna.interactions.util.exceptions.RSOConnectionPrivateException;
 import dev.piste.vayna.translations.Language;
@@ -15,7 +16,7 @@ import java.io.IOException;
  */
 public interface IUserContextCommand {
 
-    void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException;
+    void perform(UserContextInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException;
 
     CommandData getCommandData();
 

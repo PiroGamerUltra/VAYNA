@@ -1,7 +1,7 @@
-package dev.piste.vayna.interactions;
+package dev.piste.vayna.interactions.general;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.RiotGamesAPI;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.RiotGamesAPI;
 import dev.piste.vayna.config.ConfigManager;
 import dev.piste.vayna.interactions.buttons.DisconnectButton;
 import dev.piste.vayna.interactions.buttons.VisibilityButton;
@@ -9,7 +9,7 @@ import dev.piste.vayna.mongodb.RSOAuthKey;
 import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
+import dev.piste.vayna.util.DiscordEmoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -31,7 +31,7 @@ public class ConnectionInteraction {
 
         hook.editOriginalEmbeds(embed.build()).setActionRow(
                 Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/RSO/redirect/?authKey=" + rsoAuthKey.getAuthKey(), language.getTranslation("button-connect-name"))
-                        .withEmoji(Emojis.getRiotGames())
+                        .withEmoji(DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji())
         ).queue();
     }
 
@@ -41,7 +41,7 @@ public class ConnectionInteraction {
                 .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("connection-embed-title"))
                 .setDescription(language.getTranslation("connection-present-embed-desc"))
                 .addField(language.getTranslation("connection-present-embed-field-1-name"),
-                        hook.getInteraction().getUser().getAsMention() + " " + Emojis.getDiscord().getFormatted() + " \uD83D\uDD17 " + Emojis.getRiotGames().getFormatted() + " `" + riotId + "`", true)
+                        hook.getInteraction().getUser().getAsMention() + " " + DiscordEmoji.DISCORD.getAsDiscordEmoji().getFormatted() + " \uD83D\uDD17 " + DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji().getFormatted() + " `" + riotId + "`", true)
                 .addField(language.getTranslation("connection-present-embed-field-2-name"),
                         rsoConnection.isPubliclyVisible() ? "\uD83D\uDD13 " + language.getTranslation("connection-present-embed-field-2-text-public")
                                 : "\uD83D\uDD12 " + language.getTranslation("connection-present-embed-field-2-text-private"), true);

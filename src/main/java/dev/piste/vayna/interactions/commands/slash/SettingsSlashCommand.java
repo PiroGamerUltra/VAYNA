@@ -1,7 +1,7 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.interactions.SettingsInteraction;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.interactions.general.SettingsInteraction;
 import dev.piste.vayna.interactions.util.exceptions.InsufficientPermissionException;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;

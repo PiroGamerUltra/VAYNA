@@ -1,4 +1,4 @@
-package dev.piste.vayna.interactions;
+package dev.piste.vayna.interactions.general;
 
 import dev.piste.vayna.interactions.selectmenus.string.SettingsSelectMenu;
 import dev.piste.vayna.translations.Language;

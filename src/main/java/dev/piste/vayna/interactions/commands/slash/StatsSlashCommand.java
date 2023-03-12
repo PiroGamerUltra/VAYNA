@@ -1,14 +1,11 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.RiotGamesAPI;
-import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
-import dev.piste.vayna.interactions.util.exceptions.InvalidRegionException;
-import dev.piste.vayna.interactions.util.exceptions.RSOConnectionMissingException;
-import dev.piste.vayna.interactions.util.exceptions.RSOConnectionPrivateException;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.RiotGamesAPI;
+import dev.piste.vayna.http.models.riotgames.RiotAccount;
+import dev.piste.vayna.interactions.util.exceptions.*;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
-import dev.piste.vayna.interactions.StatsInteraction;
-import dev.piste.vayna.interactions.util.exceptions.InvalidRiotIdException;
+import dev.piste.vayna.interactions.general.StatsInteraction;
 import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
@@ -26,7 +23,7 @@ import java.io.IOException;
 public class StatsSlashCommand implements ISlashCommand {
 
     @Override
-    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException {
+    public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException {
         event.deferReply(false).queue();
 
         RSOConnection rsoConnection = null;

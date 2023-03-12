@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import dev.piste.vayna.apis.entities.riotgames.Match;
+import dev.piste.vayna.http.models.riotgames.Match;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;

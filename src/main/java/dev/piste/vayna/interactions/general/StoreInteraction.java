@@ -1,12 +1,12 @@
-package dev.piste.vayna.interactions;
+package dev.piste.vayna.interactions.general;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.OfficerAPI;
-import dev.piste.vayna.apis.entities.henrik.StoreBundle;
-import dev.piste.vayna.apis.entities.officer.*;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.http.models.henrik.StoreBundle;
+import dev.piste.vayna.http.models.officer.*;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
+import dev.piste.vayna.util.DiscordEmoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
@@ -25,7 +25,7 @@ public class StoreInteraction {
 
         Embed bundleEmbed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
-                .addField(language.getTranslation("store-embed-bundle-field-1-name"), storeBundle.getPrice() + " " + Emojis.getVP().getFormatted(), true)
+                .addField(language.getTranslation("store-embed-bundle-field-1-name"), storeBundle.getPrice() + " " + DiscordEmoji.VP.getAsDiscordEmoji().getFormatted(), true)
                 .addField(language.getTranslation("store-embed-bundle-field-2-name"), language.getTranslation("store-embed-bundle-field-2-text")
                         .replaceAll("%timestamp%", "<t:" + storeBundle.getRemovalDate().getTime() / 1000 + ":R>"), true)
                 .setImage(bundle.getDisplayIcon())
@@ -35,7 +35,7 @@ public class StoreInteraction {
         for(StoreBundle.Item item : storeBundle.getItems()) {
             Embed itemEmbed = new Embed()
                     .addField(language.getTranslation("store-embed-item-field-1-name"), item.getAmount() + "x", true)
-                    .addField(language.getTranslation("store-embed-item-field-2-name"), item.getBasePrice() + " " + Emojis.getVP().getFormatted(), true)
+                    .addField(language.getTranslation("store-embed-item-field-2-name"), item.getBasePrice() + " " + DiscordEmoji.VP.getAsDiscordEmoji().getFormatted(), true)
                     .removeFooter();
             switch (item.getType()) {
                 case "buddy" -> {

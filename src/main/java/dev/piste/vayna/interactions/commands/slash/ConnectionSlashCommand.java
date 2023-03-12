@@ -1,7 +1,7 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.interactions.ConnectionInteraction;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.interactions.general.ConnectionInteraction;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.util.StatsCounter;
 import dev.piste.vayna.mongodb.RSOConnection;

@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -29,6 +30,8 @@ public class RSOConnection {
     private final String riotPuuid;
     private boolean publiclyVisible;
     private final Date creationDate;
+
+    private User user;
 
     public RSOConnection(long discordUserId) {
         this.discordUserId = discordUserId;
@@ -107,6 +110,15 @@ public class RSOConnection {
 
     public void delete() {
         COLLECTION.deleteOne(document);
+    }
+
+    public RSOConnection setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public User getUser() {
+        return user;
     }
 
 }

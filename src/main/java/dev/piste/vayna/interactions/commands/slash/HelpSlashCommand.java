@@ -6,7 +6,7 @@ import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
+import dev.piste.vayna.util.DiscordEmoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -53,9 +53,9 @@ public class HelpSlashCommand implements ISlashCommand {
                 "» " + InteractionManager.getSlashCommandAsJdaCommand(new SettingsSlashCommand()).getAsMention() + " " + new SettingsSlashCommand().getDescription(language), false);
 
         event.getHook().setEphemeral(true).editOriginalEmbeds(embed.build()).setActionRow(
-                Button.link(ConfigManager.getSettingsConfig().getSupportGuildInviteUri(), language.getTranslation("button-support-name")).withEmoji(Emojis.getDiscord()),
-                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(Emojis.getGitHub()),
-                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(Emojis.getTopGG())
+                Button.link(ConfigManager.getSettingsConfig().getSupportGuildInviteUri(), language.getTranslation("button-support-name")).withEmoji(DiscordEmoji.DISCORD.getAsDiscordEmoji()),
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/github", "GitHub").withEmoji(DiscordEmoji.GITHUB.getAsDiscordEmoji()),
+                Button.link(ConfigManager.getSettingsConfig().getWebsiteUri() + "/redirect/topgg", "Top.GG").withEmoji(DiscordEmoji.TOPGG.getAsDiscordEmoji())
         ).queue();
     }
 

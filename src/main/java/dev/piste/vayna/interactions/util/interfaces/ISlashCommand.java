@@ -1,6 +1,6 @@
 package dev.piste.vayna.interactions.util.interfaces;
 
-import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.interactions.util.exceptions.*;
 import dev.piste.vayna.translations.Language;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public interface ISlashCommand {
 
-    void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, GuildConnectionsMissingException, InsufficientPermissionException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException;
+    void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException, InvalidRiotIdException, GuildConnectionsMissingException, InsufficientPermissionException, RSOConnectionPrivateException, InvalidRegionException, RSOConnectionMissingException, InvalidUserProvidedException;
 
     String getName();
 

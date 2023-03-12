@@ -1,22 +1,24 @@
 package dev.piste.vayna.interactions.commands.slash;
 
-import dev.piste.vayna.apis.HenrikAPI;
-import dev.piste.vayna.apis.HttpErrorException;
-import dev.piste.vayna.apis.OfficerAPI;
-import dev.piste.vayna.apis.RiotGamesAPI;
-import dev.piste.vayna.apis.entities.henrik.HenrikAccount;
-import dev.piste.vayna.apis.entities.henrik.MMR;
-import dev.piste.vayna.apis.entities.officer.Rank;
-import dev.piste.vayna.apis.entities.officer.Season;
-import dev.piste.vayna.apis.entities.riotgames.Leaderboard;
-import dev.piste.vayna.apis.entities.riotgames.RiotAccount;
+import dev.piste.vayna.http.apis.HenrikAPI;
+import dev.piste.vayna.http.HttpErrorException;
+import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.http.apis.RiotGamesAPI;
+import dev.piste.vayna.http.apis.ValorantAPI;
+import dev.piste.vayna.http.models.henrik.HenrikAccount;
+import dev.piste.vayna.http.models.henrik.MMR;
+import dev.piste.vayna.http.models.officer.Rank;
+import dev.piste.vayna.http.models.officer.Season;
+import dev.piste.vayna.http.models.riotgames.Leaderboard;
+import dev.piste.vayna.http.models.riotgames.RiotAccount;
 import dev.piste.vayna.interactions.util.exceptions.GuildConnectionsMissingException;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.mongodb.RSOConnection;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
+import dev.piste.vayna.util.DiscordEmoji;
 import dev.piste.vayna.util.Embed;
-import dev.piste.vayna.util.Emojis;
+import dev.piste.vayna.util.RiotRegion;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -89,12 +91,12 @@ public class LeaderboardSlashCommand implements ISlashCommand {
                     .orElse(null);
 
             if(mmr.getCurrentData().getElo() >= 2100) {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
-                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        DiscordEmoji.Rank.getRankById(rank.getId()).getAsDiscordEmoji().getFormatted() + " " + rank.getName() +
                                 " (**" + mmr.getCurrentData().getRating() + "RR**)", false);
             } else {
-                embed.addField((i+1) + ". " + user.getAsTag() + " (" + Emojis.getRiotGames().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
-                        Emojis.getRankByTierName(mmr.getCurrentData().getRankId()).getFormatted() + " " + rank.getName() +
+                embed.addField((i+1) + ". " + user.getAsTag() + " (" + DiscordEmoji.RIOT_GAMES.getAsDiscordEmoji().getFormatted() + " " + mmr.getName() + "#" + mmr.getTag() + ")",
+                        DiscordEmoji.Rank.getRankById(rank.getId()).getAsDiscordEmoji().getFormatted() + " " + rank.getName() +
                                 " (**" + mmr.getCurrentData().getRating() + "**/**100**)", false);
             }
         }
@@ -108,7 +110,7 @@ public class LeaderboardSlashCommand implements ISlashCommand {
             }
         }
         if(currentSeason == null) throw new NullPointerException("No current season found");
-        Leaderboard.TierDetails tierDetails = riotGamesAPI.getLeaderboard(currentSeason.getId(), 1, 0, "eu").getTierDetails();
+        Leaderboard.TierDetails tierDetails = new ValorantAPI(RiotRegion.EUROPE).getLeaderboard(currentSeason.getId(), 1, 0).getTierDetails();
 
         // Put the average guild elo in the embed
         int guildElo = guildMemberElo / eloMap.size();

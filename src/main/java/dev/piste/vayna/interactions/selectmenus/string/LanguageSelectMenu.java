@@ -1,6 +1,6 @@
 package dev.piste.vayna.interactions.selectmenus.string;
 
-import dev.piste.vayna.interactions.SettingsInteraction;
+import dev.piste.vayna.interactions.general.SettingsInteraction;
 import dev.piste.vayna.interactions.util.interfaces.IStringSelectMenu;
 import dev.piste.vayna.mongodb.GuildSetting;
 import dev.piste.vayna.translations.Language;

@@ -1,6 +1,6 @@
 package dev.piste.vayna.interactions.selectmenus.string;
 
-import dev.piste.vayna.apis.HttpErrorException;
+import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.interactions.util.interfaces.IStringSelectMenu;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.translations.Language;
