@@ -11,8 +11,8 @@ import dev.piste.vayna.interactions.modals.FeedbackModal;
 import dev.piste.vayna.interactions.selectmenus.string.*;
 import dev.piste.vayna.interactions.util.interfaces.*;
 import dev.piste.vayna.translations.Language;
-import dev.piste.vayna.util.Logger;
 import dev.piste.vayna.translations.LanguageManager;
+import dev.piste.vayna.util.Logger;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -58,6 +58,13 @@ public class InteractionManager {
         registerSlashCommand(new SettingsSlashCommand());
         registerSlashCommand(new StatusSlashCommand());
         registerSlashCommand(new VoteSlashCommand());
+        registerSlashCommand(new PatchSlashCommand());
+
+        for(Command command : Bot.getJDA().retrieveCommands().complete()) {
+            if(!slashCommands.containsKey(command.getName())) {
+                command.delete().queue();
+            }
+        }
     }
 
     private static void registerButtons() {
@@ -75,6 +82,7 @@ public class InteractionManager {
         registerStringSelectMenu(new LanguageSelectMenu());
         registerStringSelectMenu(new StoreSelectMenu());
         registerStringSelectMenu(new HistorySelectMenu());
+        registerStringSelectMenu(new PatchSelectMenu());
     }
 
     private static void registerUserContextCommands() {

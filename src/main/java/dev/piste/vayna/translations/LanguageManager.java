@@ -38,7 +38,7 @@ public class LanguageManager {
      */
     public static Language getLanguage(Guild guild) {
         if (guild == null) return getDefaultLanguage();
-        return getLanguage(new GuildSetting(guild.getIdLong()).getLanguageCode());
+        return getLanguage(new GuildSetting(guild.getIdLong()).getLocale());
     }
 
     /**

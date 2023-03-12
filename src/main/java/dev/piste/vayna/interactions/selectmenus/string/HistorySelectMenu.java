@@ -12,10 +12,12 @@ import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.util.DiscordEmoji;
 import dev.piste.vayna.util.Embed;
 import dev.piste.vayna.util.RiotRegion;
+import dev.piste.vayna.util.UnicodeEmoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 /**
  * @author Piste | https://github.com/PisteDev
@@ -47,69 +49,68 @@ public class HistorySelectMenu implements IStringSelectMenu {
                 .findFirst()
                 .orElse(null);
 
-        Queue queue = match.getMatchInfo().getQueue(language.getLocale());
+        Queue queue = match.getMatchInfo().getQueue(language);
 
         Embed matchEmbed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), author.getIconUrl())
-                .setImage(match.getMatchInfo().getMap(language.getLocale()).getListViewIcon())
-                .addField(language.getTranslation("selectmenu-history-embed-field-1-name"), "\uD83D\uDCC5 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":D>\n" +
-                        "\uD83D\uDD50 <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":t> - <t:" + match.getMatchInfo().getGameEndDate().getTime() / 1000 + ":t> " +
+                .setImage(match.getMatchInfo().getMap(language).getListViewIcon())
+                .addField(language.getTranslation("selectmenu-history-embed-field-1-name"), UnicodeEmoji.CALENDAR.getUnicode() + " <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":D>\n" +
+                        UnicodeEmoji.CLOCK.getUnicode() + " <t:" + match.getMatchInfo().getGameStartDate().getTime() / 1000 + ":t> - <t:" + match.getMatchInfo().getGameEndDate().getTime() / 1000 + ":t> " +
                         "(" + (match.getMatchInfo().getGameEndDate().getTime() - match.getMatchInfo().getGameStartDate().getTime()) / 1000 / 60 + " minutes)", false)
                 .addField(language.getTranslation("selectmenu-history-embed-field-2-name"), DiscordEmoji.Queue.getQueueById(queue.getId()).getAsDiscordEmoji().getFormatted() + " " + queue.getDropdownText(), false);
 
-        if(!queue.getName().equalsIgnoreCase("deathmatch")) {
-            Match.Team ownTeam = match.getTeams().stream()
-                    .filter(matchTeam -> matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
-                    .findFirst()
-                    .orElse(null);
-            Match.Team enemyTeam = match.getTeams().stream()
-                    .filter(matchTeam -> !matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
-                    .findFirst()
-                    .orElse(null);
-            if(ownTeam.isWinner()) {
-                matchEmbed.setColor(0, 255, 0)
-                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-victory") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
-            } else {
-                if(enemyTeam.isWinner()) {
-                    matchEmbed.setColor(255, 0, 0)
-                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-defeat") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
-                } else {
-                    matchEmbed.setColor(255, 255, 0)
-                            .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-draw") + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
-                }
-            }
-        } else {
+        if (queue.getName().equalsIgnoreCase("deathmatch")) {
             Match.Team playerTeam = match.getTeams().stream()
                     .filter(matchTeam -> matchTeam.getId().equalsIgnoreCase(player.getPUUID()))
                     .findFirst()
                     .orElse(null);
-
-            if(playerTeam.isWinner()) {
-                Match.Team secondPlaceTeam = null;
-                for(Match.Team team : match.getTeams()) {
-                    if(team.getId().equalsIgnoreCase(player.getPUUID())) continue;
-                    if(secondPlaceTeam == null) {
-                        secondPlaceTeam = team;
-                    } else {
-                        if(team.getPoints() > secondPlaceTeam.getPoints()) {
-                            secondPlaceTeam = team;
-                        }
-                    }
-                }
-                matchEmbed.setColor(0, 255, 0)
-                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-victory") + " (" + playerTeam.getPoints() + " - " + secondPlaceTeam.getPoints() + ")");
-            } else  {
-                Match.Team winnerTeam = null;
-                for(Match.Team team : match.getTeams()) {
-                    if(team.getId().equalsIgnoreCase(player.getPUUID())) continue;
-                    if(team.isWinner()) {
-                        winnerTeam = team;
-                        break;
-                    }
-                }
-                matchEmbed.setColor(255, 0, 0)
-                        .setTitle(language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-defeat") + " (" + playerTeam.getPoints() + " - " + winnerTeam.getPoints() + ")");
+            Match.Team enemyTeam;
+            int r = 255, g = 255;
+            String title;
+            if (playerTeam.isWinner()) {
+                enemyTeam = match.getTeams().stream()
+                        .filter(team -> !team.getId().equalsIgnoreCase(player.getPUUID()))
+                        .max(Comparator.comparingInt(Match.Team::getPoints))
+                        .orElse(null);
+                r = 0;
+                title = language.getTranslation("selectmenu-history-embed-title-victory");
+            } else {
+                enemyTeam = match.getTeams().stream()
+                        .filter(team -> !team.getId().equalsIgnoreCase(player.getPUUID()))
+                        .filter(Match.Team::isWinner)
+                        .findFirst()
+                        .orElse(null);
+                g = 0;
+                title = language.getTranslation("selectmenu-history-embed-title-defeat");
             }
+            matchEmbed.setColor(r, g, 0)
+                    .setTitle(language.getEmbedTitlePrefix() + title + " (" + playerTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
+        } else {
+            Match.Team ownTeam = match.getTeams().stream()
+                    .filter(matchTeam -> matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+
+            Match.Team enemyTeam = match.getTeams().stream()
+                    .filter(matchTeam -> !matchTeam.getId().equalsIgnoreCase(player.getTeamId()))
+                    .findFirst()
+                    .orElse(null);
+
+            int r = 255, g = 255;
+            String title = language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-draw");
+
+            if (ownTeam.isWinner()) {
+                r = 0;
+                g = 255;
+                title = language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-victory");
+            } else if (enemyTeam.isWinner()) {
+                r = 255;
+                g = 0;
+                title = language.getEmbedTitlePrefix() + language.getTranslation("selectmenu-history-embed-title-defeat");
+            }
+
+            matchEmbed.setColor(r, g, 0)
+                    .setTitle(title + " (" + ownTeam.getPoints() + " - " + enemyTeam.getPoints() + ")");
         }
 
         event.getHook().editOriginalEmbeds(matchEmbed.build()).queue();

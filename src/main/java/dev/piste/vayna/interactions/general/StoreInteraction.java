@@ -21,7 +21,7 @@ public class StoreInteraction {
     public static void sendBundleEmbed(StoreBundle storeBundle, InteractionHook hook, Language language) throws IOException, HttpErrorException, InterruptedException {
         OfficerAPI officerAPI = new OfficerAPI();
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
-        Bundle bundle = officerAPI.getBundle(storeBundle.getId(), language.getLocale());
+        Bundle bundle = officerAPI.getBundle(storeBundle.getId(), language);
 
         Embed bundleEmbed = new Embed()
                 .setTitle(language.getEmbedTitlePrefix() + bundle.getDisplayName())
@@ -39,23 +39,23 @@ public class StoreInteraction {
                     .removeFooter();
             switch (item.getType()) {
                 case "buddy" -> {
-                    Buddy buddy = officerAPI.getBuddy(item.getId(), language.getLocale());
+                    Buddy buddy = officerAPI.getBuddy(item.getId(), language);
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + buddy.getDisplayName())
                             .setThumbnail(buddy.getDisplayIcon());
                 }
                 case "player_card" -> {
-                    PlayerCard playercard = officerAPI.getPlayerCard(item.getId(), language.getLocale());
+                    PlayerCard playercard = officerAPI.getPlayerCard(item.getId(), language);
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + playercard.getDisplayName())
                             .setThumbnail(playercard.getLargeArt())
                             .setImage(playercard.getWideArt());
                 }
                 case "spray" -> {
-                    Spray spray = officerAPI.getSpray(item.getId(), language.getLocale());
+                    Spray spray = officerAPI.getSpray(item.getId(), language);
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + spray.getDisplayName())
                             .setThumbnail(spray.getAnimationGif() != null ? spray.getAnimationGif() : spray.getFullTransparentIcon());
                 }
                 case "skin_level" -> {
-                    Weapon.Skin skin = officerAPI.getSkin(item.getId(), language.getLocale());
+                    Weapon.Skin skin = officerAPI.getSkin(item.getId(), language);
                     itemEmbed.setTitle(language.getEmbedTitlePrefix() + skin.getDisplayName())
                             .setImage(skin.getDisplayIcon());
                 }

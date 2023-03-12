@@ -12,7 +12,7 @@ import java.util.List;
  * @author Piste | https://github.com/PisteDev
  */
 @SuppressWarnings("unused")
-public class PlatformData {
+public class RegionStatus {
 
     @SerializedName("id")
     private String region;

@@ -50,9 +50,9 @@ public class HistoryButton implements IButton {
 
         List<SelectOption> selectOptions = new ArrayList<>();
 
-        List<Agent> agents = officerAPI.getAgents(language.getLocale());
-        List<Map> maps = officerAPI.getMaps(language.getLocale());
-        List<Queue> queues = officerAPI.getQueues(language.getLocale());
+        List<Agent> agents = officerAPI.getAgents(language);
+        List<Map> maps = officerAPI.getMaps(language);
+        List<Queue> queues = officerAPI.getQueues(language);
 
         for(int i = 0; i < 25; i++) {
             if(matchList.size() <= i) break;

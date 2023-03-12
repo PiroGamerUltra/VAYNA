@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Piste | https://github.com/PisteDev
  */
-@SuppressWarnings("unused")
 public class RiotGamesAPI {
 
     private final RestClient riotRestClient;

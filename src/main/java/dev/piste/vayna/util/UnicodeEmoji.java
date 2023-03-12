@@ -8,7 +8,18 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 @SuppressWarnings("unused")
 public enum UnicodeEmoji {
 
-    UnicodeEmoji();
+    CALENDAR("📅"),
+    CLOCK("🕒");
+
+    private final String unicode;
+
+    UnicodeEmoji(String unicode) {
+        this.unicode = unicode;
+    }
+
+    public String getUnicode() {
+        return unicode;
+    }
 
     public enum Region {
 

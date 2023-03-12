@@ -39,7 +39,7 @@ public class StoreSlashCommand implements ISlashCommand {
         } else {
             ArrayList<SelectOption> selectOptions = new ArrayList<>();
             for(StoreBundle storeBundle : storeBundles) {
-                Bundle bundle = officerAPI.getBundle(storeBundle.getId(), language.getLocale());
+                Bundle bundle = officerAPI.getBundle(storeBundle.getId(), language);
                 selectOptions.add(SelectOption.of(bundle.getDisplayName(), bundle.getId()));
             }
 

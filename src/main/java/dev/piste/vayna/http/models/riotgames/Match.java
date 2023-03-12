@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.OfficerAPI;
 import dev.piste.vayna.http.models.officer.*;
+import dev.piste.vayna.translations.Language;
 
 import java.io.IOException;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class Match {
     @SerializedName("teams")
     private List<Team> teams;
     @SerializedName("roundResults")
-    private List<RoundResult> roundResults;
+    private List<RoundResult> rounds;
 
     public MatchInfo getMatchInfo() {
         return matchInfo;
@@ -44,8 +45,8 @@ public class Match {
         return teams;
     }
 
-    public List<RoundResult> getRoundResults() {
-        return roundResults;
+    public List<RoundResult> getRounds() {
+        return rounds;
     }
 
     public Match setMongoId() {
@@ -86,8 +87,8 @@ public class Match {
             return mapPath;
         }
 
-        public Map getMap(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-            for(Map map : new OfficerAPI().getMaps(languageCode)) {
+        public Map getMap(Language language) throws IOException, HttpErrorException, InterruptedException {
+            for(Map map : new OfficerAPI().getMaps(language)) {
                 if(map.getPath().equals(mapPath)) {
                     return map;
                 }
@@ -120,9 +121,9 @@ public class Match {
             return queueName;
         }
 
-        public Queue getQueue(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-            if(queueName.equals("")) return new OfficerAPI().getQueue("63d60a3e-4838-695d-9077-e9af5ed523ca", languageCode);
-            for(Queue queue : new OfficerAPI().getQueues(languageCode)) {
+        public Queue getQueue(Language language) throws IOException, HttpErrorException, InterruptedException {
+            if(queueName.equals("")) return new OfficerAPI().getQueue("63d60a3e-4838-695d-9077-e9af5ed523ca", language);
+            for(Queue queue : new OfficerAPI().getQueues(language)) {
                 if(queue.getName().equals(queueName)) {
                     return queue;
                 }
@@ -130,8 +131,8 @@ public class Match {
             return null;
         }
 
-        public Season getSeason(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-            for(Season season : new OfficerAPI().getSeasons(languageCode)) {
+        public Season getSeason(Language language) throws IOException, HttpErrorException, InterruptedException {
+            for(Season season : new OfficerAPI().getSeasons(language)) {
                 if(season.getId().equals(seasonId)) {
                     return season;
                 }
@@ -192,9 +193,9 @@ public class Match {
             return agentId;
         }
 
-        public Agent getAgent(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+        public Agent getAgent(Language language) throws IOException, HttpErrorException, InterruptedException {
             if(agentId == null) return null;
-            return new OfficerAPI().getAgent(agentId, languageCode);
+            return new OfficerAPI().getAgent(agentId, language);
         }
 
         public Stats getStats() {
@@ -205,12 +206,12 @@ public class Match {
             return rankId;
         }
 
-        public PlayerCard getPlayerCard(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-            return new OfficerAPI().getPlayerCard(playerCardId, languageCode);
+        public PlayerCard getPlayerCard(Language language) throws IOException, HttpErrorException, InterruptedException {
+            return new OfficerAPI().getPlayerCard(playerCardId, language);
         }
 
-        public PlayerTitle getPlayerTitle(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-            return new OfficerAPI().getPlayerTitle(playerTitleId, languageCode);
+        public PlayerTitle getPlayerTitle(Language language) throws IOException, HttpErrorException, InterruptedException {
+            return new OfficerAPI().getPlayerTitle(playerTitleId, language);
         }
 
         public static class Stats {
@@ -555,14 +556,14 @@ public class Match {
                     return loadoutValue;
                 }
 
-                public Weapon getWeapon(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+                public Weapon getWeapon(Language language) throws IOException, HttpErrorException, InterruptedException {
                     if(weaponId == null) return null;
-                    return new OfficerAPI().getWeapon(weaponId, languageCode);
+                    return new OfficerAPI().getWeapon(weaponId, language);
                 }
 
-                public Gear getArmor(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+                public Gear getArmor(Language language) throws IOException, HttpErrorException, InterruptedException {
                     if(armorId == null) return null;
-                    return new OfficerAPI().getGear(armorId, languageCode);
+                    return new OfficerAPI().getGear(armorId, language);
                 }
 
                 public int getRemainingMoney() {

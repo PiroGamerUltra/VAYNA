@@ -26,8 +26,8 @@ public class RestClient {
     public RestClient(String baseUrl) {
         this.baseUrl = baseUrl;
         this.httpClient = HttpClient.newHttpClient();
-        this.httpRequestBuilder = HttpRequest.newBuilder();
-        this.httpRequestBuilder.header("Content-Type", "application/json");
+        this.httpRequestBuilder = HttpRequest.newBuilder()
+                .header("Content-Type", "application/json");
     }
 
     public RestClient addHeader(String key, String value) {
@@ -64,4 +64,5 @@ public class RestClient {
             }
         return JsonParser.parseString(response.body()).getAsJsonObject();
     }
+
 }

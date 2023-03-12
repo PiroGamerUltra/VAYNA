@@ -3,6 +3,7 @@ package dev.piste.vayna.http.models.officer;
 import com.google.gson.annotations.SerializedName;
 import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.translations.Language;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -51,9 +52,9 @@ public class Season {
         return getDateFromString(endTime);
     }
 
-    public Season getParentSeason(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+    public Season getParentSeason(Language language) throws IOException, HttpErrorException, InterruptedException {
         if(parentId == null) return null;
-        return new OfficerAPI().getSeason(parentId, languageCode);
+        return new OfficerAPI().getSeason(parentId, language);
     }
 
     public String getAssetPath() {

@@ -1,31 +1,31 @@
 package dev.piste.vayna.util;
 
+import dev.piste.vayna.translations.Language;
+
 /**
  * @author Piste | https://github.com/PisteDev
  */
 public enum RiotRegion {
 
-    EUROPE("eu", "Europe"),
-    NORTH_AMERICA("na", "North America"),
-    BRAZIL("br", "Brazil"),
-    LATIN_AMERICA("latam", "Latin America"),
-    KOREA("kr", "Korea"),
-    ASIA_PACIFIC("ap", "Asia Pacific");
+    EUROPE("eu"),
+    NORTH_AMERICA("na"),
+    BRAZIL("br"),
+    LATIN_AMERICA("latam"),
+    KOREA("kr"),
+    ASIA_PACIFIC("ap");
 
     private final String id;
-    private final String name;
 
-    RiotRegion(String id, String name) {
+    RiotRegion(String id) {
         this.id = id;
-        this.name = name;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getName(Language language) {
+        return language.getTranslation(String.format("region-%s-name", id));
     }
 
     public static RiotRegion getRiotRegionById(String id) {

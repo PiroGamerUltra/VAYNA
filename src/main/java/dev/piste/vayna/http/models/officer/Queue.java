@@ -3,6 +3,7 @@ package dev.piste.vayna.http.models.officer;
 import com.google.gson.annotations.SerializedName;
 import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.translations.Language;
 
 import java.io.IOException;
 
@@ -67,7 +68,7 @@ public class Queue {
         return assetPath;
     }
 
-    public GameMode getParentGameMode(String languageCode) throws IOException, HttpErrorException, InterruptedException {
+    public GameMode getParentGameMode(Language language) throws IOException, HttpErrorException, InterruptedException {
         String gameModeId = switch (name.toLowerCase()) {
             case "competitive", "unrated" -> "96bd3920-4f36-d026-2b28-c683eb0bcac5";
             case "deathmatch" -> "a8790ec5-4237-f2f0-e93b-08a8e89865b2";
@@ -79,7 +80,7 @@ public class Queue {
             default -> null;
         };
         if(gameModeId == null) return null;
-        return new OfficerAPI().getGameMode(gameModeId, languageCode);
+        return new OfficerAPI().getGameMode(gameModeId, language);
     }
 
 }

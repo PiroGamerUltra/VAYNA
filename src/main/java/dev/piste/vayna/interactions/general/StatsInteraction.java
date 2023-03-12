@@ -63,7 +63,7 @@ public class StatsInteraction {
         RiotRegion region = RiotRegion.getRiotRegionById(regionId);
         HenrikAccount henrikAccount = henrikAPI.getAccount(riotAccount.getName(), riotAccount.getTag());
         MMR.CurrentData currentMmrData = henrikAPI.getMMR(henrikAccount.getId(), henrikAccount.getRegion()).getCurrentData();
-        List<Rank> ranks = new OfficerAPI().getRanks(language.getLocale());
+        List<Rank> ranks = new OfficerAPI().getRanks(language);
 
         Embed embed = new Embed()
                 .setAuthor(riotAccount.getRiotId(), henrikAccount.getPlayerCard() != null ? henrikAccount.getPlayerCard().getSmallArt() : null)
@@ -77,7 +77,7 @@ public class StatsInteraction {
             }
         }
         embed.addField(language.getTranslation("stats-embed-field-2-name"), DiscordEmoji.LEVEL.getAsDiscordEmoji().getFormatted() + " " + henrikAccount.getLevel(), true)
-                .addField(language.getTranslation("stats-embed-field-3-name"), UnicodeEmoji.Region.getRegionById(region.getId()).getAsDiscordEmoji().getFormatted() + " " + region.getName(), true);
+                .addField(language.getTranslation("stats-embed-field-3-name"), UnicodeEmoji.Region.getRegionById(region.getId()).getAsDiscordEmoji().getFormatted() + " " + region.getName(language), true);
 
 
         if(currentMmrData.getRankName() == null) {

@@ -78,7 +78,7 @@ public class LeaderboardSlashCommand implements ISlashCommand {
                 .setAuthor(event.getGuild().getName(), event.getGuild().getIconUrl())
                 .setDescription(language.getTranslation("command-leaderboard-embed-desc"));
 
-        List<Rank> ranks = officerAPI.getRanks(language.getLocale());
+        List<Rank> ranks = officerAPI.getRanks(language);
 
         // Create an embed field for the best 20 players in this guild
         for(int i = 0; i < 20; i++) {
@@ -102,8 +102,8 @@ public class LeaderboardSlashCommand implements ISlashCommand {
         }
 
         Season currentSeason = null;
-        for(Season season : officerAPI.getSeasons(language.getLocale())) {
-            if(season.getParentSeason(language.getLocale()) == null) continue;
+        for(Season season : officerAPI.getSeasons(language)) {
+            if(season.getParentSeason(language) == null) continue;
             if(season.getStartDate().before(new Date()) && season.getEndDate().after(new Date())) {
                 currentSeason = season;
                 break;

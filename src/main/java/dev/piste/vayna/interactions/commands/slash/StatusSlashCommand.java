@@ -2,7 +2,7 @@ package dev.piste.vayna.interactions.commands.slash;
 
 import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.ValorantAPI;
-import dev.piste.vayna.http.models.riotgames.PlatformData;
+import dev.piste.vayna.http.models.riotgames.RegionStatus;
 import dev.piste.vayna.interactions.util.interfaces.ISlashCommand;
 import dev.piste.vayna.translations.Language;
 import dev.piste.vayna.translations.LanguageManager;
@@ -28,14 +28,14 @@ public class StatusSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        PlatformData platformData = new ValorantAPI(RiotRegion.getRiotRegionById(event.getOption("region").getAsString())).getPlatformData();
+        RegionStatus regionStatus = new ValorantAPI(RiotRegion.getRiotRegionById(event.getOption("region").getAsString())).getRegionStatus();
 
         List<MessageEmbed> embedList = new ArrayList<>();
 
-        for(PlatformData.Status status : platformData.getMaintenances()) {
+        for(RegionStatus.Status status : regionStatus.getMaintenances()) {
             embedList.add(getStatusEmbed(status, language));
         }
-        for(PlatformData.Status status : platformData.getIncidents()) {
+        for(RegionStatus.Status status : regionStatus.getIncidents()) {
             embedList.add(getStatusEmbed(status, language));
         }
 
@@ -50,19 +50,19 @@ public class StatusSlashCommand implements ISlashCommand {
         event.getHook().editOriginalEmbeds(embedList).queue();
     }
 
-    private MessageEmbed getStatusEmbed(PlatformData.Status status, Language language) {
+    private MessageEmbed getStatusEmbed(RegionStatus.Status status, Language language) {
         String riotLanguageCode = language.getLocale().replaceAll("-", "_");
 
         String title = null;
-        for(PlatformData.Translation translation : status.getTitles()) {
+        for(RegionStatus.Translation translation : status.getTitles()) {
             if(translation.getLocale().equals(riotLanguageCode)) {
                 title = translation.getContent();
             }
         }
         if(title == null) throw new NullPointerException("Error while getting title of maintenance (ID: " + status.getId() + ")!");
         List<String> updates = new ArrayList<>();
-        for(PlatformData.Update update : status.getUpdates()) {
-            for(PlatformData.Translation translation : update.getTranslations()) {
+        for(RegionStatus.Update update : status.getUpdates()) {
+            for(RegionStatus.Translation translation : update.getTranslations()) {
                 if(translation.getLocale().equals(riotLanguageCode)) {
                     updates.add(translation.getContent());
                 }

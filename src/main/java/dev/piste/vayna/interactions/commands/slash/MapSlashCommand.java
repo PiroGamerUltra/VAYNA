@@ -24,7 +24,7 @@ public class MapSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        Map map = new OfficerAPI().getMap(event.getOption("name").getAsString(), language.getLocale());
+        Map map = new OfficerAPI().getMap(event.getOption("name").getAsString(), language);
 
         Embed embed = new Embed()
                 .setAuthor(map.getDisplayName(), map.getSplash())
@@ -48,7 +48,7 @@ public class MapSlashCommand implements ISlashCommand {
     @Override
     public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the map", true);
-        for(Map map : new OfficerAPI().getMaps(LanguageManager.getDefaultLanguage().getLocale())) {
+        for(Map map : new OfficerAPI().getMaps(LanguageManager.getDefaultLanguage())) {
             if(map.getDisplayName().equalsIgnoreCase("The Range")) continue;
             optionData.addChoice(map.getDisplayName(), map.getId());
         }

@@ -26,7 +26,7 @@ public class AgentSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        Agent agent = new OfficerAPI().getAgent(event.getOption("name").getAsString(), language.getLocale());
+        Agent agent = new OfficerAPI().getAgent(event.getOption("name").getAsString(), language);
         ArrayList<MessageEmbed> embedList = new ArrayList<>();
 
         Embed agentEmbed = new Embed()
@@ -67,7 +67,7 @@ public class AgentSlashCommand implements ISlashCommand {
     @Override
     public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the agent", true);
-        for(Agent agent : new OfficerAPI().getAgents(LanguageManager.getDefaultLanguage().getLocale())) {
+        for(Agent agent : new OfficerAPI().getAgents(LanguageManager.getDefaultLanguage())) {
             optionData.addChoice(agent.getDisplayName(), agent.getId());
         }
         return Commands.slash(getName(), getDescription(LanguageManager.getDefaultLanguage())).addOptions(optionData);

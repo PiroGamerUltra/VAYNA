@@ -8,7 +8,7 @@ import dev.piste.vayna.http.RestClient;
 import dev.piste.vayna.http.models.riotgames.Leaderboard;
 import dev.piste.vayna.http.models.riotgames.Match;
 import dev.piste.vayna.http.models.riotgames.MatchList;
-import dev.piste.vayna.http.models.riotgames.PlatformData;
+import dev.piste.vayna.http.models.riotgames.RegionStatus;
 import dev.piste.vayna.util.RiotRegion;
 
 import java.io.IOException;
@@ -27,9 +27,9 @@ public class ValorantAPI {
         restClient = new RestClient(String.format(BASE_URL, region.getId())).addHeader(KEY_HEADER_NAME, KEY_HEADER_VALUE);
     }
 
-    public PlatformData getPlatformData() throws HttpErrorException, IOException, InterruptedException {
+    public RegionStatus getRegionStatus() throws HttpErrorException, IOException, InterruptedException {
         JsonObject jsonObject = restClient.doGet("/status/v1/platform-data");
-        return new Gson().fromJson(jsonObject, PlatformData.class);
+        return new Gson().fromJson(jsonObject, RegionStatus.class);
     }
 
     public MatchList getMatchList(String puuid) throws HttpErrorException, IOException, InterruptedException {

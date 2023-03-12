@@ -3,6 +3,7 @@ package dev.piste.vayna.http.models.officer;
 import com.google.gson.annotations.SerializedName;
 import dev.piste.vayna.http.HttpErrorException;
 import dev.piste.vayna.http.apis.OfficerAPI;
+import dev.piste.vayna.translations.Language;
 
 import java.io.IOException;
 
@@ -43,8 +44,8 @@ public class PlayerCard {
         return isHiddenIfNotOwned;
     }
 
-    public Theme getTheme(String languageCode) throws IOException, HttpErrorException, InterruptedException {
-        return new OfficerAPI().getTheme(themeId, languageCode);
+    public Theme getTheme(Language language) throws IOException, HttpErrorException, InterruptedException {
+        return new OfficerAPI().getTheme(themeId, language);
     }
 
     public String getDisplayIcon() {

@@ -16,9 +16,9 @@ public class LanguageSelectMenu implements IStringSelectMenu {
     public void perform(StringSelectInteractionEvent event, Language language) {
         event.deferEdit().queue();
 
-        GuildSetting guildSetting = new GuildSetting(event.getGuild().getIdLong());
-        guildSetting.setLanguage(event.getSelectedOptions().get(0).getValue());
-        guildSetting.update();
+        new GuildSetting(event.getGuild().getIdLong())
+                .setLocale(event.getSelectedOptions().get(0).getValue())
+                .update();
 
         SettingsInteraction.sendSettingsEmbed(event.getHook(), LanguageManager.getLanguage(event.getGuild()));
     }

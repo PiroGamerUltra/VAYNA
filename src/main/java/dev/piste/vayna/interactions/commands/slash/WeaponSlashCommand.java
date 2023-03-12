@@ -24,7 +24,7 @@ public class WeaponSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        Weapon weapon = new OfficerAPI().getWeapon(event.getOption("name").getAsString(), language.getLocale());
+        Weapon weapon = new OfficerAPI().getWeapon(event.getOption("name").getAsString(), language);
 
         Embed embed = new Embed()
                 .setAuthor(weapon.getDisplayName(), weapon.getKillStreamIcon())
@@ -59,7 +59,7 @@ public class WeaponSlashCommand implements ISlashCommand {
     @Override
     public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the weapon", true);
-        for(Weapon weapon : new OfficerAPI().getWeapons(LanguageManager.getDefaultLanguage().getLocale())) {
+        for(Weapon weapon : new OfficerAPI().getWeapons(LanguageManager.getDefaultLanguage())) {
             if(weapon.getDisplayName().equalsIgnoreCase("Melee")) continue;
             optionData.addChoice(weapon.getDisplayName(), weapon.getId());
         }

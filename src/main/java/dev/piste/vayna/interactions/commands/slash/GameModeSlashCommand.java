@@ -25,8 +25,8 @@ public class GameModeSlashCommand implements ISlashCommand {
     public void perform(SlashCommandInteractionEvent event, Language language) throws HttpErrorException, IOException, InterruptedException {
         event.deferReply(true).queue();
 
-        Queue queue = new OfficerAPI().getQueue(event.getOption("name").getAsString(), language.getLocale());
-        GameMode gameMode = queue.getParentGameMode(language.getLocale());
+        Queue queue = new OfficerAPI().getQueue(event.getOption("name").getAsString(), language);
+        GameMode gameMode = queue.getParentGameMode(language);
 
         Embed embed = new Embed()
                 .setAuthor(queue.getDropdownText() + (queue.isBeta() ? " " + language.getTranslation("command-gamemode-embed-author") : ""), gameMode.getDisplayIcon())
@@ -50,7 +50,7 @@ public class GameModeSlashCommand implements ISlashCommand {
     @Override
     public CommandData getCommandData() throws HttpErrorException, IOException, InterruptedException {
         OptionData optionData = new OptionData(OptionType.STRING, "name", "The name of the gamemode", true);
-        for(Queue queue : new OfficerAPI().getQueues(LanguageManager.getDefaultLanguage().getLocale())) {
+        for(Queue queue : new OfficerAPI().getQueues(LanguageManager.getDefaultLanguage())) {
             if(queue.getName().equals("custom") || queue.getName().equals("newmap")) continue;
             optionData.addChoice(queue.getDropdownText(), queue.getId());
         }
